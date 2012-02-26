@@ -38,16 +38,16 @@ package maryfisher.ui.sprite.button {
 		
 		private function addListeners():void {
 			if (_hitTest) {
-				_hitTest.addEventListener(MouseEvent.ROLL_OVER, handleMouseOver, false, 0, true);
-				_hitTest.addEventListener(MouseEvent.CLICK, handleMouseUp, false, 0, true);
-				_hitTest.addEventListener(MouseEvent.ROLL_OUT, handleMouseOut, false, 0, true);
+				_hitTest.addEventListener(MouseEvent.ROLL_OVER, onMouseOver, false, 0, true);
+				_hitTest.addEventListener(MouseEvent.CLICK, onMouseUp, false, 0, true);
+				_hitTest.addEventListener(MouseEvent.ROLL_OUT, onMouseOut, false, 0, true);
 				return;
 			}
 			
-			addEventListener(MouseEvent.ROLL_OVER, handleMouseOver, false, 0, true);
-			addEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown, false, 0, true);
-			addEventListener(MouseEvent.MOUSE_UP, handleMouseUp, false, 0, true);
-			addEventListener(MouseEvent.ROLL_OUT, handleMouseOut, false, 0, true);
+			addEventListener(MouseEvent.ROLL_OVER, onMouseOver, false, 0, true);
+			addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown, false, 0, true);
+			addEventListener(MouseEvent.MOUSE_UP, onMouseUp, false, 0, true);
+			addEventListener(MouseEvent.ROLL_OUT, onMouseOut, false, 0, true);
 		}
 		
 		public function destroy():void {
@@ -56,15 +56,20 @@ package maryfisher.ui.sprite.button {
 		
 		private function removeListeners():void {
 			if(!_hitTest){
-				removeEventListener(MouseEvent.ROLL_OVER, handleMouseOver, false);
-				removeEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown, false);
-				removeEventListener(MouseEvent.MOUSE_UP, handleMouseUp, false);
-				removeEventListener(MouseEvent.ROLL_OUT, handleMouseOut, false);
+				removeEventListener(MouseEvent.ROLL_OVER, onMouseOver, false);
+				removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown, false);
+				removeEventListener(MouseEvent.MOUSE_UP, onMouseUp, false);
+				removeEventListener(MouseEvent.ROLL_OUT, onMouseOut, false);
 				return;
 			}
 		}
 		
-		protected function handleMouseDown(e:MouseEvent):void {
+		private function showOverState():void {
+			if(_upState) _upState.visible = false;
+			if(_overState) _overState.visible = true;
+		}
+		
+		protected function onMouseDown(e:MouseEvent):void {
 			if (!_enabled || _selected) {
 				return;
 			}
@@ -72,34 +77,38 @@ package maryfisher.ui.sprite.button {
 			
 		}
 		
-		protected function handleMouseOver(e:MouseEvent):void {
+		protected function onMouseOver(e:MouseEvent):void {
 			if (!_enabled || _selected) {
 				return;
 			}
 				/* TODO
 				 * Tween!
 				 */	
-			if(_upState) _upState.visible = false;
-			if(_overState) _overState.visible = true;
+			showOverState();
 			
 		}
 		
-		protected function handleMouseOut(e:MouseEvent):void {
+		protected function onMouseOut(e:MouseEvent):void {
 			if (!_enabled || _selected) {
 				return;
 			}
-			if(_upState) _upState.visible = true;
-			if(_overState) _overState.visible = false;
-			if(_downState) _downState.visible = false;
+			showUpState();
 			
 		}
 		
-		protected function handleMouseUp(e:MouseEvent):void {
+		protected function onMouseUp(e:MouseEvent):void {
 			if (!_enabled) {
 				return;
 			}
 			if(_downState) _downState.visible = false;
 			dispatchEvent(new ButtonEvent(ButtonEvent.BUTTON_CLICKED, _id));
+		}
+		
+		protected function showUpState():void {
+			if(_upState) _upState.visible = true;
+			if(_overState) _overState.visible = false;
+			if (_downState) _downState.visible = false;
+			//_tooltip && _tooltip.hide();
 		}
 		
 		public function attachTooltip(tooltip:ITooltip):void {
@@ -108,7 +117,6 @@ package maryfisher.ui.sprite.button {
 		}
 		
 		public function set selected(value:Boolean):void {
-			trace('selected ', value, _selected);
 			if (_selected == value) {
 				return;	
 			}
@@ -119,8 +127,8 @@ package maryfisher.ui.sprite.button {
 			}else {
 				upState = _defaultState;
 			}
-			handleMouseOut(null);
-			
+			//handleMouseOut(null);
+			showUpState();
 		}
 		
 		public function set enabled(value:Boolean):void {
@@ -129,7 +137,7 @@ package maryfisher.ui.sprite.button {
 			}
 			
 			if (!value) {
-				handleMouseOut(null);
+				onMouseOut(null);
 				removeListeners();
 				_selected = false;
 			}else {
@@ -181,5 +189,15 @@ package maryfisher.ui.sprite.button {
 			_hitTest.alpha = 0;
 			addChild(_hitTest);
 		}
+		
+		public function set selectedState(value:DisplayObject):void {
+			_selectedState = value;
+			_selectedState.visible = false;
+			addChild(_selectedState);
+		}
+		
+		//public function set defaultState(value:DisplayObject):void {
+			//_defaultState = value;
+		//}
 	}
 }

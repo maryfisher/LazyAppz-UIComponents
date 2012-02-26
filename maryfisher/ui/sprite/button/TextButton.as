@@ -33,23 +33,23 @@ package maryfisher.ui.sprite.button {
 		}
 		
 		override protected function handleMouseOver(e:MouseEvent):void {
-			super.handleMouseOver(e);
+			super.onMouseOver(e);
 			if(_hasOver) _label.textColor = _overColor;
 			
 		}
 		
 		override protected function handleMouseOut(e:MouseEvent):void {
-			super.handleMouseOut(e);
+			super.onMouseOut(e);
 			_label.textColor = _upColor;
 		}
 		
 		override protected function handleMouseDown(e:MouseEvent):void {
-			super.handleMouseDown(e);
+			super.onMouseDown(e);
 			if(_hasDown) _label.textColor = _downColor;
 		}
 		
 		override protected function handleMouseUp(e:MouseEvent):void {
-			super.handleMouseUp(e);
+			super.onMouseUp(e);
 			_label.textColor = _upColor;
 		}
 		

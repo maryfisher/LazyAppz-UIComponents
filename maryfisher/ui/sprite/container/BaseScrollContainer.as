@@ -3,7 +3,6 @@ package maryfisher.ui.sprite.container {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
-	import flash.display.Sprite;
 	import maryfisher.ui.event.ButtonEvent;
 	import maryfisher.ui.sprite.button.BaseButton;
 	
@@ -11,7 +10,7 @@ package maryfisher.ui.sprite.container {
 	 * ...
 	 * @author mary_fisher
 	 */
-	public class BaseScrollContainer extends Sprite {
+	public class BaseScrollContainer {
 		
 		private var _scrollSideways:Boolean;
 		private var _nextButton:BaseButton;
