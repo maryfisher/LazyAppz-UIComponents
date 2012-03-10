@@ -3,13 +3,14 @@ package maryfisher.ui.sprite.button {
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import maryfisher.ui.event.ButtonEvent;
+	import maryfisher.ui.interfaces.IButton;
 	import maryfisher.ui.interfaces.ITooltip;
 	
 	/**
 	 * ...
 	 * @author ...
 	 */
-	public class BaseButton extends Sprite {
+	public class BaseButton extends Sprite implements IButton{
 		
 		protected var _tooltip:ITooltip;
 		
@@ -114,6 +115,14 @@ package maryfisher.ui.sprite.button {
 		public function attachTooltip(tooltip:ITooltip):void {
 			_tooltip = tooltip;
 			
+		}
+		
+		public function get enabled():Boolean {
+			return _enabled;
+		}
+		
+		public function get selected():Boolean {
+			return _selected;
 		}
 		
 		public function set selected(value:Boolean):void {

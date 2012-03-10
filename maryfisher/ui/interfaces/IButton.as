@@ -8,6 +8,7 @@ package maryfisher.ui.interfaces {
 	public interface IButton extends IViewComponent{
 		function get id():String;
 		function set selected(value:Boolean):void;
+		function get selected():Boolean;
 		function set enabled(value:Boolean):void;
 		function get enabled():Boolean;
 	}
