@@ -1,4 +1,4 @@
-package maryfisher.ui.sprite.container {
+package maryfisher.ui.container {
 	/**
 	 * ...
 	 * @author mary_fisher

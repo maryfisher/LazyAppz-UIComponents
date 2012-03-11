@@ -1,4 +1,4 @@
-package maryfisher.ui.sprite.button {
+package maryfisher.ui.button {
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
@@ -7,7 +7,7 @@ package maryfisher.ui.sprite.button {
 	 * ...
 	 * @author mary_fisher
 	 */
-	public class TextButton extends BaseButton {
+	public class TextSpriteButton extends BaseSpriteButton {
 		
 		protected var _label:TextField;
 		
@@ -20,7 +20,7 @@ package maryfisher.ui.sprite.button {
 		private var _hasOver:Boolean = false;
 		private var _hasDown:Boolean = false;
 		
-		public function TextButton(id:String) {
+		public function TextSpriteButton(id:String) {
 			super(id);
 			_label = new TextField();
 			_label.wordWrap = false;

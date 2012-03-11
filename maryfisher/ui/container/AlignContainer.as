@@ -1,4 +1,4 @@
-package maryfisher.ui.sprite.container {
+package maryfisher.ui.container {
 	import flash.display.Sprite;
 	import matchmaker.component.icon.AbstractIcon;
 	

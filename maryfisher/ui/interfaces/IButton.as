@@ -11,6 +11,7 @@ package maryfisher.ui.interfaces {
 		function get selected():Boolean;
 		function set enabled(value:Boolean):void;
 		function get enabled():Boolean;
+		function addClickedListener(listener:Function):void;
 	}
 	
 }

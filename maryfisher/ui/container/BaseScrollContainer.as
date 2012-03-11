@@ -1,10 +1,9 @@
-package maryfisher.ui.sprite.container {
+package maryfisher.ui.container {
 	import caurina.transitions.Tweener;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
-	import maryfisher.ui.event.ButtonEvent;
-	import maryfisher.ui.sprite.button.BaseButton;
+	import maryfisher.ui.interfaces.IButton;
 	
 	/**
 	 * ...
@@ -13,8 +12,6 @@ package maryfisher.ui.sprite.container {
 	public class BaseScrollContainer {
 		
 		private var _scrollSideways:Boolean;
-		private var _nextButton:BaseButton;
-		private var _prevButton:BaseButton;
 		private var _content:DisplayObject;
 		private var _scrollWidth:int;
 		private var _scrollHeight:int;
@@ -57,18 +54,6 @@ package maryfisher.ui.sprite.container {
 			return null;
 		}
 		
-		public function assignScrollButtons(prevButton:BaseButton, nextButton:BaseButton):void {
-			_prevButton = prevButton;
-			//_prevButton.id = "prev";
-			_nextButton = nextButton;
-			//_nextButton.id = "next";
-			/* TODO
-			 * Signals!
-			 */
-			_prevButton.addEventListener(ButtonEvent.BUTTON_CLICKED, handleButtonClicked, false, 0, true);
-			_nextButton.addEventListener(ButtonEvent.BUTTON_CLICKED, handleButtonClicked, false, 0, true);
-		}
-		
 		public function assignContent(content:DisplayObject):void {
 			_content = content;
 			_startY = _content.y;
@@ -81,7 +66,7 @@ package maryfisher.ui.sprite.container {
 			}else {
 				_maxPages = (_content.height - (_scrollHeight - _scrollRows)) / _scrollRows;
 			}
-			enableButtons();
+			//enableButtons();
 		}
 		
 		public function scrollContent(direction:int):void {
@@ -90,7 +75,7 @@ package maryfisher.ui.sprite.container {
 				_currentPage = index;
 			}
 			
-			enableButtons();
+			//enableButtons();
 			
 			_end = -((_scrollRows) * _currentPage) + _startY;
 			
@@ -106,22 +91,12 @@ package maryfisher.ui.sprite.container {
 			Tweener.addTween(_content, tweenDelay );
 		}
 		
-		private function handleButtonClicked(event:ButtonEvent):void {
-			var direction:int = event.buttonId == 'next' ? 1 : -1;
-			scrollContent(direction);
-		}
-		
 		private function createMask():DisplayObject {
 			var mask:Bitmap = new Bitmap(new BitmapData(_scrollWidth, _scrollHeight, false, 0));
 			mask.x = _content.x;
 			mask.y = _content.y;
 			_content.mask = mask;
 			return mask;
-		}
-		
-		private function enableButtons():void {
-			_prevButton.enabled = (_currentPage > 0);
-			_nextButton.enabled = (_currentPage < _maxPages);
 		}
 		
 		public function dispose():void {

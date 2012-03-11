@@ -1,4 +1,4 @@
-package maryfisher.ui.sprite.container {
+package maryfisher.ui.container {
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.utils.Dictionary;

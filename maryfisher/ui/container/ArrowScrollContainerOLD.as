@@ -1,4 +1,4 @@
-package maryfisher.ui.sprite.container {
+package maryfisher.ui.container {
 	//import caurina.transitions.Tweener;
 	import caurina.transitions.Tweener;
 	import flash.display.Bitmap;
