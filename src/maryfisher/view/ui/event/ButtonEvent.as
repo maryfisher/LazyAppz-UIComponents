@@ -1,4 +1,4 @@
-package maryfisher.ui.event {
+package maryfisher.view.ui.event {
 	import flash.events.Event;
 	
 	/**

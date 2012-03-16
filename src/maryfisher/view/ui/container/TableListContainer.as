@@ -1,4 +1,4 @@
-package maryfisher.ui.container {
+package maryfisher.view.ui.container {
 	/**
 	 * ...
 	 * @author mary_fisher

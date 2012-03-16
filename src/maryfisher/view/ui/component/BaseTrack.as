@@ -1,4 +1,4 @@
-package maryfisher.ui.component {
+package maryfisher.view.ui.component {
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import maryfisher.ui.interfaces.IScrollTrack;

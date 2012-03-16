@@ -1,4 +1,4 @@
-package maryfisher.ui.button {
+package maryfisher.view.ui.button {
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;

@@ -1,4 +1,4 @@
-package maryfisher.ui.button {
+package maryfisher.view.ui.button {
 	/**
 	 * ...
 	 * @author mary_fisher

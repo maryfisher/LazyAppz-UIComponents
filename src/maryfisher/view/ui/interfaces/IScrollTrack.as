@@ -1,4 +1,4 @@
-package maryfisher.ui.interfaces {
+package maryfisher.view.ui.interfaces {
 	import flash.events.IEventDispatcher;
 	import org.osflash.signals.Signal;
 	

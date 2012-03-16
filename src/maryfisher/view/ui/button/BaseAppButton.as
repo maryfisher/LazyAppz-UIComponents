@@ -1,4 +1,4 @@
-package maryfisher.ui.button {
+package maryfisher.view.ui.button {
 	import flash.display.Sprite;
 	import flash.events.TouchEvent;
 	import maryfisher.ui.interfaces.IButton;

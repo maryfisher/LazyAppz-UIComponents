@@ -1,4 +1,4 @@
-package maryfisher.ui.container {
+package maryfisher.view.ui.container {
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.geom.Point;
