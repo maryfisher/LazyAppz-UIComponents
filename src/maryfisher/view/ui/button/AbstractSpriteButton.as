@@ -1,8 +1,11 @@
 package maryfisher.view.ui.button {
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
-	import maryfisher.ui.event.ButtonEvent;
-	import maryfisher.ui.interfaces.IButton;
+	import maryfisher.view.ui.event.ButtonEvent;
+	import maryfisher.view.ui.event.ButtonSignalEvent;
+	import maryfisher.view.ui.interfaces.IButton;
+	import org.osflash.signals.DeluxeSignal;
+	import org.osflash.signals.events.GenericEvent;
 	import org.osflash.signals.Signal;
 	
 	/**
@@ -12,6 +15,7 @@ package maryfisher.view.ui.button {
 	public class AbstractSpriteButton extends Sprite implements IButton{
 		
 		private var _clickedSignal:Signal;
+		private var _bubblingSignal:DeluxeSignal;
 		
 		protected var _enabled:Boolean;
 		protected var _selected:Boolean;
@@ -25,11 +29,15 @@ package maryfisher.view.ui.button {
 		
 		protected var _id:String;
 		
+		protected var _doBubble:Boolean = true;
+		
 		public function AbstractSpriteButton(id:String) {
 			_enabled = true;
 			_selected = false;
 			_id = id;
 			mouseChildren = false;
+			
+			_bubblingSignal = new DeluxeSignal(this);
 			
 			addListeners();
 		}
@@ -65,10 +73,10 @@ package maryfisher.view.ui.button {
 			//_tooltip && _tooltip.hide();
 		}
 		
-		public function get selected():Boolean { return _selected;	}		
+		public function get selected():Boolean { return _selected;	}
 		public function set selected(value:Boolean):void {
 			if (_selected == value) {
-				return;	
+				return;
 			}
 			
 			_selected = value;
@@ -140,13 +148,22 @@ package maryfisher.view.ui.button {
 			addChild(_selectedState);
 		}
 		
+		public function set doBubble(value:Boolean):void {
+			_doBubble = value;
+		}
+		
 		protected function onUp():void {
 			if (!_enabled) {
 				return;
 			}
-			if(_downState) _downState.visible = false;
+			if (_downState) _downState.visible = false;
+			
+			/* TODO
+			 *nicht auf alle Arten dispatchen
+			 */
 			dispatchEvent(new ButtonEvent(ButtonEvent.BUTTON_CLICKED, _id));
-			_clickedSignal.dispatch(this);
+			_doBubble && (_bubblingSignal.dispatch(new ButtonSignalEvent()));
+			_clickedSignal && _clickedSignal.dispatch(this);
 		}
 		
 		protected function onDown():void {

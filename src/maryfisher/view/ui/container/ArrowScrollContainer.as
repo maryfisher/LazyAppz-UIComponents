@@ -1,8 +1,8 @@
 package maryfisher.view.ui.container {
-	import maryfisher.ui.interfaces.IButton;
+	import maryfisher.view.ui.interfaces.IButton;
 	/**
 	 * ...
-	 * 
+	 *
 	 */
 	public class ArrowScrollContainer extends BaseScrollContainer {
 		
@@ -58,7 +58,7 @@ package maryfisher.view.ui.container {
 		
 		private function enableButtons():void {
 			_prevButton.enabled = (_currentPage > 0);
-			_nextButton.enabled = (_currentPage < _maxPages);
+			_nextButton.enabled = (_currentPage < _maxPages - 1);
 		}
 		
 		override public function scrollContent(direction:int):void {

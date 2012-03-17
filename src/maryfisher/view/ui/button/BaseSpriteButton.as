@@ -2,26 +2,59 @@ package maryfisher.view.ui.button {
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
-	import maryfisher.ui.event.ButtonEvent;
-	import maryfisher.ui.interfaces.IButton;
-	import maryfisher.ui.interfaces.ITooltip;
+	import flash.events.TouchEvent;
+	import maryfisher.view.ui.event.ButtonEvent;
+	import maryfisher.view.ui.interfaces.IButton;
+	import maryfisher.view.ui.interfaces.ITooltip;
 	
 	/**
 	 * ...
 	 * @author ...
 	 */
 	public class BaseSpriteButton extends AbstractSpriteButton{
+		private var _isTouch:Boolean;
 		
 		protected var _tooltip:ITooltip;
 		
 		protected var _overState:DisplayObject;
 		
-		public function BaseSpriteButton(id:String) {
+		public function BaseSpriteButton(id:String, isTouch:Boolean = false) {
+			_isTouch = isTouch;
 			super(id);
-			buttonMode = true;
+			if(_isTouch) buttonMode = true;
 		}
 		
 		override protected function addListeners():void {
+			if (!_isTouch) {
+				addMouseListeners();
+			}else {
+				addTouchListeners();
+			}
+		}
+		
+		private function addTouchListeners():void {
+			if (_hitTest) {
+				_hitTest.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin, false);
+				_hitTest.addEventListener(TouchEvent.TOUCH_END, onTouchEnd, false);
+				return;
+			}
+			
+			addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
+			addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+			CONFIG::debug{
+				addEventListener(MouseEvent.CLICK, onMouseUp);
+			}
+		}
+		
+		protected function onTouchEnd(e:TouchEvent):void {
+			onUp()
+		}
+		
+		protected function onTouchBegin(e:TouchEvent):void {
+			onDown();
+		}
+		
+		private function addMouseListeners():void {
 			if (_hitTest) {
 				_hitTest.addEventListener(MouseEvent.ROLL_OVER, onMouseOver, false, 0, true);
 				_hitTest.addEventListener(MouseEvent.CLICK, onMouseUp, false, 0, true);
@@ -36,6 +69,26 @@ package maryfisher.view.ui.button {
 		}
 		
 		override protected function removeListeners():void {
+			if (_isTouch) {
+				removeTouchListeners();
+			}else{
+				removeMouseListeners();
+			}
+		}
+		
+		private function removeTouchListeners():void {
+			if (!_hitTest) {
+				removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
+				removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+			}
+		}
+		
+		protected function onOver():void {
+			if(_upState) _upState.visible = false;
+			if(_overState) _overState.visible = true;
+		}
+		
+		private function removeMouseListeners():void {
 			if(!_hitTest){
 				removeEventListener(MouseEvent.ROLL_OVER, onMouseOver, false);
 				removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown, false);
@@ -43,11 +96,6 @@ package maryfisher.view.ui.button {
 				removeEventListener(MouseEvent.ROLL_OUT, onMouseOut, false);
 				return;
 			}
-		}
-		
-		private function showOverState():void {
-			if(_upState) _upState.visible = false;
-			if(_overState) _overState.visible = true;
 		}
 		
 		protected function onMouseDown(e:MouseEvent):void {
@@ -60,8 +108,8 @@ package maryfisher.view.ui.button {
 			}
 				/* TODO
 				 * Tween!
-				 */	
-			showOverState();
+				 */
+			onOver();
 			
 		}
 		
@@ -74,7 +122,7 @@ package maryfisher.view.ui.button {
 		}
 		
 		protected function onMouseUp(e:MouseEvent):void {
-			super.onUp()
+			super.onUp();
 		}
 		
 		override protected function showUpState():void {

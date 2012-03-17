@@ -3,7 +3,7 @@ package maryfisher.view.ui.container {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
-	import maryfisher.ui.interfaces.IButton;
+	import maryfisher.view.ui.interfaces.IButton;
 	
 	/**
 	 * ...
@@ -16,8 +16,8 @@ package maryfisher.view.ui.container {
 		private var _scrollWidth:int;
 		private var _scrollHeight:int;
 		private var _startY:int;
-		private var _currentPage:int;
-		private var _maxPages:int;
+		protected var _currentPage:int;
+		protected var _maxPages:int;
 		private var _scrollRows:int;
 		private var _end:int;
 		private var _scrollMax:int;
@@ -27,7 +27,7 @@ package maryfisher.view.ui.container {
 		}
 		
 		/**
-		 * 
+		 *
 		 * @param	scrollWidth
 		 * @param	scrollHeight
 		 * @param	isHorizontal defines scroll direction
@@ -63,6 +63,7 @@ package maryfisher.view.ui.container {
 		public function updateContent():void {
 			if (_scrollSideways) {
 				_maxPages = (_content.width - (_scrollWidth - _scrollRows)) / _scrollRows;
+				trace(_maxPages);
 			}else {
 				_maxPages = (_content.height - (_scrollHeight - _scrollRows)) / _scrollRows;
 			}
@@ -71,9 +72,11 @@ package maryfisher.view.ui.container {
 		
 		public function scrollContent(direction:int):void {
 			var index:int = _currentPage + direction;
-			if (index >= 0 && index <= _maxPages) {
+			trace("before currentPage", _currentPage);
+			if (index >= 0 && index < _maxPages) {
 				_currentPage = index;
 			}
+			trace("after currentPage", _currentPage);
 			
 			//enableButtons();
 			

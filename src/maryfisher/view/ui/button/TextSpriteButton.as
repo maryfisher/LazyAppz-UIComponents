@@ -3,25 +3,29 @@ package maryfisher.view.ui.button {
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
+	import maryfisher.austengames.view.components.TextColorScheme;
 	/**
 	 * ...
 	 * @author mary_fisher
 	 */
 	public class TextSpriteButton extends BaseSpriteButton {
 		
+		private var _colorScheme:TextColorScheme;
+		
 		protected var _label:TextField;
 		
-		protected var _overColor:uint;
-		protected var _upColor:uint;
-		protected var _downColor:uint;
+		//protected var _overColor:uint;
+		//protected var _upColor:uint;
+		//protected var _downColor:uint;
 		
 		protected var _textFormat:TextFormat;
 		
 		private var _hasOver:Boolean = false;
 		private var _hasDown:Boolean = false;
 		
-		public function TextSpriteButton(id:String) {
-			super(id);
+		public function TextSpriteButton(id:String, colorScheme:TextColorScheme, isTouch:Boolean = false) {
+			super(id, isTouch);
+			_colorScheme = colorScheme;
 			_label = new TextField();
 			_label.wordWrap = false;
 			_label.autoSize = TextFieldAutoSize.CENTER;
@@ -32,34 +36,21 @@ package maryfisher.view.ui.button {
 			_label.textColor = color;
 		}
 		
-		override protected function handleMouseOver(e:MouseEvent):void {
-			super.onMouseOver(e);
-			if(_hasOver) _label.textColor = _overColor;
+		override protected function onOver():void {
+			super.onOver();
+			if(_hasOver) _label.textColor = _colorScheme.overColor;
 			
 		}
 		
-		override protected function handleMouseOut(e:MouseEvent):void {
-			super.onMouseOut(e);
-			_label.textColor = _upColor;
+		override protected function onDown():void {
+			super.onDown();
+			if(_hasDown) _label.textColor = _colorScheme.downColor;
 		}
 		
-		override protected function handleMouseDown(e:MouseEvent):void {
-			super.onMouseDown(e);
-			if(_hasDown) _label.textColor = _downColor;
+		override protected function onUp():void {
+			super.onUp();
+			_label.textColor = _colorScheme.upColor;
 		}
-		
-		override protected function handleMouseUp(e:MouseEvent):void {
-			super.onMouseUp(e);
-			_label.textColor = _upColor;
-		}
-		
-		//pro function set overColor(value:uint):void {
-			//_overColor = value;
-		//}
-		//
-		//public function set upColor(value:uint):void {
-			//_upColor = value;
-		//}
 		
 		protected function set hasOver(value:Boolean):void {
 			_hasOver = value;
@@ -81,6 +72,15 @@ package maryfisher.view.ui.button {
 			_textFormat = value;
 			_label.defaultTextFormat = _textFormat;
 			_label.setTextFormat(_textFormat);
+		}
+		
+		override public function set enabled(value:Boolean):void {
+			super.enabled = value;
+			if (_enabled) {
+				textColor = _colorScheme.upColor;
+			}else {
+				textColor = _colorScheme.downColor;
+			}
 		}
 	}
 
