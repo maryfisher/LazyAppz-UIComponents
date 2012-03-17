@@ -6,10 +6,10 @@ package maryfisher.view.ui.container {
 	import maryfisher.view.ui.interfaces.IButton;
 	
 	/**
-	 * ...
+	 *
 	 * @author mary_fisher
 	 */
-	public class BaseScrollContainer {
+	public class BaseScroller {
 		
 		private var _scrollSideways:Boolean;
 		private var _content:DisplayObject;
@@ -22,7 +22,7 @@ package maryfisher.view.ui.container {
 		private var _end:int;
 		private var _scrollMax:int;
 		
-		public function BaseScrollContainer() {
+		public function BaseScroller() {
 			
 		}
 		
@@ -34,7 +34,7 @@ package maryfisher.view.ui.container {
 		 * @param	scrollRows defines how much should be scrolled each time (if not set, default length is length of the mask)
 		 * @return mask object
 		 */
-		public function defineScrollArea(scrollWidth:int, scrollHeight:int, isHorizontal:Boolean = false, scrollRows:int = 0):DisplayObject {
+		public function defineScrollArea(scrollWidth:int, scrollHeight:int, isHorizontal:Boolean = false, scrollRows:int = 0, doCreateMask:Boolean = true):DisplayObject {
 			
 			_scrollHeight = scrollHeight;
 			_scrollWidth = scrollWidth;
@@ -47,7 +47,7 @@ package maryfisher.view.ui.container {
 				_scrollRows = _scrollSideways ? _scrollWidth / scrollRows : _scrollHeight / scrollRows;
 			}
 			
-			if (_content) {
+			if (_content && doCreateMask) {
 				return createMask();
 			}
 			
@@ -78,11 +78,18 @@ package maryfisher.view.ui.container {
 			}
 			trace("after currentPage", _currentPage);
 			
+			/* TODO
+			 * maybe on tween finish
+			 */
+			if (_content is IScrollContainer) {
+				(_content as IScrollContainer).scrolledContent(_currentPage);
+			}
+			
 			//enableButtons();
 			
 			_end = -((_scrollRows) * _currentPage) + _startY;
 			
-			var tween:Object = { time:_scrollRows / 200, transition:"easeOutSine", delay:0.1 };
+			var tween:Object = { time:_scrollRows / 400, transition:"easeOutSine", delay:0.1 };
 			var tweenDelay:Object;
 			if (_scrollSideways) {
 				tweenDelay = { base:tween, x:_end };
@@ -105,6 +112,11 @@ package maryfisher.view.ui.container {
 		public function dispose():void {
 			
 		}
+		
+		public function get currentPage():int {
+			return _currentPage;
+		}
+		
 	}
 
 }

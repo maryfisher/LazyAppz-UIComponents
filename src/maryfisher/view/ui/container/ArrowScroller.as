@@ -4,7 +4,7 @@ package maryfisher.view.ui.container {
 	 * ...
 	 *
 	 */
-	public class ArrowScrollContainer extends BaseScrollContainer {
+	public class ArrowScroller extends BaseScroller {
 		
 		private var _nextButton:IButton;
 		private var _prevButton:IButton;
@@ -12,7 +12,7 @@ package maryfisher.view.ui.container {
 		private var _lastButton:IButton;
 		private var _firstButton:IButton;
 		
-		public function ArrowScrollContainer() {
+		public function ArrowScroller() {
 			
 		}
 		
