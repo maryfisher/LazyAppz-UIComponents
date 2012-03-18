@@ -10,17 +10,18 @@ package maryfisher.view.ui.container {
 	 * @author mary_fisher
 	 */
 	public class BaseScroller {
+		protected var _mask:Bitmap;
 		
-		private var _scrollSideways:Boolean;
-		private var _content:DisplayObject;
-		private var _scrollWidth:int;
-		private var _scrollHeight:int;
-		private var _startY:int;
-		protected var _currentPage:int;
-		protected var _maxPages:int;
-		private var _scrollRows:int;
-		private var _end:int;
-		private var _scrollMax:int;
+		protected var _scrollSideways:Boolean;
+		protected var _content:DisplayObject;
+		protected var _scrollWidth:int;
+		protected var _scrollHeight:int;
+		protected var _startPos:int;
+		//protected var _currentPage:int;
+		//protected var _maxPages:int;
+		protected var _scrollRows:int;
+		protected var _end:int;
+		protected var _scrollMax:int;
 		
 		public function BaseScroller() {
 			
@@ -34,20 +35,20 @@ package maryfisher.view.ui.container {
 		 * @param	scrollRows defines how much should be scrolled each time (if not set, default length is length of the mask)
 		 * @return mask object
 		 */
-		public function defineScrollArea(scrollWidth:int, scrollHeight:int, isHorizontal:Boolean = false, scrollRows:int = 0, doCreateMask:Boolean = true):DisplayObject {
+		public function defineScrollArea(scrollWidth:int, scrollHeight:int, isHorizontal:Boolean = false, scrollRows:int = 0):DisplayObject {
 			
 			_scrollHeight = scrollHeight;
 			_scrollWidth = scrollWidth;
 			_scrollSideways = isHorizontal;
-			_scrollMax = _scrollSideways ? _scrollWidth : _scrollHeight;
+			//_scrollMax = _scrollSideways ? _scrollWidth : _scrollHeight;
 			
 			if (scrollRows == 0) {
-				_scrollRows = _scrollMax;
+				_scrollRows = _scrollSideways ? _scrollWidth : _scrollHeight;
 			}else {
 				_scrollRows = _scrollSideways ? _scrollWidth / scrollRows : _scrollHeight / scrollRows;
 			}
 			
-			if (_content && doCreateMask) {
+			if (_content) {
 				return createMask();
 			}
 			
@@ -56,40 +57,24 @@ package maryfisher.view.ui.container {
 		
 		public function assignContent(content:DisplayObject):void {
 			_content = content;
-			_startY = _content.y;
-			_currentPage = 0;
+			_startPos = _scrollSideways ? _content.x : _content.y;
 		}
 		
 		public function updateContent():void {
-			if (_scrollSideways) {
-				_maxPages = (_content.width - (_scrollWidth - _scrollRows)) / _scrollRows;
-				trace(_maxPages);
-			}else {
-				_maxPages = (_content.height - (_scrollHeight - _scrollRows)) / _scrollRows;
-			}
-			//enableButtons();
+			_scrollMax = _scrollSideways ? _content.width : _content.height;
 		}
 		
-		public function scrollContent(direction:int):void {
-			var index:int = _currentPage + direction;
-			trace("before currentPage", _currentPage);
-			if (index >= 0 && index < _maxPages) {
-				_currentPage = index;
-			}
-			trace("after currentPage", _currentPage);
+		public function scrollContent():void {
 			
 			/* TODO
-			 * maybe on tween finish
+			 *
 			 */
-			if (_content is IScrollContainer) {
-				(_content as IScrollContainer).scrolledContent(_currentPage);
-			}
 			
-			//enableButtons();
-			
-			_end = -((_scrollRows) * _currentPage) + _startY;
-			
-			var tween:Object = { time:_scrollRows / 400, transition:"easeOutSine", delay:0.1 };
+			Tweener.removeTweens(_content);
+			//var tween:Object = { time:_scrollRows / 400, transition:"easeOutSine", delay:0.1 };
+			//var time:Number = Math.abs(_end - (_scrollSideways ? _content.x : _content.y)) / 300;
+			var time:Number = 0.3;
+			var tween:Object = { time: time, transition:"easeOutSine" };
 			var tweenDelay:Object;
 			if (_scrollSideways) {
 				tweenDelay = { base:tween, x:_end };
@@ -102,19 +87,15 @@ package maryfisher.view.ui.container {
 		}
 		
 		private function createMask():DisplayObject {
-			var mask:Bitmap = new Bitmap(new BitmapData(_scrollWidth, _scrollHeight, false, 0));
-			mask.x = _content.x;
-			mask.y = _content.y;
-			_content.mask = mask;
-			return mask;
+			_mask = new Bitmap(new BitmapData(_scrollWidth, _scrollHeight, false, 0));
+			_mask.x = _content.x;
+			_mask.y = _content.y;
+			_content.mask = _mask;
+			return _mask;
 		}
 		
 		public function dispose():void {
 			
-		}
-		
-		public function get currentPage():int {
-			return _currentPage;
 		}
 		
 	}

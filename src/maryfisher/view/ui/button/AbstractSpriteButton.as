@@ -56,12 +56,12 @@ package maryfisher.view.ui.button {
 			_clickedSignal.add(listener);
 		}
 		
-		public function get componentType():String {
-			return "";
+		public function addOnFinished(listener:Function):void {
+			
 		}
 		
-		public function get finishedSignal():Signal {
-			return null;
+		public function get componentType():String {
+			return "";
 		}
 		
 		protected function removeListeners():void {	}
