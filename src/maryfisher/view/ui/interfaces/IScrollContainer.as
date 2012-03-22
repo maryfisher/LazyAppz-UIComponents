@@ -1,4 +1,4 @@
-package maryfisher.view.ui.container {
+package maryfisher.view.ui.interfaces {
 	
 	/**
 	 * ...

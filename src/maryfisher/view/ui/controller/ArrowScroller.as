@@ -1,4 +1,4 @@
-package maryfisher.view.ui.container {
+package maryfisher.view.ui.controller {
 	import flash.display.DisplayObject;
 	import maryfisher.view.ui.interfaces.IButton;
 	/**
@@ -71,13 +71,8 @@ package maryfisher.view.ui.container {
 			_currentPage = 0;
 		}
 		
-		override public function scrollContent(direction:int):void {
-			super.scrollContent(direction);
-			enableButtons();
-		}
-		
-		override public function updateContent():void {
-			super.updateContent();
+		override public function scrollContent():void {
+			super.scrollContent();
 			enableButtons();
 		}
 		
@@ -88,7 +83,7 @@ package maryfisher.view.ui.container {
 			}else {
 				_maxPages = (_content.height - (_scrollHeight - _scrollRows)) / _scrollRows;
 			}
-			//enableButtons();
+			enableButtons();
 		}
 		
 		/**

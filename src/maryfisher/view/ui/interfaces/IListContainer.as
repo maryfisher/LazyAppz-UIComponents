@@ -1,5 +1,6 @@
-package maryfisher.view.ui.container {
+package maryfisher.view.ui.interfaces {
 	import flash.display.DisplayObject;
+	
 	
 	/**
 	 * ...
@@ -7,9 +8,10 @@ package maryfisher.view.ui.container {
 	 */
 	public interface IListContainer {
 		/* TODO
-		 *object??
+		 * object??
 		 */
-		function addElement(elm:DisplayObject):void
+		
+		function addElement(elm:DisplayObject, dist:int = -1):void
 	}
 	
 }

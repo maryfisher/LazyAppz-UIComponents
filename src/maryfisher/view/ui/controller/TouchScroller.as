@@ -1,4 +1,4 @@
-package maryfisher.view.ui.container {
+package maryfisher.view.ui.controller {
 	import flash.display.DisplayObject;
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
@@ -17,9 +17,9 @@ package maryfisher.view.ui.container {
 		override public function assignContent(content:DisplayObject):void {
 			super.assignContent(content);
 			
-			CONFIG::debug {
-				_content.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-			}
+			//CONFIG::debug {
+				//_content.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			//}
 			
 			_content.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
 		}
@@ -34,7 +34,7 @@ package maryfisher.view.ui.container {
 		}
 		
 		private function onTouchBegin (e:TouchEvent):void {
-			_content.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+			_content.stage.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
 			_content.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
 			_content.stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
 			
@@ -61,7 +61,7 @@ package maryfisher.view.ui.container {
 		}
 		
 		private function onTouchEnd(e:TouchEvent):void {
-			_content.removeEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+			_content.stage.removeEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
 			_content.removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);
 			_content.stage.removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);
 		}
@@ -70,9 +70,22 @@ package maryfisher.view.ui.container {
 			//Beschleunigung
 			var dist:Number = -(_lastPos - pos);// / ( _scrollSideways ? _content.width : _content.height);
 			
-			
+			/**
+				dist -29 currentPos 150
+				currentPos + dist * 10 -140
+				_startPos - _scrollMax + _mask.width 110
+				_startPos 0
+				dist -197 currentPos 149.75
+				currentPos + dist * 10 -1820.25
+				_startPos - _scrollMax + _mask.width 110
+				_startPos 110
+			 */
 			var currentPos:Number = _scrollSideways ? _content.x : _content.y;
-			
+			//trace("dist", dist, "currentPos", currentPos);
+			//trace("currentPos + dist * 10", currentPos + dist * 10);
+			//trace("_scrollMax, _mask.width", _scrollMax, _mask.width)
+			//trace("_startPos - _scrollMax + _mask.width", _startPos - _scrollMax + _mask.width)
+			//trace("_startPos", _startPos)
 			_end = Math.max((_startPos - _scrollMax + _mask.width), currentPos + dist * 10);
 			_end = Math.min(_startPos, _end);
 			

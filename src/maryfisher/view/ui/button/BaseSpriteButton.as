@@ -13,6 +13,7 @@ package maryfisher.view.ui.button {
 	 */
 	public class BaseSpriteButton extends AbstractSpriteButton{
 		private var _isTouch:Boolean;
+		private var _isDown:Boolean;
 		
 		protected var _tooltip:ITooltip;
 		
@@ -42,15 +43,20 @@ package maryfisher.view.ui.button {
 			addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
 			addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
 			CONFIG::debug{
-				addEventListener(MouseEvent.CLICK, onMouseUp);
+				//addEventListener(MouseEvent.CLICK, onMouseUp);
 			}
 		}
 		
 		protected function onTouchEnd(e:TouchEvent):void {
-			onUp()
+			onUp();
+			_isDown = false;
 		}
 		
 		protected function onTouchBegin(e:TouchEvent):void {
+			if (_isDown) {
+				return;
+			}
+			_isDown = true;
 			onDown();
 		}
 		

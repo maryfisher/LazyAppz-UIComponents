@@ -1,6 +1,8 @@
 package maryfisher.view.ui.container {
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	import maryfisher.view.ui.interfaces.IListContainer;
+	import maryfisher.view.ui.interfaces.IScrollContainer;
 	
 	/**
 	 * ...
@@ -13,12 +15,12 @@ package maryfisher.view.ui.container {
 			
 		}
 		
-		public function addElement(elm:DisplayObject):void {
-			elm.x = elm.width * numChildren;
+		public function addElement(elm:DisplayObject, dist:int = -1):void {
+			//if (!dist) {
+				elm.x = elm.width * numChildren;
+			//}
 			addChild(elm);
 		}
-		
-		/* INTERFACE org.osflash.signals.events.IBubbleEventHandler */
 		
 		public function scrolledContent(currentPage:int):void {
 			for (var i:int = 0; i < numChildren; i++ ) {
