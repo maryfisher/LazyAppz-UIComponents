@@ -17,13 +17,13 @@ package maryfisher.view.model3d {
 	 * ...
 	 * @author mary_fisher
 	 */
-	public class ModelLoader extends ObjectContainer3D implements IViewComponent {
+	public class BaseModelLoader extends ObjectContainer3D implements IViewComponent {
 		
 		protected var _viewProxy:ViewProxy;
 		protected var _finishedSignal:Signal;
 		protected var _loader:Loader3D;
 		
-		public function ModelLoader() {
+		public function BaseModelLoader() {
 			_viewProxy = new ViewProxy();
 			_finishedSignal = new Signal();
 			_loader = new Loader3D(false);

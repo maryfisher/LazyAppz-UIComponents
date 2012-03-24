@@ -16,7 +16,7 @@ package maryfisher.view.ui.effects {
 		/* INTERFACE maryfisher.view.ui.interfaces.ITabSelectedEffect */
 		
 		public function onTabSelected(oldContent:DisplayObject, newContent:DisplayObject):void {
-			var tween:Object = { time: time, transition:"easeOutSine" };
+			var tween:Object = { time: 0.3, transition:"easeOutSine" };
 			
 			Tweener.addTween(oldContent, {base: tween, alpha: 0});
 			Tweener.addTween(newContent, {base: tween, alpha: 1});

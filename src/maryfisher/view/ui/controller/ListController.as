@@ -27,9 +27,9 @@ package maryfisher.view.ui.controller {
 			reset();
 		}
 		
-		public function setDimensions(b:Point):void {
-			
-		}
+		//public function setDimensions(b:Point):void {
+			//
+		//}
 		
 		public function setColumns(rows:int, isHorizontal:Boolean = true):void {
 			_isHorizontal = isHorizontal;

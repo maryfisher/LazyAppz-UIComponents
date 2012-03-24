@@ -43,11 +43,14 @@ package maryfisher.view.ui.button {
 			addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
 			addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
 			CONFIG::debug{
-				//addEventListener(MouseEvent.CLICK, onMouseUp);
+				addEventListener(MouseEvent.CLICK, onMouseUp);
 			}
 		}
 		
 		protected function onTouchEnd(e:TouchEvent):void {
+			if (!_isDown) {
+				return;
+			}
 			onUp();
 			_isDown = false;
 		}

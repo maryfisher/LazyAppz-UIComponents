@@ -17,9 +17,9 @@ package maryfisher.view.ui.controller {
 		override public function assignContent(content:DisplayObject):void {
 			super.assignContent(content);
 			
-			//CONFIG::debug {
-				//_content.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-			//}
+			CONFIG::debug {
+				_content.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			}
 			
 			_content.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
 		}

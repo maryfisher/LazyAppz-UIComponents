@@ -4,6 +4,7 @@ package maryfisher.view.ui.controller {
 	import maryfisher.view.ui.interfaces.IButton;
 	import maryfisher.view.ui.interfaces.ITabBar;
 	import maryfisher.view.ui.interfaces.ITabSelectedEffect;
+	import org.osflash.signals.Signal;
 	/**
 	 * ...
 	 * @author mary_fisher
@@ -14,21 +15,24 @@ package maryfisher.view.ui.controller {
 		private var _content:Dictionary;
 		private var _selectedTab:String;
 		private var _effect:ITabSelectedEffect;
+		private var _tabUpdate:Signal;
 		
 		public function TabController() {
 			_content = new Dictionary();
 			_tabButtons = new Dictionary();
-			_tabBar.addOnTabSelected(onTabSelected);
+			_tabUpdate = new Signal(String);
+			//_tabBar.addOnTabSelected(onTabSelected);
 		}
 		
-		private function onTabSelected(id:String):void {
-			selectTab(id);
+		private function onTabSelected(button:IButton):void {
+			selectTab(button.id);
 		}
 		
-		public function addContent(content:DisplayObject, tab:IButton, id:String):void {
-			content.visible = false;
-			_content[id] = content;
-			_tabButtons[id] = tab;
+		public function addContent(content:DisplayObject, tab:IButton):void {
+			//content.visible = false;
+			_content[tab.id] = content;
+			_tabButtons[tab.id] = tab;
+			tab.addClickedListener(onTabSelected);
 			_effect && _effect.onAddContent(content);
 		}
 		
@@ -46,11 +50,21 @@ package maryfisher.view.ui.controller {
 			
 			//_content[_selectedTab] && _content[_selectedTab].visible = true;
 			(_tabButtons[_selectedTab] as IButton).selected = true;
+			
+			_tabUpdate.dispatch(id);
 		}
 		
 		public function set effect(value:ITabSelectedEffect):void {
 			_effect = value;
 		}
+		
+		public function get tabUpdate():Signal {
+			return _tabUpdate;
+		}
+		
+		//private function addOnTabSelected(listener:Function):void {
+			//_tabUpdate.add(listener);
+		//}
 	}
 
 }
