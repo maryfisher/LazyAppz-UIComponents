@@ -16,6 +16,7 @@ package maryfisher.view.model3d {
 		function destroy():void;
 		function start(stage:Stage = null):void;
 		function stop():void;
+		function assignBounds(minX:int, maxX:int, minY:int, maxY:int):void
 	}
 	
 }

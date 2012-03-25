@@ -53,6 +53,7 @@ package maryfisher.view.model3d {
 		
 		public function set cameraController(value:ICameraController):void {
 			_cameraController = value;
+			_cameraController.assignBounds(x, x + width, y, y + width);
 		}
 		
 		public function destroy():void {

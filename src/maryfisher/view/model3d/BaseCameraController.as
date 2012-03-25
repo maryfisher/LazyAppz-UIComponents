@@ -41,6 +41,12 @@ package maryfisher.view.model3d {
 		
 		private var _tiltSignal:Signal;
 		private var _panSignal:Signal;
+		
+		protected var _minBoundsX:int;
+		protected var _maxBoundsX:int;
+		protected var _minBoundsY:int;
+		protected var _maxBoundsY:int;
+		
 		protected var _targetObject:Entity;
 		protected var _lookAtObject:ObjectContainer3D;
 		protected var _stage:Stage;
@@ -61,6 +67,14 @@ package maryfisher.view.model3d {
 			
 			_tiltSignal = new Signal(int);
 			_panSignal = new Signal(int);
+		}
+		
+		public function assignBounds(minBoundsX:int, maxBoundsX:int, minBoundsY:int, maxBoundsY:int):void {
+			_maxBoundsY = maxBoundsY;
+			_minBoundsY = minBoundsY;
+			_maxBoundsX = maxBoundsX;
+			_minBoundsX = minBoundsX;
+			
 		}
 		
 		public function setMinMaxAngle(minTiltAngle:Number, maxTiltAngle:Number, minPanAngle:Number, maxPanAngle:Number):void {
@@ -99,17 +113,27 @@ package maryfisher.view.model3d {
 		}
 		
 		protected function onEnterFrame(e:Event):void {
-			if (_currentPositionX != _positionX ||
-				_currentPositionZ != _positionZ) {
-				
-				updatePosition();
-				return;
+			if (_currentPositionX == _positionX && _currentPositionZ == _positionZ) {
+				if (_tiltAngle == _currentTiltAngle && _panAngle == _currentPanAngle) {
+					return;
+				}
 			}
 			
-			if (_tiltAngle != _currentTiltAngle || _panAngle != _currentPanAngle) {
-				
-				updateAngle();
-			}
+			updatePosition();
+			updateAngle();
+			updateLookAt();
+			
+			//if (_currentPositionX != _positionX || _currentPositionZ != _positionZ) {
+				//
+				//updatePosition();
+				//updateLookAt();
+				//return;
+			//}
+			//
+			//if (_tiltAngle != _currentTiltAngle || _panAngle != _currentPanAngle) {
+				//updateAngle();
+				//updateLookAt();
+			//}
 			
 		}
 		
@@ -118,6 +142,10 @@ package maryfisher.view.model3d {
 		}
 		
 		private function updateLookAt():void {
+			_targetObject.x = _currentPositionX + _distance * Math.sin(_currentPanAngle * MathConsts.DEGREES_TO_RADIANS) * Math.cos(_currentTiltAngle * MathConsts.DEGREES_TO_RADIANS);
+			_targetObject.z = _currentPositionZ + _distance * Math.cos(_currentPanAngle * MathConsts.DEGREES_TO_RADIANS) * Math.cos(_currentTiltAngle * MathConsts.DEGREES_TO_RADIANS);
+			_targetObject.y = _lookAtObject.y + _distance * Math.sin(_currentTiltAngle * MathConsts.DEGREES_TO_RADIANS) * _yFactor;
+			
 			if (_targetObject || _lookAtObject){
 				_targetObject.lookAt(_lookAtObject.scene ? _lookAtObject.scenePosition : _lookAtObject.position);
 			}
@@ -127,10 +155,16 @@ package maryfisher.view.model3d {
 			_currentPositionX = _positionX;
 			_currentPositionZ = _positionZ;
 			
-			_targetObject.x = _currentPositionX + _distance;
-			_targetObject.z = _currentPositionZ + _distance;
-			
-			updateLookAt();
+			//_currentPositionX += (_positionX - _currentPositionX)/ (_steps + 1);
+			//_currentPositionZ += (_positionZ - _currentPositionZ) / (_steps + 1);
+			//
+			//snap coords if angle differences are close
+			//if (Math.abs(_positionX - _currentPositionX) < 0.01) {
+				//_currentPositionX = _positionX;
+			//}
+			//if(Math.abs(_positionZ - _currentPositionZ) < 0.01) {
+				//_currentPositionZ = _positionZ;
+			//}
 		}
 		
 		private function updateAngle():void {
@@ -149,17 +183,11 @@ package maryfisher.view.model3d {
 			_currentTiltAngle += (_tiltAngle - _currentTiltAngle)/(_steps + 1);
 			_currentPanAngle += (_panAngle - _currentPanAngle)/(_steps + 1);
 			
-			
 			//snap coords if angle differences are close
 			if ((Math.abs(_tiltAngle - _currentTiltAngle) < 0.01) && (Math.abs(_panAngle - _currentPanAngle) < 0.01)) {
 				_currentTiltAngle = _tiltAngle;
 				_currentPanAngle = _panAngle;
 			}
-			_targetObject.x = _lookAtObject.x + _distance * Math.sin(_currentPanAngle * MathConsts.DEGREES_TO_RADIANS) * Math.cos(_currentTiltAngle * MathConsts.DEGREES_TO_RADIANS);
-			_targetObject.z = _lookAtObject.z + _distance * Math.cos(_currentPanAngle * MathConsts.DEGREES_TO_RADIANS) * Math.cos(_currentTiltAngle * MathConsts.DEGREES_TO_RADIANS);
-			_targetObject.y = _lookAtObject.y + _distance * Math.sin(_currentTiltAngle * MathConsts.DEGREES_TO_RADIANS) * _yFactor;
-			
-			updateLookAt();
 		}
 		
 		public function set panAngle(val:Number):void {
@@ -244,6 +272,10 @@ package maryfisher.view.model3d {
 			_positionZ = value;
 			
 			_positionZ = Math.max(_minPositionZ, Math.min(_maxPositionZ, _positionZ));
+		}
+		
+		public function get tiltAngle():Number {
+			return _tiltAngle;
 		}
 	}
 

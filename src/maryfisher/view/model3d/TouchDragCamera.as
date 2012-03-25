@@ -3,17 +3,19 @@ package maryfisher.view.model3d {
 	import away3d.entities.Entity;
 	import away3d.entities.Mesh;
 	import away3d.primitives.CubeGeometry;
+	import flash.display.DisplayObject;
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
 	import flash.geom.Vector3D;
+	import maryfisher.framework.view.IViewComponent;
 	
 	/**
 	 * ...
 	 * @author mary_fisher
 	 */
-	public class TouchCamera extends BaseCameraController {
+	public class TouchDragCamera extends BaseCameraController {
 		
 		private var _rotate:Boolean = false;
 		private var _drag:Boolean = false;
@@ -25,7 +27,7 @@ package maryfisher.view.model3d {
 		private var _lastPositionX:Number;
 		private var _lastPositionZ:Number;
 		
-		public function TouchCamera(targetObject:Entity = null, panAngle:Number = 0, tiltAngle:Number = 90, distance:Number = 1000) {
+		public function TouchDragCamera(targetObject:Entity = null, panAngle:Number = 0, tiltAngle:Number = 90, distance:Number = 1000) {
 			super(targetObject, new Mesh(new CubeGeometry()), panAngle, tiltAngle, distance);
 		}
 		
@@ -40,23 +42,36 @@ package maryfisher.view.model3d {
 			
 		}
 		
+		//private function onStageMouseLeave(e:Event):void {
+			//_drag = false;
+			//_stage.removeEventListener(Event.MOUSE_LEAVE, onStageMouseLeave);
+		//}
+		
 		private function onMouseUp(e:MouseEvent):void {
 			_drag = false;
 		}
 		
 		private function onMouseDown(e:MouseEvent):void {
-			_lastPositionX = _lookAtObject.x;
-			_lastPositionZ = _lookAtObject.z;
-			_lastStageX = e.stageX;
-			_lastStageY = e.stageY;
-			_drag = true;
+			beginDrag(e.stageX, e.stageY);
 		}
 		
-		private function onTouchBegin(event:TouchEvent):void {
+		private function onTouchBegin(e:TouchEvent):void {
+			beginDrag(e.stageX, e.stageY);
+		}
+		
+		private function beginDrag(stageX:Number, stageY:Number):void {
+			if (stageX > _maxBoundsX || stageX < _minBoundsX) {
+				return;
+			}
+			
+			if (stageY > _maxBoundsY || stageY < _minBoundsY) {
+				return;
+			}
+			
 			_lastPositionX = _lookAtObject.x;
 			_lastPositionZ = _lookAtObject.z;
-			_lastStageX = event.stageX;
-			_lastStageY = event.stageY;
+			_lastStageX = stageX;
+			_lastStageY = stageY;
 			_drag = true;
 		}
 		
