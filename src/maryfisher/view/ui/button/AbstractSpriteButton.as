@@ -1,6 +1,7 @@
 package maryfisher.view.ui.button {
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import maryfisher.view.ui.event.ButtonEvent;
 	import maryfisher.view.ui.event.ButtonSignalEvent;
 	import maryfisher.view.ui.interfaces.IButton;
@@ -15,6 +16,7 @@ package maryfisher.view.ui.button {
 	public class AbstractSpriteButton extends Sprite implements IButton{
 		
 		private var _clickedSignal:Signal;
+		private var _downSignal:Signal;
 		private var _bubblingSignal:DeluxeSignal;
 		
 		protected var _enabled:Boolean;
@@ -54,6 +56,13 @@ package maryfisher.view.ui.button {
 				_clickedSignal = new Signal(IButton);
 			}
 			_clickedSignal.add(listener);
+		}
+		
+		public function addDownListener(listener:Function):void {
+			if (!_downSignal) {
+				_downSignal = new Signal(IButton);
+			}
+			_downSignal.add(listener);
 		}
 		
 		public function addOnFinished(listener:Function):void {
@@ -161,16 +170,29 @@ package maryfisher.view.ui.button {
 			/* TODO
 			 *nicht auf alle Arten dispatchen
 			 */
-			dispatchEvent(new ButtonEvent(ButtonEvent.BUTTON_CLICKED, _id));
+			//dispatchEvent(new ButtonEvent(ButtonEvent.BUTTON_CLICKED, _id));
 			_doBubble && (_bubblingSignal.dispatch(new ButtonSignalEvent()));
 			_clickedSignal && _clickedSignal.dispatch(this);
+			
+			if (_downSignal) {
+				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+			}
 		}
 		
 		protected function onDown():void {
 			if (!_enabled || _selected) {
 				return;
 			}
-			if(_downState) _downState.visible = false;
+			if (_downState) _downState.visible = true;
+			
+			if (_downSignal) {
+				_downSignal.dispatch(this);
+				addEventListener(Event.ENTER_FRAME, onEnterFrame);
+			}
+		}
+		
+		private function onEnterFrame(e:Event):void {
+			_downSignal.dispatch(this);
 		}
 	}
 

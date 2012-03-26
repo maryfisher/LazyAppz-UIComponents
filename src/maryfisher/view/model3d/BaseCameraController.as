@@ -62,11 +62,16 @@ package maryfisher.view.model3d {
 			
 			_currentPanAngle = _panAngle;
 			_currentTiltAngle = _tiltAngle;
+			
 			_currentPositionX = _lookAtObject.position.x;
 			_currentPositionZ = _lookAtObject.position.z;
 			
 			_tiltSignal = new Signal(int);
 			_panSignal = new Signal(int);
+			
+			updatePosition();
+			updateAngle();
+			updateLookAt();
 		}
 		
 		public function assignBounds(minBoundsX:int, maxBoundsX:int, minBoundsY:int, maxBoundsY:int):void {
@@ -77,7 +82,7 @@ package maryfisher.view.model3d {
 			
 		}
 		
-		public function setMinMaxAngle(minTiltAngle:Number, maxTiltAngle:Number, minPanAngle:Number, maxPanAngle:Number):void {
+		public function setMinMaxAngle(minTiltAngle:Number = 0, maxTiltAngle:Number = 90, minPanAngle:Number = NaN, maxPanAngle:Number = NaN):void {
 			this.minPanAngle = minPanAngle || -Infinity;
 			this.maxPanAngle = maxPanAngle || Infinity;
 			this.minTiltAngle = minTiltAngle;
