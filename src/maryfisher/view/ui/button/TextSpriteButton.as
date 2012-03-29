@@ -4,6 +4,7 @@ package maryfisher.view.ui.button {
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
 	import maryfisher.austengames.view.components.TextColorScheme;
+	import maryfisher.view.ui.component.FormatText;
 	/**
 	 * ...
 	 * @author mary_fisher
@@ -12,23 +13,19 @@ package maryfisher.view.ui.button {
 		
 		private var _colorScheme:TextColorScheme;
 		
-		protected var _label:TextField;
-		
-		//protected var _overColor:uint;
-		//protected var _upColor:uint;
-		//protected var _downColor:uint;
-		
-		protected var _textFormat:TextFormat;
+		protected var _label:FormatText;
 		
 		private var _hasOver:Boolean = false;
 		private var _hasDown:Boolean = false;
 		
-		public function TextSpriteButton(id:String, colorScheme:TextColorScheme, isTouch:Boolean = false) {
+		public function TextSpriteButton(id:String, colorScheme:TextColorScheme, isTouch:Boolean = false, textfield:FormatText = null) {
 			super(id, isTouch);
 			_colorScheme = colorScheme;
-			_label = new TextField();
+			_label = textfield || new FormatText();
 			_label.wordWrap = false;
 			_label.autoSize = TextFieldAutoSize.CENTER;
+			_label.align = "center";
+			_label.textColor = _colorScheme.upColor;
 			addChild(_label);
 		}
 		
@@ -69,9 +66,10 @@ package maryfisher.view.ui.button {
 		}
 		
 		public function set textFormat(value:TextFormat):void {
-			_textFormat = value;
-			_label.defaultTextFormat = _textFormat;
-			_label.setTextFormat(_textFormat);
+			_label.format = value;
+			//_textFormat = value;
+			//_label.defaultTextFormat = _textFormat;
+			//_label.setTextFormat(_textFormat);
 		}
 		
 		override public function set enabled(value:Boolean):void {

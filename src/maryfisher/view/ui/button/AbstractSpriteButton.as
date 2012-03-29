@@ -1,10 +1,15 @@
 package maryfisher.view.ui.button {
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.filters.ColorMatrixFilter;
 	import maryfisher.view.ui.event.ButtonEvent;
 	import maryfisher.view.ui.event.ButtonSignalEvent;
 	import maryfisher.view.ui.interfaces.IButton;
+	import maryfisher.view.ui.interfaces.ISound;
+	import maryfisher.view.util.ColorUtil;
 	import org.osflash.signals.DeluxeSignal;
 	import org.osflash.signals.events.GenericEvent;
 	import org.osflash.signals.Signal;
@@ -18,6 +23,7 @@ package maryfisher.view.ui.button {
 		private var _clickedSignal:Signal;
 		private var _downSignal:Signal;
 		private var _bubblingSignal:DeluxeSignal;
+		protected var _sound:ISound;
 		
 		protected var _enabled:Boolean;
 		protected var _selected:Boolean;
@@ -67,6 +73,12 @@ package maryfisher.view.ui.button {
 		
 		public function addOnFinished(listener:Function):void {
 			
+		}
+		
+		/* INTERFACE maryfisher.view.ui.interfaces.IButton */
+		
+		public function set sound(value:ISound):void {
+			_sound = value;
 		}
 		
 		public function get componentType():String {
@@ -161,6 +173,30 @@ package maryfisher.view.ui.button {
 			_doBubble = value;
 		}
 		
+		protected function drawDisabledState(desaturate:Boolean = true, transparent:Boolean = false):void {
+			
+			if (_defaultState is Bitmap) {
+				var bd:BitmapData
+				if (desaturate) {
+					bd = ColorUtil.desaturateBitmapData((_defaultState as Bitmap).bitmapData, transparent ? 0.5 : 1);
+				}else {
+					bd = (_defaultState as Bitmap).bitmapData.clone();
+					//if (transparent) {
+						//bd = ColorUtil.setTransparency((_defaultState as Bitmap).bitmapData, 0.5);
+					//}
+				}
+				_disabledState = new Bitmap(bd);
+				if (transparent) {
+					_disabledState.alpha = 0.5;
+				}
+				
+			}else {
+				//_disabledState = new Bitmap()
+				//_defaultState;
+				//ColorUtil.desaturate(_disabledState);
+			}
+		}
+		
 		protected function onUp():void {
 			if (!_enabled) {
 				return;
@@ -173,6 +209,7 @@ package maryfisher.view.ui.button {
 			//dispatchEvent(new ButtonEvent(ButtonEvent.BUTTON_CLICKED, _id));
 			_doBubble && (_bubblingSignal.dispatch(new ButtonSignalEvent()));
 			_clickedSignal && _clickedSignal.dispatch(this);
+			//_sound && _sound.play();
 			
 			if (_downSignal) {
 				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
@@ -184,7 +221,7 @@ package maryfisher.view.ui.button {
 				return;
 			}
 			if (_downState) _downState.visible = true;
-			
+			_sound && _sound.play();
 			if (_downSignal) {
 				_downSignal.dispatch(this);
 				addEventListener(Event.ENTER_FRAME, onEnterFrame);

@@ -1,6 +1,8 @@
 package maryfisher.view.ui.controller {
 	import flash.display.DisplayObject;
+	import maryfisher.austengames.view.components.button.ArrowButton;
 	import maryfisher.view.ui.interfaces.IButton;
+	import maryfisher.view.ui.interfaces.IScrollContainer;
 	/**
 	 * ...
 	 *
@@ -12,6 +14,7 @@ package maryfisher.view.ui.controller {
 		
 		private var _lastButton:IButton;
 		private var _firstButton:IButton;
+		private var _downDirection:int = 1;
 		
 		protected var _currentPage:int;
 		protected var _maxPages:int;
@@ -20,16 +23,21 @@ package maryfisher.view.ui.controller {
 			
 		}
 		
-		public function assignScrollButtons(prevButton:IButton, nextButton:IButton, lastButton:IButton = null, firstButton:IButton = null):void {
+		public function assignScrollButtons(prevButton:IButton, nextButton:IButton, onDown:Boolean = false, lastButton:IButton = null, firstButton:IButton = null):void {
 			_firstButton = firstButton;
 			_lastButton = lastButton;
 			_prevButton = prevButton;
 			_nextButton = nextButton;
 			
-			//_prevButton.addEventListener(ButtonEvent.BUTTON_CLICKED, handleButtonClicked, false, 0, true);
-			_prevButton.addClickedListener(onPrevButtonClicked);
-			_nextButton.addClickedListener(onNextButtonClicked);
-			//_nextButton.addEventListener(ButtonEvent.BUTTON_CLICKED, handleButtonClicked, false, 0, true);
+			if(!onDown){
+				_prevButton.addClickedListener(onPrevButtonClicked);
+				_nextButton.addClickedListener(onNextButtonClicked);
+			}else {
+				_prevButton.addDownListener(onButtonDown);
+				_prevButton.addClickedListener(onButtonUp);
+				_nextButton.addDownListener(onButtonDown);
+				_nextButton.addClickedListener(onButtonUp);
+			}
 			
 			if (!_firstButton) {
 				return;
@@ -39,18 +47,28 @@ package maryfisher.view.ui.controller {
 			_lastButton.addClickedListener(onLastButtonClicked);
 		}
 		
-		private function onLastButtonClicked(button:IButton):void {
+		private function onButtonUp(button:IButton):void {
+			var pos:Number = (_startPos - _end) / _scrollRows;
+			_currentPage = _downDirection == 1 ? Math.ceil(pos) : Math.floor(pos);
+			calculateMove();
+		}
+		
+		private function onButtonDown(button:IButton):void {
 			
+			_downDirection = button.id == ArrowButton.NEXT ? 1 : -1;
+			_end = _end - (_scrollWidth / 5 * _downDirection);
+			scrollContent();
+		}
+		
+		private function onLastButtonClicked(button:IButton):void {
+			_currentPage = _maxPages - 1;
+			calculateMove();
 		}
 		
 		private function onFirstButtonClicked(button:IButton):void {
-			
+			_currentPage = 0;
+			calculateMove();
 		}
-		
-		//private function handleButtonClicked(event:ButtonEvent):void {
-			//var direction:int = event.buttonId == 'next' ? 1 : -1;
-			//scrollContent(direction);
-		//}
 		
 		private function onNextButtonClicked(button:IButton):void {
 			setCurrentPage(1);
@@ -63,6 +81,12 @@ package maryfisher.view.ui.controller {
 		private function enableButtons():void {
 			_prevButton.enabled = (_currentPage > 0);
 			_nextButton.enabled = (_currentPage < _maxPages - 1);
+		}
+		
+		private function calculateMove():void {
+			_end = -((_scrollRows) * _currentPage) + _startPos;
+			trace("calculateMove", _end, _currentPage, _startPos);
+			scrollContent();
 		}
 		
 		override public function assignContent(content:DisplayObject):void {
@@ -91,26 +115,23 @@ package maryfisher.view.ui.controller {
 		 */
 		protected function setCurrentPage(direction:int):void {
 			var index:int = _currentPage + direction;
-			if (index >= _maxPages) {
-				_currentPage = _maxPages;
-			}else if (index < 0) {
-				_currentPage = 0;
-			}else {
-				_currentPage = index;
+			trace(_currentPage, _maxPages, direction);
+			if (index >= _maxPages || index < 0) {
+				return;
 			}
+			
+			_currentPage = index;
 			
 			/* TODO
 			 * maybe on tween finish
 			 */
-			if (_content is IScrollContainer) {
-				(_content as IScrollContainer).scrolledContent(_currentPage);
-			}
+			//if (_content is IScrollContainer) {
+				//(_content as IScrollContainer).scrolledContent(_currentPage);
+			//}
 			
 			//enableButtons();
 			
-			_end = -((_scrollRows) * _currentPage) + _startPos;
-			
-			scrollContent();
+			calculateMove();
 		}
 		
 		public function get currentPage():int {

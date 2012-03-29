@@ -12,6 +12,8 @@ package maryfisher.view.ui.button {
 			_defaultState = upState;
 			if (disabledState) {
 				_disabledState = disabledState;
+			}else {
+				drawDisabledState(false, true);
 			}
 			this.upState = upState;
 			this.downState = downState;

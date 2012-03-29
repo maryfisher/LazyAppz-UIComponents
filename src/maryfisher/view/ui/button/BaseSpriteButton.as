@@ -40,12 +40,15 @@ package maryfisher.view.ui.button {
 				return;
 			}
 			
-			addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
-			addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+			
 			CONFIG::debug{
 				addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 				addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 			}
+			//CONFIG::Release{
+				addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
+				addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+			//}
 		}
 		
 		protected function onTouchEnd(e:TouchEvent):void {

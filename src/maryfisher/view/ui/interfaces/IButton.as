@@ -12,6 +12,8 @@ package maryfisher.view.ui.interfaces {
 		function set enabled(value:Boolean):void;
 		function get enabled():Boolean;
 		function addClickedListener(listener:Function):void;
+		function addDownListener(listener:Function):void;
+		function set sound(value:ISound):void;
 	}
 	
 }

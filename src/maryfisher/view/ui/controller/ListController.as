@@ -27,9 +27,10 @@ package maryfisher.view.ui.controller {
 			reset();
 		}
 		
-		//public function setDimensions(b:Point):void {
-			//
-		//}
+		public function setDimensions(width:int, height:int):void {
+			_childWidth = width;
+			_childHeight = height;
+		}
 		
 		public function setColumns(rows:int, isHorizontal:Boolean = true):void {
 			_isHorizontal = isHorizontal;
@@ -49,17 +50,19 @@ package maryfisher.view.ui.controller {
 		private function setChildPos(child:IListObject):void {
 			//if (!_initiated) {
 				//distX += child.width;
-				if(!_isHorizontal){
-					if (_childWidth < child.width) {
-						_childWidth = child.width;
-					}
-					_childHeight = child.height;
-				}else {
-					_childWidth = child.width;
-					if (_childHeight < child.height) {
-						_childHeight = child.height;
-					}
-				}
+				//if (!_isHorizontal) {
+					_childWidth = _childWidth || child.width;
+					_childHeight = _childHeight || child.height;
+					//if (_childWidth < child.width) {
+						//_childWidth = child.width;
+					//}
+					//_childHeight = child.height;
+				//}else {
+					//_childWidth = child.width;
+					//if (_childHeight < child.height) {
+						//_childHeight = child.height;
+					//}
+				//}
 				//distY += child.height;
 				
 				//_initiated = true;

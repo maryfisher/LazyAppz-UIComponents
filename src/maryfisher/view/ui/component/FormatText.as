@@ -11,12 +11,14 @@ package maryfisher.view.ui.component {
 		
 		private var _format:TextFormat;
 		
-		public function FormatText(x:int, y:int, width:int = 100, height:int = 30) {
+		public function FormatText(x:int = 0, y:int = 0, width:int = 100, height:int = 30) {
 			super();
 			this.x = x;
 			this.y = y;
 			this.width = width;
 			this.height = height;
+			
+			selectable = false;
 			
 			_format = new TextFormat();
 		}

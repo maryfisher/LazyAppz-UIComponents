@@ -29,7 +29,7 @@ package maryfisher.view.ui.controller {
 		}
 		
 		public function addContent(content:DisplayObject, tab:IButton):void {
-			//content.visible = false;
+			content.visible = false;
 			_content[tab.id] = content;
 			_tabButtons[tab.id] = tab;
 			tab.addClickedListener(onTabSelected);
@@ -42,13 +42,13 @@ package maryfisher.view.ui.controller {
 			}
 			
 			if (_selectedTab && _tabButtons[_selectedTab]) {
-				//_content[_selectedTab].visible = false;
+				_content[_selectedTab].visible = false;
 				(_tabButtons[_selectedTab] as IButton).selected = false;
 			}
 			
 			_selectedTab = id;
 			
-			//_content[_selectedTab] && _content[_selectedTab].visible = true;
+			_content[_selectedTab] && (_content[_selectedTab].visible = true);
 			(_tabButtons[_selectedTab] as IButton).selected = true;
 			
 			_tabUpdate.dispatch(id);

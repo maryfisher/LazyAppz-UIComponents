@@ -41,10 +41,12 @@ package maryfisher.view.ui.controller {
 			_scrollWidth = scrollWidth;
 			_scrollSideways = isHorizontal;
 			//_scrollMax = _scrollSideways ? _scrollWidth : _scrollHeight;
+			_startPos = _scrollSideways ? _content.x : _content.y;
 			
 			if (scrollRows == 0) {
 				_scrollRows = _scrollSideways ? _scrollWidth : _scrollHeight;
 			}else {
+				//trace(_scrollRows, _scrollWidth / scrollRows)
 				_scrollRows = _scrollSideways ? _scrollWidth / scrollRows : _scrollHeight / scrollRows;
 			}
 			
@@ -57,7 +59,6 @@ package maryfisher.view.ui.controller {
 		
 		public function assignContent(content:DisplayObject):void {
 			_content = content;
-			_startPos = _scrollSideways ? _content.x : _content.y;
 		}
 		
 		public function updateContent():void {
@@ -66,23 +67,17 @@ package maryfisher.view.ui.controller {
 		
 		public function scrollContent():void {
 			
-			/* TODO
-			 *
-			 */
+			_end = Math.min(Math.max(_end, (_startPos - _scrollMax + (_scrollSideways ? _mask.width : _mask.height))), _startPos);
+			
+			if ((_scrollSideways ? _content.x : _content.y) == _end) {
+				return;
+			}
 			
 			Tweener.removeTweens(_content);
 			//var tween:Object = { time:_scrollRows / 400, transition:"easeOutSine", delay:0.1 };
 			//var time:Number = Math.abs(_end - (_scrollSideways ? _content.x : _content.y)) / 300;
-			var time:Number = 0.3;
-			var tween:Object = { time: time, transition:"easeOutSine" };
-			var tweenDelay:Object;
-			if (_scrollSideways) {
-				tweenDelay = { base:tween, x:_end };
-			}else {
-				tweenDelay = { base:tween, y:_end };
-			}
-			
-			//TweenLite.to(_content, 0.5, { } );
+			var tween:Object = { time: 0.3, transition:"easeOutSine" };
+			var tweenDelay:Object = _scrollSideways ? { base:tween, x:_end } : { base:tween, y:_end };
 			Tweener.addTween(_content, tweenDelay );
 		}
 		
