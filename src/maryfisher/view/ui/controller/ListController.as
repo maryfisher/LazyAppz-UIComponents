@@ -17,14 +17,16 @@ package maryfisher.view.ui.controller {
 		private var distX:int;
 		private var distY:int;
 		private var columns:int;
-		private var _initiated:Boolean;
+		//private var _initiated:Boolean;
 		private var _isHorizontal:Boolean;
 		private var _children:Vector.<IListObject>;
+		private var _startY:int;
+		private var _startX:int;
 		
 		public function ListController() {
-			_initiated = false;
+			//_initiated = false;
 			_children = new Vector.<IListObject>();
-			reset();
+			//reset();
 		}
 		
 		public function setDimensions(width:int, height:int):void {
@@ -82,10 +84,10 @@ package maryfisher.view.ui.controller {
 			if (columns != -1) {
 				if (_index % columns == 0) {
 					if(_isHorizontal){
-						_posX = 0;
+						_posX = _startX;
 						_posY += _childHeight + distY;
 					}else {
-						_posY = 0;
+						_posY = _startY;
 						_posX += _childWidth + distX;
 					}
 				}
@@ -94,8 +96,8 @@ package maryfisher.view.ui.controller {
 		
 		public function updateChildPos():void {
 			_index = 0;
-			_posX = 0;
-			_posY = 0;
+			_posX = _startX;
+			_posY = _startY;
 			for (var i:int; i < _children.length; i++ ) {
 				setChildPos(_children[i]);
 			}
@@ -111,16 +113,26 @@ package maryfisher.view.ui.controller {
 			return p;
 		}
 		
+		/**
+		 * resets index, start positions, removes all children
+		 */
 		public function reset():void {
 			_children = new Vector.<IListObject>();
 			_index = 0;
-			_posX = 0;
-			_posY = 0;
+			_posX = _startX;
+			_posY = _startY;
 		}
 		
 		public function removeListChild(child:IListObject):void {
 			_children.splice(_children.indexOf(child), 1);
 			updateChildPos();
+		}
+		
+		public function setStartPos(startX:int, startY:int):void {
+			_startX = startX;
+			_startY = startY;
+			_posX = _startX;
+			_posY = _startY;
 		}
 	}
 }
