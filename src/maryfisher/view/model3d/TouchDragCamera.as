@@ -105,6 +105,10 @@ package maryfisher.view.model3d {
 		private function onTouchEnd(e:TouchEvent):void {
 			_drag = false;
 		}
+		
+		public function get isDragging():Boolean {
+			return _drag;
+		}
 	}
 
 }
