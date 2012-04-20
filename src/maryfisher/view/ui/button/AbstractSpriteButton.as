@@ -224,7 +224,12 @@ package maryfisher.view.ui.button {
 			_sound && _sound.play();
 			if (_downSignal) {
 				_downSignal.dispatch(this);
-				addEventListener(Event.ENTER_FRAME, onEnterFrame);
+				/* TODO
+				 * optional
+				 */
+				if(!_clickedSignal){
+					addEventListener(Event.ENTER_FRAME, onEnterFrame);
+				}
 			}
 		}
 		

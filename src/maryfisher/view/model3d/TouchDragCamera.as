@@ -6,6 +6,7 @@ package maryfisher.view.model3d {
 	import flash.display.DisplayObject;
 	import flash.display.Stage;
 	import flash.events.Event;
+	import flash.events.GestureEvent;
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
 	import flash.geom.Vector3D;
@@ -26,6 +27,8 @@ package maryfisher.view.model3d {
 		private var _lastStageY:Number;
 		private var _lastPositionX:Number;
 		private var _lastPositionZ:Number;
+		private var _touchPoints:int;
+		private var _seconds:int;
 		
 		public function TouchDragCamera(targetObject:Entity = null, panAngle:Number = 0, tiltAngle:Number = 90, distance:Number = 1000) {
 			super(targetObject, new Mesh(new CubeGeometry()), panAngle, tiltAngle, distance);
@@ -33,12 +36,14 @@ package maryfisher.view.model3d {
 		
 		override public function start(stage:Stage = null):void {
 			super.start(stage);
-			CONFIG::debug{
+			CONFIG::mouse{
 				stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 				stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			}
-			stage.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
-			stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+			CONFIG::touch{
+				stage.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
+				stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+			}
 			
 		}
 		
@@ -47,16 +52,21 @@ package maryfisher.view.model3d {
 			//_stage.removeEventListener(Event.MOUSE_LEAVE, onStageMouseLeave);
 		//}
 		
+		CONFIG::mouse
 		private function onMouseUp(e:MouseEvent):void {
 			_drag = false;
 		}
 		
+		CONFIG::mouse
 		private function onMouseDown(e:MouseEvent):void {
 			beginDrag(e.stageX, e.stageY);
 		}
-		
+		CONFIG::touch
 		private function onTouchBegin(e:TouchEvent):void {
-			beginDrag(e.stageX, e.stageY);
+			_touchPoints++;
+			if (_touchPoints == 2) {
+				beginDrag(e.stageX, e.stageY);
+			}
 		}
 		
 		private function beginDrag(stageX:Number, stageY:Number):void {
@@ -73,12 +83,18 @@ package maryfisher.view.model3d {
 			_lastStageX = stageX;
 			_lastStageY = stageY;
 			_drag = true;
+			CONFIG::touch {
+				_seconds = 5;
+			}
 		}
 		
 		override protected function onEnterFrame(e:Event):void {
 			super.onEnterFrame(e);
 			if (!_drag) {
 				return;
+			}
+			CONFIG::mouse {
+				_seconds++;
 			}
 			_lookAtObject.rotationY = _targetObject.rotationY;
 			var distX:int = (_stage.mouseX - _lastStageX);
@@ -101,13 +117,21 @@ package maryfisher.view.model3d {
 			 */
 			//notifyMoveUpdate();
 		}
-		
+		CONFIG::touch
 		private function onTouchEnd(e:TouchEvent):void {
 			_drag = false;
+			_touchPoints = 0;
 		}
 		
-		public function get isDragging():Boolean {
-			return _drag;
+		public function get wasDragging():Boolean {
+			//CONFIG::debug{
+			//abhängig von der framerate!!!!
+				var dragging:Boolean = _seconds > 4;
+				_seconds = 0;
+				return dragging;
+			//}
+			//_touchPoints = 0;
+			//return _drag;
 		}
 	}
 

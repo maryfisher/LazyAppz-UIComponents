@@ -12,27 +12,31 @@ package maryfisher.view.ui.button {
 	 * @author ...
 	 */
 	public class BaseSpriteButton extends AbstractSpriteButton{
-		private var _isTouch:Boolean;
+		//private var _isTouch:Boolean;
 		private var _isDown:Boolean;
 		
 		protected var _tooltip:ITooltip;
 		
 		protected var _overState:DisplayObject;
 		
-		public function BaseSpriteButton(id:String, isTouch:Boolean = false) {
-			_isTouch = isTouch;
+		public function BaseSpriteButton(id:String) {
+			//_isTouch = isTouch;
 			super(id);
-			if(_isTouch) buttonMode = true;
-		}
-		
-		override protected function addListeners():void {
-			if (!_isTouch) {
-				addMouseListeners();
-			}else {
-				addTouchListeners();
+			//if(_isTouch) buttonMode = true;
+			CONFIG::mouse {
+				buttonMode = true;
 			}
 		}
 		
+		override protected function addListeners():void {
+			CONFIG::mouse {
+				addMouseListeners();
+			}
+			CONFIG::touch{
+				addTouchListeners();
+			}
+		}
+		CONFIG::touch
 		private function addTouchListeners():void {
 			if (_hitTest) {
 				_hitTest.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin, false);
@@ -40,17 +44,10 @@ package maryfisher.view.ui.button {
 				return;
 			}
 			
-			
-			CONFIG::debug{
-				addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-				addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-			}
-			//CONFIG::Release{
-				addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
-				addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
-			//}
+			addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
+			addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
 		}
-		
+		CONFIG::touch
 		protected function onTouchEnd(e:TouchEvent):void {
 			if (!_isDown) {
 				return;
@@ -58,7 +55,7 @@ package maryfisher.view.ui.button {
 			onUp();
 			_isDown = false;
 		}
-		
+		CONFIG::touch
 		protected function onTouchBegin(e:TouchEvent):void {
 			if (_isDown) {
 				return;
@@ -66,7 +63,7 @@ package maryfisher.view.ui.button {
 			_isDown = true;
 			onDown();
 		}
-		
+		CONFIG::mouse
 		private function addMouseListeners():void {
 			if (_hitTest) {
 				_hitTest.addEventListener(MouseEvent.ROLL_OVER, onMouseOver, false, 0, true);
@@ -82,13 +79,15 @@ package maryfisher.view.ui.button {
 		}
 		
 		override protected function removeListeners():void {
-			if (_isTouch) {
+			CONFIG::touch {
 				removeTouchListeners();
-			}else{
+			}
+			CONFIG::mouse{
 				removeMouseListeners();
 			}
 		}
 		
+		CONFIG::touch
 		private function removeTouchListeners():void {
 			if (!_hitTest) {
 				removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
@@ -101,6 +100,7 @@ package maryfisher.view.ui.button {
 			if(_overState) _overState.visible = true;
 		}
 		
+		CONFIG::mouse
 		private function removeMouseListeners():void {
 			if(!_hitTest){
 				removeEventListener(MouseEvent.ROLL_OVER, onMouseOver, false);
@@ -111,10 +111,11 @@ package maryfisher.view.ui.button {
 			}
 		}
 		
+		CONFIG::mouse
 		protected function onMouseDown(e:MouseEvent):void {
 			onDown();
 		}
-		
+		CONFIG::mouse
 		protected function onMouseOver(e:MouseEvent):void {
 			if (!_enabled || _selected) {
 				return;
@@ -125,7 +126,7 @@ package maryfisher.view.ui.button {
 			onOver();
 			
 		}
-		
+		CONFIG::mouse
 		protected function onMouseOut(e:MouseEvent):void {
 			if (!_enabled || _selected) {
 				return;
@@ -133,7 +134,7 @@ package maryfisher.view.ui.button {
 			showUpState();
 			
 		}
-		
+		CONFIG::mouse
 		protected function onMouseUp(e:MouseEvent):void {
 			super.onUp();
 		}

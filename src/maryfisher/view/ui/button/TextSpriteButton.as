@@ -18,10 +18,11 @@ package maryfisher.view.ui.button {
 		private var _hasOver:Boolean = false;
 		private var _hasDown:Boolean = false;
 		
-		public function TextSpriteButton(id:String, colorScheme:TextColorScheme, isTouch:Boolean = false, textfield:FormatText = null) {
-			super(id, isTouch);
+		public function TextSpriteButton(id:String, colorScheme:TextColorScheme, textfield:FormatText = null) {
+			super(id);
 			_colorScheme = colorScheme;
 			_label = textfield || new FormatText();
+			_label.mouseEnabled = false;
 			_label.wordWrap = false;
 			_label.autoSize = TextFieldAutoSize.CENTER;
 			_label.align = "center";

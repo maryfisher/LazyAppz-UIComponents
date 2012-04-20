@@ -5,6 +5,9 @@ package maryfisher.view.ui.interfaces {
 	 * ...
 	 * @author mary_fisher
 	 */
+	/* TODO
+	 * wieso extended das viewcomponent???
+	 */
 	public interface IButton extends IViewComponent{
 		function get id():String;
 		function set selected(value:Boolean):void;
