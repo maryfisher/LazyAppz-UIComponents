@@ -96,8 +96,10 @@ package maryfisher.view.ui.button {
 		}
 		
 		protected function onOver():void {
-			if(_upState) _upState.visible = false;
-			if(_overState) _overState.visible = true;
+			if (_overState) {
+				_upState.visible = false;
+				_overState.visible = true;
+			}
 		}
 		
 		CONFIG::mouse
@@ -157,9 +159,10 @@ package maryfisher.view.ui.button {
 			}
 			
 			super.enabled = value;
-			
-			if (!value) {
-				onMouseOut(null);
+			CONFIG::mouse{
+				if (!value) {
+					onMouseOut(null);
+				}
 			}
 			buttonMode = _enabled;
 		}
