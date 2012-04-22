@@ -16,7 +16,7 @@ package maryfisher.view.ui.button {
 		private var _isDown:Boolean;
 		
 		protected var _tooltip:ITooltip;
-		
+		CONFIG::mouse
 		protected var _overState:DisplayObject;
 		
 		public function BaseSpriteButton(id:String) {
@@ -95,6 +95,7 @@ package maryfisher.view.ui.button {
 			}
 		}
 		
+		CONFIG::mouse
 		protected function onOver():void {
 			if (_overState) {
 				_upState.visible = false;
@@ -143,7 +144,9 @@ package maryfisher.view.ui.button {
 		
 		override protected function showUpState():void {
 			super.showUpState();
-			if(_overState) _overState.visible = false;
+			CONFIG::mouse{
+				if (_overState) _overState.visible = false;
+			}
 			//_tooltip && _tooltip.hide();
 		}
 		
@@ -167,6 +170,7 @@ package maryfisher.view.ui.button {
 			buttonMode = _enabled;
 		}
 		
+		CONFIG::mouse
 		public function set overState(value:DisplayObject):void {
 			_overState = value;
 			_overState.visible = false;

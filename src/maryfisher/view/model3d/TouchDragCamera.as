@@ -84,7 +84,7 @@ package maryfisher.view.model3d {
 			_lastStageY = stageY;
 			_drag = true;
 			CONFIG::touch {
-				_seconds = 5;
+				_seconds = 8;
 			}
 		}
 		
@@ -126,7 +126,7 @@ package maryfisher.view.model3d {
 		public function get wasDragging():Boolean {
 			//CONFIG::debug{
 			//abhängig von der framerate!!!!
-				var dragging:Boolean = _seconds > 4;
+				var dragging:Boolean = _seconds > 7;
 				_seconds = 0;
 				return dragging;
 			//}

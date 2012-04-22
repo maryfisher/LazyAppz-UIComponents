@@ -22,7 +22,7 @@ package maryfisher.view.ui.button {
 			super(id);
 			_colorScheme = colorScheme;
 			_label = textfield || new FormatText();
-			_label.mouseEnabled = false;
+			//_label.mouseEnabled = false;
 			_label.wordWrap = false;
 			_label.autoSize = TextFieldAutoSize.CENTER;
 			_label.align = "center";
@@ -34,6 +34,7 @@ package maryfisher.view.ui.button {
 			_label.textColor = color;
 		}
 		
+		CONFIG::mouse
 		override protected function onOver():void {
 			super.onOver();
 			if(_hasOver) _label.textColor = _colorScheme.overColor;

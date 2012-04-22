@@ -17,7 +17,7 @@ package maryfisher.view.ui.component {
 			this.y = y;
 			this.width = width;
 			this.height = height;
-			
+			mouseEnabled = false;
 			selectable = false;
 			
 			_format = new TextFormat();
