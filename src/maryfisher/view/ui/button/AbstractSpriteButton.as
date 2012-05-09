@@ -55,6 +55,7 @@ package maryfisher.view.ui.button {
 		public function destroy():void {
 			removeListeners();
 			_clickedSignal && _clickedSignal.removeAll();
+			_downSignal && _downSignal.removeAll();
 		}
 		
 		public function addClickedListener(listener:Function):void {
