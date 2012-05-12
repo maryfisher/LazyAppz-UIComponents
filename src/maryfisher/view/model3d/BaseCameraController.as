@@ -24,7 +24,7 @@ package maryfisher.view.model3d {
 		
 		private var _currentPanAngle:Number = 0;
 		private var _currentTiltAngle:Number = 90;
-		private var _panAngle:Number = 0;
+		protected var _panAngle:Number = 0;
 		private var _tiltAngle:Number = 90;
 		private var _minPanAngle:Number = -Infinity;
 		private var _maxPanAngle:Number = Infinity;
