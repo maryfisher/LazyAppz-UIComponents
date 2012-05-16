@@ -22,10 +22,10 @@ package maryfisher.view.model3d {
 		private var _maxPositionZ:Number = Infinity;
 		private var _minPositionZ:Number = -Infinity;
 		
-		private var _currentPanAngle:Number = 0;
-		private var _currentTiltAngle:Number = 90;
+		protected var _currentPanAngle:Number = 0;
+		protected var _currentTiltAngle:Number = 90;
 		protected var _panAngle:Number = 0;
-		private var _tiltAngle:Number = 90;
+		protected var _tiltAngle:Number = 90;
 		private var _minPanAngle:Number = -Infinity;
 		private var _maxPanAngle:Number = Infinity;
 		private var _minTiltAngle:Number = -80;
@@ -281,6 +281,13 @@ package maryfisher.view.model3d {
 		
 		public function get tiltAngle():Number {
 			return _tiltAngle;
+		}
+		
+		public function moveLookAtObject(pos:Vector3D):void {
+			_lookAtObject.position = pos;
+			updatePosition();
+			updateAngle();
+			updateLookAt();
 		}
 	}
 

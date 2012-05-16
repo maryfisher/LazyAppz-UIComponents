@@ -54,7 +54,8 @@ package maryfisher.view.model3d {
 		
 		CONFIG::mouse
 		private function onMouseDown(e:MouseEvent):void {
-			_lastPanAngle = _panAngle;
+			_lastPanAngle = _currentPanAngle;
+			_lastTiltAngle = _currentTiltAngle;
 			_lastStageX = _stage.mouseX;
 			_lastStageY = _stage.mouseY;
 			_move = true;
@@ -62,7 +63,8 @@ package maryfisher.view.model3d {
 		}
 		CONFIG::touch
 		private function onTouchBegin(e:TouchEvent):void {
-			_lastPanAngle = _panAngle;
+			_lastPanAngle = _currentPanAngle;
+			_lastTiltAngle = _currentTiltAngle;
 			_lastStageX = _stage.mouseX;
 			_lastStageY = _stage.mouseY;
 			_move = true;

@@ -16,7 +16,7 @@ package maryfisher.view.model3d {
 	 * ...
 	 * @author mary_fisher
 	 */
-	public class TouchDragCamera extends BaseCameraController {
+	public class DragCamera extends BaseCameraController {
 		
 		private var _rotate:Boolean = false;
 		private var _drag:Boolean = false;
@@ -30,7 +30,7 @@ package maryfisher.view.model3d {
 		private var _touchPoints:int;
 		private var _seconds:int;
 		
-		public function TouchDragCamera(targetObject:Entity = null, panAngle:Number = 0, tiltAngle:Number = 90, distance:Number = 1000) {
+		public function DragCamera(targetObject:Entity = null, panAngle:Number = 0, tiltAngle:Number = 90, distance:Number = 1000) {
 			super(targetObject, new Mesh(new CubeGeometry()), panAngle, tiltAngle, distance);
 		}
 		

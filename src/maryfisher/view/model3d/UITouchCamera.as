@@ -8,7 +8,7 @@ package maryfisher.view.model3d {
 	 * ...
 	 * @author mary_fisher
 	 */
-	public class UITouchCamera extends TouchDragCamera {
+	public class UITouchCamera extends DragCamera {
 		
 		private var _zoomInButton:IButton;
 		private var _zoomOutButton:IButton;
