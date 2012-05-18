@@ -54,6 +54,12 @@ package maryfisher.view.ui.controller {
 			_tabUpdate.dispatch(id);
 		}
 		
+		public function reset():void {
+			_content = new Dictionary();
+			_tabButtons = new Dictionary();
+			_selectedTab = null;
+		}
+		
 		public function set effect(value:ITabSelectedEffect):void {
 			_effect = value;
 		}

@@ -15,6 +15,45 @@ package maryfisher.view.util {
 			
 		}
 		
+		static public function adjustSaturation(color:uint, s:Number):uint {
+			var invs:Number = 1 - s;
+			
+			var irlum:Number = invs * 0.3;
+			var iglum:Number = invs * 0.59;
+			var iblum:Number = invs * 0.11;
+			
+			var r:Number = (((color >> 16) & 0xFF));
+            var g:Number = (((color >> 8) & 0xFF));
+            var b:Number = ((color & 0xFF));
+			
+			var newred:Number = r * (irlum + s) + g * iglum + b * iblum;
+			var newgreen:Number = r * irlum + g * (iglum + s) + b * iblum;
+			var newblue:Number = r * irlum + g * iglum + b * (iblum + s);
+			
+			var newColor:uint = (int(newred) << 16) | (int(newgreen) << 8) | int(newblue);
+			return newColor;
+			//var mat:Array = [
+				//irlum + s, iglum    , iblum    , 0, 0,
+				//irlum    , iglum + s, iblum    , 0, 0,
+				//irlum    , iglum    , iblum + s, 0, 0,
+				//0        , 0        , 0        , 1, 0 ];
+			
+		}
+		
+		//static public function desaturateColor(color:uint):uint {
+			//var newColor:uint;
+			//var r:Number = (((color >> 16) & 0xFF));
+            //var g:Number = (((color >> 8) & 0xFF));
+            //var b:Number = ((color & 0xFF));
+			//
+			//var newred:Number = r * 0.3 + g * 0.59 + b * 0.11;
+			//var newgreen:Number = r * 0.3 + g * 0.59 + b * 0.11;
+			//var newblue:Number = r * 0.3 + g * 0.59 + b * 0.11;
+			//
+			//newColor = (int(newred) << 16) | (int(newred) << 8) | int(newred);
+			//return newColor;
+		//}
+		
 		static public function desaturate(d:DisplayObject):void {
 			d.filters = [new ColorMatrixFilter(
 				[0.2126, 0.7152, 0.0722, 0, 0,
