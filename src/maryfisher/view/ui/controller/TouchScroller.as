@@ -18,15 +18,15 @@ package maryfisher.view.ui.controller {
 		override public function assignContent(content:DisplayObject):void {
 			super.assignContent(content);
 			
-			CONFIG::debug {
+			CONFIG::mouse {
 				_content.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 			}
-			//CONFIG::release{
+			CONFIG::touch{
 				_content.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
-			//}
+			}
 		}
 		
-		CONFIG::debug
+		CONFIG::mouse
 		private function onMouseDown(e:MouseEvent):void {
 			_content.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			_content.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
@@ -36,7 +36,7 @@ package maryfisher.view.ui.controller {
 			//calculateOffset();
 		}
 		
-		//CONFIG::release
+		CONFIG::touch
 		private function onTouchBegin (e:TouchEvent):void {
 			_content.stage.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
 			_content.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
@@ -46,28 +46,29 @@ package maryfisher.view.ui.controller {
 			calculateOffset();
 		}
 		
-		CONFIG::debug
+		CONFIG::mouse
 		private function onMouseMove(e:MouseEvent):void {
 			//var pos:Number = _scrollSideways ? e.stageX : e.stageY;
 			//calculateMove(pos);
+			trace("onScrollMouseMove");
 			calculateMove();
 		}
 		
-		//CONFIG::release
+		CONFIG::touch
 		private function onTouchMove(e:TouchEvent):void	{
 			//var pos:Number = _scrollSideways ? e.stageX : e.stageY;
 			//calculateMove(pos);
 			calculateMove();
 		}
 		
-		CONFIG::debug
+		CONFIG::mouse
 		private function onMouseUp(e:MouseEvent):void {
 			_content.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			//_content.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			_content.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 		}
 		
-		//CONFIG::release
+		CONFIG::touch
 		private function onTouchEnd(e:TouchEvent):void {
 			_content.stage.removeEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
 			//_content.removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);

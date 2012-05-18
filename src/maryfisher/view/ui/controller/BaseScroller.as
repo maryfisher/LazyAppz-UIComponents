@@ -63,6 +63,7 @@ package maryfisher.view.ui.controller {
 		
 		public function updateContent():void {
 			_scrollMax = _scrollSideways ? _content.width : _content.height;
+			trace("_scrollMax", _scrollMax);
 		}
 		
 		public function scrollContent():void {
