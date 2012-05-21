@@ -15,8 +15,8 @@ package maryfisher.view.ui.button {
 		
 		protected var _label:FormatText;
 		
-		private var _hasOver:Boolean = false;
-		private var _hasDown:Boolean = false;
+		//private var _hasOver:Boolean = false;
+		//private var _hasDown:Boolean = false;
 		
 		public function TextSpriteButton(id:String, colorScheme:TextColorScheme, textfield:FormatText = null) {
 			super(id);
@@ -37,26 +37,22 @@ package maryfisher.view.ui.button {
 		CONFIG::mouse
 		override protected function onOver():void {
 			super.onOver();
-			if(_hasOver) _label.textColor = _colorScheme.overColor;
+			_label.textColor = _colorScheme.overColor;
 			
 		}
 		
 		override protected function onDown():void {
 			super.onDown();
-			if(_hasDown) _label.textColor = _colorScheme.downColor;
+			_label.textColor = _colorScheme.downColor;
+		}
+		
+		override protected function showUpState():void {
+			_label.textColor = _colorScheme.upColor;
 		}
 		
 		override protected function onUp():void {
 			super.onUp();
 			_label.textColor = _colorScheme.upColor;
-		}
-		
-		protected function set hasOver(value:Boolean):void {
-			_hasOver = value;
-		}
-		
-		protected function set hasDown(value:Boolean):void {
-			_hasDown = value;
 		}
 		
 		public function set label(value:String):void {

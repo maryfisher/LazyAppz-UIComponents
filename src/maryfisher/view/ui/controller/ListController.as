@@ -29,6 +29,13 @@ package maryfisher.view.ui.controller {
 			//reset();
 		}
 		
+		public function setStartPos(startX:int, startY:int):void {
+			_startX = startX;
+			_startY = startY;
+			_posX = _startX;
+			_posY = _startY;
+		}
+		
 		public function setDimensions(width:int, height:int):void {
 			_childWidth = width;
 			_childHeight = height;
@@ -126,13 +133,6 @@ package maryfisher.view.ui.controller {
 		public function removeListChild(child:IListObject):void {
 			_children.splice(_children.indexOf(child), 1);
 			updateChildPos();
-		}
-		
-		public function setStartPos(startX:int, startY:int):void {
-			_startX = startX;
-			_startY = startY;
-			_posX = _startX;
-			_posY = _startY;
 		}
 	}
 }

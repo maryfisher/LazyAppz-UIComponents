@@ -20,7 +20,7 @@ package maryfisher.view.ui.controller {
 		public function TabController() {
 			_content = new Dictionary();
 			_tabButtons = new Dictionary();
-			_tabUpdate = new Signal(String);
+			_tabUpdate = new Signal(IButton);
 			//_tabBar.addOnTabSelected(onTabSelected);
 		}
 		
@@ -51,7 +51,7 @@ package maryfisher.view.ui.controller {
 			_content[_selectedTab] && (_content[_selectedTab].visible = true);
 			(_tabButtons[_selectedTab] as IButton).selected = true;
 			
-			_tabUpdate.dispatch(id);
+			_tabUpdate.dispatch((_tabButtons[_selectedTab] as IButton));
 		}
 		
 		public function reset():void {
