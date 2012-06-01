@@ -6,6 +6,7 @@ package maryfisher.view.model3d {
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.geom.Vector3D;
+	import maryfisher.framework.view.ICameraObject;
 	import org.osflash.signals.Signal;
 	/**
 	 * ...
@@ -41,6 +42,7 @@ package maryfisher.view.model3d {
 		
 		private var _tiltSignal:Signal;
 		private var _panSignal:Signal;
+		private var _cameraObjects:Vector.<ICameraObject>;
 		
 		protected var _minBoundsX:int;
 		protected var _maxBoundsX:int;
@@ -68,6 +70,8 @@ package maryfisher.view.model3d {
 			
 			_tiltSignal = new Signal(int);
 			_panSignal = new Signal(int);
+			
+			_cameraObjects = new Vector.<ICameraObject>();
 			
 			updatePosition();
 			updateAngle();
@@ -127,7 +131,7 @@ package maryfisher.view.model3d {
 			updatePosition();
 			updateAngle();
 			updateLookAt();
-			
+			updateCameraObjects();
 			//if (_currentPositionX != _positionX || _currentPositionZ != _positionZ) {
 				//
 				//updatePosition();
@@ -140,6 +144,14 @@ package maryfisher.view.model3d {
 				//updateLookAt();
 			//}
 			
+		}
+		
+		private function updateCameraObjects():void {
+			var l:int = _cameraObjects.length;
+			for (var i:int = 0; i < l; i++ ) {
+				_cameraObjects[i].cameraPan = _currentPanAngle;
+				_cameraObjects[i].cameraTilt = _currentTiltAngle;
+			}
 		}
 		
 		public function stop():void {
@@ -288,6 +300,18 @@ package maryfisher.view.model3d {
 			updatePosition();
 			updateAngle();
 			updateLookAt();
+		}
+		
+		/* INTERFACE maryfisher.view.model3d.ICameraController */
+		
+		public function registerCameraObject(co:ICameraObject):void {
+			_cameraObjects.push(co);
+			co.cameraPan = _currentPanAngle;
+			co.cameraTilt = _currentTiltAngle;
+		}
+		
+		public function unregisterCameraObject(co:ICameraObject):void {
+			_cameraObjects.splice(_cameraObjects.indexOf(co), 1);
 		}
 	}
 
