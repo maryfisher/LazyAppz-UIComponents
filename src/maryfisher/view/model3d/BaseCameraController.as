@@ -232,6 +232,10 @@ package maryfisher.view.model3d {
 			_distance = val;
 		}
 		
+		public function get distance():Number {
+			return _distance;
+		}
+		
 		public function set minPanAngle(val:Number):void {
 			if (_minPanAngle == val)
 				return;
