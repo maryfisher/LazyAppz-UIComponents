@@ -18,6 +18,7 @@ package maryfisher.view.model3d.ui {
 		protected var _position:Point;
 		protected var _upData:BitmapData;
 		protected var _overData:BitmapData;
+		protected var _downData:BitmapData;
 		protected var _pigData:BitmapData;
 		
 		public function Plane3DButton(id:String, color:uint) {
@@ -44,13 +45,12 @@ package maryfisher.view.model3d.ui {
 		
 		public function get upData():BitmapData { return _upData; }
 		public function get overData():BitmapData { return _overData; }
+		public function get downData():BitmapData { return _downData; }
 		public function get pigData():BitmapData { return _pigData; }
 		public function get pigColor():uint { return _pigColor; }
 		
 		public function get position():Point { return _position; }
 		public function set position(value:Point):void { _position = value;	}
-		
-		
 		
 		public function toString():String {
 			return "[Plane3DButton id=" + _id + "]";

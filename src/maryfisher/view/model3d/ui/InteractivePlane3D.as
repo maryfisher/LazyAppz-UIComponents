@@ -20,12 +20,9 @@ package maryfisher.view.model3d.ui {
 	 * ...
 	 * @author mary_fisher
 	 */
-	public class InteractivePlane3D extends Mesh implements IViewComponent, ICameraObject{
+	public class InteractivePlane3D extends UIPlane3D{
 		
 		protected var _pigData:BitmapData;
-		protected var _origData:BitmapData;
-		protected var _bitmapData:BitmapData;
-		protected var _bitmapTexture:BitmapTexture;
 		protected var _buttonLookup:Dictionary;
 		protected var _updateSignal:Signal;
 		protected var _selectedButton:Plane3DButton;
@@ -35,9 +32,8 @@ package maryfisher.view.model3d.ui {
 			
 			_buttonLookup = new Dictionary();
 			
-			_bitmapData = new BitmapData(512, 512, true, 0xff);
-			_bitmapTexture = new BitmapTexture(_bitmapData);
-			super(new PlaneGeometry(150, 150, 1, 1, false), new TextureMaterial(_bitmapTexture));
+			//_bitmapData = new BitmapData(256, 256, true, 0xff);
+			super(270, 270, new BitmapData(512, 512, true, 0xff));
 			
 			mouseEnabled = true;
 			mouseHitMethod = MouseHitMethod.MESH_CLOSEST_HIT;
@@ -78,14 +74,15 @@ package maryfisher.view.model3d.ui {
 			_pigData.copyPixels(b.pigData, b.pigData.rect, position);
 		}
 		
-		protected function initView():void {
-			new ViewCommand(this, ViewCommand.REGISTER_VIEW);
+		override protected function initView():void {
+			super.initView();
+			
 			addEventListener(MouseEvent3D.MOUSE_MOVE, onMove);
 			addEventListener(MouseEvent3D.CLICK, onClick);
 		}
 		
-		protected function exitView():void {
-			new ViewCommand(this, ViewCommand.UNREGISTER_VIEW);
+		override protected function exitView():void {
+			super.exitView();
 			removeEventListener(MouseEvent3D.MOUSE_MOVE, onMove);
 			removeEventListener(MouseEvent3D.CLICK, onClick);
 		}
@@ -95,30 +92,6 @@ package maryfisher.view.model3d.ui {
 			for (var i:Object in _buttonLookup) {
 				delete _buttonLookup[i];
 			}
-		}
-		
-		/* INTERFACE maryfisher.austengames.view.interfaces.party.IGuestOverviewMenu */
-		
-		public function get componentType():String {
-			return ViewConstants.MODEL3D_VIEW;
-		}
-		
-		public function destroy():void {
-			exitView();
-		}
-		
-		public function addOnFinished(listener:Function):void {
-			listener();
-		}
-		
-		/* INTERFACE maryfisher.framework.view.ICameraObject */
-		
-		public function set cameraTilt(value:Number):void {
-			rotationX = value;
-		}
-		
-		public function set cameraPan(value:Number):void {
-			rotationY = value + 180;
 		}
 		
 		public function get updateSignal():Signal {
