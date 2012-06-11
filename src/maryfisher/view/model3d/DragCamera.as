@@ -18,8 +18,9 @@ package maryfisher.view.model3d {
 	 */
 	public class DragCamera extends BaseCameraController {
 		
-		private var _rotate:Boolean = false;
+		//private var _rotate:Boolean = false;
 		private var _drag:Boolean = false;
+		private var _move:Boolean = false;
 		
 		private var _lastPanAngle:Number;
 		private var _lastTiltAngle:Number;
@@ -39,12 +40,43 @@ package maryfisher.view.model3d {
 			CONFIG::mouse{
 				stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 				stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+				stage.addEventListener(MouseEvent.RIGHT_MOUSE_DOWN, onRightMouseDown);
+				stage.addEventListener(MouseEvent.RIGHT_MOUSE_UP, onRightMouseUp);
+				stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 			}
 			CONFIG::touch{
 				stage.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
 				stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
 			}
 			
+		}
+		
+		CONFIG::mouse
+		private function onMouseWheel(e:MouseEvent):void {
+			//e.delta > 0 ist zoom rein
+			tiltAngle -= e.delta;
+		}
+		
+		CONFIG::mouse
+		private function onRightMouseUp(e:MouseEvent):void {
+			_move = false;
+			_stage.removeEventListener(Event.MOUSE_LEAVE, onStageMouseLeave);
+		}
+		
+		CONFIG::mouse
+		private function onRightMouseDown(e:MouseEvent):void {
+			_lastPanAngle = _currentPanAngle;
+			_lastTiltAngle = _currentTiltAngle;
+			_lastStageX = _stage.mouseX;
+			_lastStageY = _stage.mouseY;
+			_move = true;
+			_stage.addEventListener(Event.MOUSE_LEAVE, onStageMouseLeave);
+		}
+		
+		CONFIG::mouse
+		private function onStageMouseLeave(event:Event):void {
+			_move = false;
+			_stage.removeEventListener(Event.MOUSE_LEAVE, onStageMouseLeave);
 		}
 		
 		//private function onStageMouseLeave(e:Event):void {
@@ -89,7 +121,13 @@ package maryfisher.view.model3d {
 		}
 		
 		override protected function onEnterFrame(e:Event):void {
+			
+			if (_move) {
+				panAngle = 0.3 * (_stage.mouseX - _lastStageX) + _lastPanAngle;
+			}
+			
 			super.onEnterFrame(e);
+			
 			if (!_drag) {
 				return;
 			}

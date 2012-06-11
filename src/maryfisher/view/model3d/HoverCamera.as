@@ -47,6 +47,7 @@ package maryfisher.view.model3d {
 			_stage.removeEventListener(Event.MOUSE_LEAVE, onStageMouseLeave);
 		}
 		
+		CONFIG::mouse
 		private function onStageMouseLeave(event:Event):void {
 			_move = false;
 			_stage.removeEventListener(Event.MOUSE_LEAVE, onStageMouseLeave);
