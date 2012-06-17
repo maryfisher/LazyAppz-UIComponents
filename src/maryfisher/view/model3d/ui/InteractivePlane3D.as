@@ -34,6 +34,7 @@ package maryfisher.view.model3d.ui {
 			
 			//_bitmapData = new BitmapData(256, 256, true, 0xff);
 			super(270, 270, new BitmapData(512, 512, true, 0xff));
+			(material as TextureMaterial).alphaThreshold = 0.9;
 			
 			mouseEnabled = true;
 			mouseHitMethod = MouseHitMethod.MESH_CLOSEST_HIT;
