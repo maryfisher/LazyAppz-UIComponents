@@ -27,6 +27,7 @@ package maryfisher.view.model3d.ui {
 		protected var _updateSignal:Signal;
 		protected var _selectedButton:Plane3DButton;
 		protected var _currentOverColor:uint;
+		protected var _lastIndex:int;
 		
 		public function InteractivePlane3D() {
 			
@@ -35,6 +36,7 @@ package maryfisher.view.model3d.ui {
 			//_bitmapData = new BitmapData(256, 256, true, 0xff);
 			super(270, 270, new BitmapData(512, 512, true, 0xff));
 			(material as TextureMaterial).alphaThreshold = 0.9;
+			_pigData = new BitmapData(_bitmapData.width, _bitmapData.height, false, 0);
 			
 			mouseEnabled = true;
 			mouseHitMethod = MouseHitMethod.MESH_CLOSEST_HIT;
@@ -93,6 +95,10 @@ package maryfisher.view.model3d.ui {
 			for (var i:Object in _buttonLookup) {
 				delete _buttonLookup[i];
 			}
+			_bitmapData = new BitmapData(512, 512, true, 0xff);
+			_pigData = new BitmapData(_bitmapData.width, _bitmapData.height, false, 0);
+			_bitmapTexture.bitmapData = _bitmapData;
+			_lastIndex = 0;
 		}
 		
 		public function get updateSignal():Signal {

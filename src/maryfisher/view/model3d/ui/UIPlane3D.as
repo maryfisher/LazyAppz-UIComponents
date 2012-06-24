@@ -4,6 +4,7 @@ package maryfisher.view.model3d.ui {
 	import away3d.primitives.PlaneGeometry;
 	import away3d.textures.BitmapTexture;
 	import flash.display.BitmapData;
+	import flash.geom.Vector3D;
 	import maryfisher.austengames.config.ViewConstants;
 	import maryfisher.framework.command.view.ViewCommand;
 	import maryfisher.framework.view.ICameraObject;
@@ -50,12 +51,17 @@ package maryfisher.view.model3d.ui {
 		
 		/* INTERFACE maryfisher.framework.view.ICameraObject */
 		
+		public function setCameraPosition(cameraPos:Vector3D, lookAtPos:Vector3D):void {
+			
+		}
+		
 		public function set cameraTilt(value:Number):void {
 			rotationX = value;
 		}
 		
 		public function set cameraPan(value:Number):void {
 			rotationY = value + 180;
+			//rotationY = value;
 		}
 	}
 

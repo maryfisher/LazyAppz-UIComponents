@@ -11,7 +11,7 @@ package maryfisher.view.ui.button {
 	 */
 	public class TextSpriteButton extends BaseSpriteButton {
 		
-		private var _colorScheme:TextColorScheme;
+		protected var _colorScheme:TextColorScheme;
 		
 		protected var _label:FormatText;
 		
@@ -47,6 +47,7 @@ package maryfisher.view.ui.button {
 		}
 		
 		override protected function showUpState():void {
+			super.showUpState();
 			_label.textColor = _colorScheme.upColor;
 		}
 		

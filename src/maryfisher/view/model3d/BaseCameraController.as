@@ -149,8 +149,10 @@ package maryfisher.view.model3d {
 		private function updateCameraObjects():void {
 			var l:int = _cameraObjects.length;
 			for (var i:int = 0; i < l; i++ ) {
-				_cameraObjects[i].cameraPan = _currentPanAngle;
-				_cameraObjects[i].cameraTilt = _currentTiltAngle;
+				var obj:ICameraObject = _cameraObjects[i];
+				obj.cameraPan = _currentPanAngle;
+				obj.cameraTilt = _currentTiltAngle;
+				obj.setCameraPosition(_targetObject.position, _lookAtObject.position);
 			}
 		}
 		
