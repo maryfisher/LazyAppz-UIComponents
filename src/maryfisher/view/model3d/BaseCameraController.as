@@ -302,10 +302,13 @@ package maryfisher.view.model3d {
 		}
 		
 		public function moveLookAtObject(pos:Vector3D):void {
-			_lookAtObject.position = pos;
+			_lookAtObject.position = pos.clone();
+			_positionX = _lookAtObject.x;
+			_positionZ = _lookAtObject.z;
 			updatePosition();
 			updateAngle();
 			updateLookAt();
+			updateCameraObjects();
 		}
 		
 		/* INTERFACE maryfisher.view.model3d.ICameraController */
@@ -314,6 +317,7 @@ package maryfisher.view.model3d {
 			_cameraObjects.push(co);
 			co.cameraPan = _currentPanAngle;
 			co.cameraTilt = _currentTiltAngle;
+			co.setCameraPosition(_targetObject.position, _lookAtObject.position);
 		}
 		
 		public function unregisterCameraObject(co:ICameraObject):void {

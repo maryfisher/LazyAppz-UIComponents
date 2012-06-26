@@ -3,18 +3,33 @@ package maryfisher.view.ui.component {
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.geom.Point;
+	import maryfisher.view.ui.interfaces.ITooltip;
 	
 	/**
 	 * ...
 	 * @author mary_fisher
 	 */
-	public class ExtendableTooltip extends Sprite {
+	public class ExtendableTooltip extends Sprite implements ITooltip{
 		
 		private var _bg:Bitmap;
 		
 		public function ExtendableTooltip() {
 			super();
 			
+		}
+		
+		/* INTERFACE maryfisher.view.ui.interfaces.ITooltip */
+		
+		public function switchVisibility():void {
+			visible = !visible;
+		}
+		
+		public function show():void {
+			visible = true;
+		}
+		
+		public function hide():void {
+			visible = false;
 		}
 		
 		protected function buildBackground(top:BitmapData, middle:BitmapData, bottom:BitmapData, height:int):void {

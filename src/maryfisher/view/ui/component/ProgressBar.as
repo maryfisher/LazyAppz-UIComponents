@@ -21,8 +21,11 @@ package maryfisher.view.ui.component {
 			if (percent > 1) {
 				percent = percent * 0.01;
 			}
+			if (_lastProgress == percent) {
+				return;
+			}
 			_lastProgress = percent;
-			Tweener.addTween(_mask, { width: percent * _bar.width, time:1 } );
+			Tweener.addTween(_mask, { width: percent * _bar.width, time: 4 } );
 			_mask.width = percent * _bar.width;
 		}
 		
