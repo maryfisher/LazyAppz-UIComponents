@@ -9,27 +9,13 @@ package maryfisher.view.ui.component {
 	 * ...
 	 * @author mary_fisher
 	 */
-	public class ExtendableTooltip extends Sprite implements ITooltip{
+	public class ExtendableTooltip extends BaseSpriteTooltip implements ITooltip{
 		
 		private var _bg:Bitmap;
 		
 		public function ExtendableTooltip() {
 			super();
 			
-		}
-		
-		/* INTERFACE maryfisher.view.ui.interfaces.ITooltip */
-		
-		public function switchVisibility():void {
-			visible = !visible;
-		}
-		
-		public function show():void {
-			visible = true;
-		}
-		
-		public function hide():void {
-			visible = false;
 		}
 		
 		protected function buildBackground(top:BitmapData, middle:BitmapData, bottom:BitmapData, height:int):void {

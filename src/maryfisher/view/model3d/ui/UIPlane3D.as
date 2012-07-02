@@ -20,11 +20,13 @@ package maryfisher.view.model3d.ui {
 		protected var _bitmapData:BitmapData;
 		protected var _bitmapTexture:BitmapTexture;
 		
-		public function UIPlane3D(width:int, height:int, bitmapData:BitmapData) {
-			_bitmapData = bitmapData;
-			_origData = bitmapData.clone();
-			_bitmapTexture = new BitmapTexture(_bitmapData);
-			super(new PlaneGeometry(width, height, 1, 1, false), new TextureMaterial(_bitmapTexture));
+		public function UIPlane3D(bm:BitmapData) {
+			super();
+			buildMaterial(bm);
+		}
+		
+		protected function buildGeometry(width:int, height:int):void {
+			geometry = new PlaneGeometry(width, height, 1, 1, false);
 		}
 		
 		/* INTERFACE maryfisher.austengames.view.interfaces.party.IGuestOverviewMenu */
@@ -53,6 +55,13 @@ package maryfisher.view.model3d.ui {
 		
 		public function setCameraPosition(cameraPos:Vector3D, lookAtPos:Vector3D):void {
 			
+		}
+		
+		protected function buildMaterial(bitmapData:BitmapData):void {
+			_bitmapData = bitmapData;
+			_origData = bitmapData.clone();
+			_bitmapTexture = new BitmapTexture(_bitmapData);
+			material = new TextureMaterial(_bitmapTexture);
 		}
 		
 		public function set cameraTilt(value:Number):void {

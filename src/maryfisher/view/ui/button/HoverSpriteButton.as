@@ -1,7 +1,9 @@
 package maryfisher.view.ui.button {
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
+	import maryfisher.view.ui.component.BaseSpriteTooltip;
 	import maryfisher.view.ui.interfaces.ITooltip;
 	
 	/**
@@ -10,19 +12,22 @@ package maryfisher.view.ui.button {
 	 */
 	public class HoverSpriteButton extends Sprite {
 		
-		protected var _tooltip:ITooltip;
+		protected var _tooltip:BaseSpriteTooltip;
 		
-		public function HoverSpriteButton(tooltip:ITooltip = null) {
+		public function HoverSpriteButton(tooltip:BaseSpriteTooltip = null) {
 			_tooltip = tooltip;
 			
-			CONFIG::mouse {
-				addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
-				addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
-			}
+			_tooltip && _tooltip.hide();
 			
-			CONFIG::touch {
-				addEventListener(TouchEvent.TOUCH_TAP, onTap);
-			}
+			if (!_tooltip) return;
+			
+			addListeners();
+		}
+		
+		private function onAdded(e:Event):void {
+			removeEventListener(Event.ADDED_TO_STAGE, onAdded);
+			positionTooltip();
+			stage.addChild(_tooltip);
 		}
 		
 		CONFIG::touch
@@ -40,8 +45,43 @@ package maryfisher.view.ui.button {
 			_tooltip && _tooltip.show();
 		}
 		
-		public function set tooltip(value:ITooltip):void {
+		protected function positionTooltip():void {
+			_tooltip.y = getRect(stage).top - _tooltip.height;
+		}
+		
+		private function addListeners():void {
+			CONFIG::mouse {
+				addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
+				addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
+			}
+			
+			CONFIG::touch {
+				addEventListener(TouchEvent.TOUCH_TAP, onTap);
+			}
+			if (stage) {
+				onAdded(null);
+			}else{
+				addEventListener(Event.ADDED_TO_STAGE, onAdded);
+			}
+		}
+		
+		public function destroy():void {
+			CONFIG::mouse {
+				removeEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
+				removeEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
+			}
+			
+			CONFIG::touch {
+				removeEventListener(TouchEvent.TOUCH_TAP, onTap);
+			}
+			
+			stage && stage.removeChild(_tooltip);
+			_tooltip.destroy();
+		}
+		
+		public function set tooltip(value:BaseSpriteTooltip):void {
 			_tooltip = value;
+			addListeners();
 		}
 		
 	}

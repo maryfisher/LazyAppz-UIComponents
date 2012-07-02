@@ -34,12 +34,19 @@ package maryfisher.view.model3d.ui {
 			_buttonLookup = new Dictionary();
 			
 			//_bitmapData = new BitmapData(256, 256, true, 0xff);
-			super(270, 270, new BitmapData(512, 512, true, 0xff));
-			(material as TextureMaterial).alphaThreshold = 0.9;
+			buildGeometry(270, 270)
+			
+			super(new BitmapData(512, 512, true, 0xff));
+			
 			_pigData = new BitmapData(_bitmapData.width, _bitmapData.height, false, 0);
 			
 			mouseEnabled = true;
 			mouseHitMethod = MouseHitMethod.MESH_CLOSEST_HIT;
+		}
+		
+		override protected function buildMaterial(bitmapData:BitmapData):void {
+			super.buildMaterial(bitmapData);
+			(material as TextureMaterial).alphaThreshold = 0.9;
 		}
 		
 		protected function onClick(e:MouseEvent3D):void {

@@ -8,6 +8,8 @@ package maryfisher.view.ui.interfaces {
 		function switchVisibility():void;
 		function show():void;
 		function hide():void;
+		
+		function destroy():void;
 	}
 	
 }
