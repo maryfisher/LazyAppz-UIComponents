@@ -144,7 +144,7 @@ package maryfisher.view.ui.button {
 				if (contains(_upState)) removeChild(_upState);
 			}
 			_upState = value;
-			addChildAt(_upState, 0);
+			_upState && addChildAt(_upState, 0);
 		}
 		
 		public function set downState(value:DisplayObject):void {

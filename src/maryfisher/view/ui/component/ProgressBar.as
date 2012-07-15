@@ -18,9 +18,9 @@ package maryfisher.view.ui.component {
 		}
 		
 		public function setProgress(percent:Number):void {
-			if (percent > 1) {
-				percent = percent * 0.01;
-			}
+			//if (percent > 1) {
+				//percent = percent * 0.01;
+			//}
 			if (_lastProgress == percent) {
 				return;
 			}
