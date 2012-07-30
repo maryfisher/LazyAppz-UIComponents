@@ -1,4 +1,4 @@
-package maryfisher.view.ui.controller {
+package maryfisher.view.ui.mediator {
 	import caurina.transitions.Tweener;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -92,6 +92,16 @@ package maryfisher.view.ui.controller {
 		
 		public function dispose():void {
 			
+		}
+		
+		public function reset():void {
+			//_end = (_startPos - _scrollMax + (_scrollSideways ? _mask.width : _mask.height));
+			_end = _startPos;
+			if (_scrollSideways) {
+				_content.x = _end;
+			}else {
+				_content.y = _end;
+			}
 		}
 		
 	}

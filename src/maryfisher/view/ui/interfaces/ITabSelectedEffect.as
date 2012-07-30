@@ -6,8 +6,8 @@ package maryfisher.view.ui.interfaces {
 	 * @author mary_fisher
 	 */
 	public interface ITabSelectedEffect {
-		function onAddContent(content:DisplayObject):void;
-		function onTabSelected(oldContent:DisplayObject, newContent:DisplayObject):void;
+		function onAddContent(content:IDisplayObject):void;
+		function startTransition(oldContent:IDisplayObject, newContent:IDisplayObject):void;
 	}
 	
 }

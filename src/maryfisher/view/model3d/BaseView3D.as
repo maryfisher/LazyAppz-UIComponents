@@ -24,9 +24,7 @@ package maryfisher.view.model3d {
 		private var _cube:Mesh;
 		
 		public function BaseView3D(x:int, y:int, width:int, height:int) {
-			_camera = new Camera3D();
-			_scene = new Scene3D();
-			super(_scene, _camera);
+			super(null, null);
 			this.width = width;
 			this.height = height;
 			this.x = x;

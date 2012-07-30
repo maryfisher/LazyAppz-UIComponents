@@ -1,13 +1,12 @@
-package maryfisher.view.ui.controller {
+package maryfisher.view.ui.mediator {
 	import flash.geom.Point;
-	import maryfisher.austengames.view.ui.preparation.conversation.ConversationItem;
-	import maryfisher.view.ui.interfaces.IListObject;
+	import maryfisher.view.ui.interfaces.IDisplayObject;
 	
 	/**
 	 * ...
 	 * @author mary_fisher
 	 */
-	public class ListController {
+	public class ListMediator {
 		
 		private var _posX:int;
 		private var _posY:int;
@@ -16,16 +15,17 @@ package maryfisher.view.ui.controller {
 		private var _childHeight:int;
 		private var distX:int;
 		private var distY:int;
-		private var columns:int;
+		private var columns:int = 1;
 		//private var _initiated:Boolean;
-		private var _isHorizontal:Boolean;
-		private var _children:Vector.<IListObject>;
+		private var _isHorizontal:Boolean = true;
+		private var _children:Vector.<IDisplayObject>;
 		private var _startY:int;
 		private var _startX:int;
+		private var _hasVariableDims:Boolean = false;
 		
-		public function ListController() {
+		public function ListMediator() {
 			//_initiated = false;
-			_children = new Vector.<IListObject>();
+			_children = new Vector.<IDisplayObject>();
 			//reset();
 		}
 		
@@ -51,33 +51,19 @@ package maryfisher.view.ui.controller {
 			distY = d.y;
 		}
 		
-		public function addListChild(child:IListObject):void {
+		public function addListChild(child:IDisplayObject):void {
 			_children.push(child);
 			setChildPos(child);
 		}
 		
-		private function setChildPos(child:IListObject):void {
-			//if (!_initiated) {
-				//distX += child.width;
-				//if (!_isHorizontal) {
-					_childWidth = _childWidth || child.width;
-					_childHeight = _childHeight || child.height;
-					//if (_childWidth < child.width) {
-						//_childWidth = child.width;
-					//}
-					//_childHeight = child.height;
-				//}else {
-					//_childWidth = child.width;
-					//if (_childHeight < child.height) {
-						//_childHeight = child.height;
-					//}
-				//}
-				//distY += child.height;
-				
-				//_initiated = true;
-			//}else if (child) {
-				//
-			//}
+		private function setChildPos(child:IDisplayObject):void {
+			if (_hasVariableDims) {
+				_childWidth = child.width;
+				_childHeight = child.height;
+			}else{
+				_childWidth = _childWidth || child.width;
+				_childHeight = _childHeight || child.height;
+			}
 			
 			child.x = _posX;
 			child.y = _posY;
@@ -110,7 +96,7 @@ package maryfisher.view.ui.controller {
 			}
 		}
 		
-		public function getChildPos(child:IListObject):Point {
+		public function getChildPos(child:IDisplayObject):Point {
 			var p:Point = new Point();
 			var index:int = _children.indexOf(child);
 			if (index) {
@@ -120,19 +106,37 @@ package maryfisher.view.ui.controller {
 			return p;
 		}
 		
+		public function getLastChildPos():Point {
+			var p:Point = new Point();
+			var index:int = _children.length - 1;
+			if (index >= 0) {
+				p.y = Math.ceil(index / columns);
+				p.x = index % columns;
+			}
+			return p;
+		}
+		
+		public function getNextChildPos():Point {
+			return new Point(_posX, _posY);
+		}
+		
 		/**
 		 * resets index, start positions, removes all children
 		 */
 		public function reset():void {
-			_children = new Vector.<IListObject>();
+			_children = new Vector.<IDisplayObject>();
 			_index = 0;
 			_posX = _startX;
 			_posY = _startY;
 		}
 		
-		public function removeListChild(child:IListObject):void {
+		public function removeListChild(child:IDisplayObject):void {
 			_children.splice(_children.indexOf(child), 1);
 			updateChildPos();
+		}
+		
+		public function set hasVariableDims(value:Boolean):void {
+			_hasVariableDims = value;
 		}
 	}
 }

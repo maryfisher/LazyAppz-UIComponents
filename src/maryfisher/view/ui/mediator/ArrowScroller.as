@@ -1,4 +1,4 @@
-package maryfisher.view.ui.controller {
+package maryfisher.view.ui.mediator {
 	import flash.display.DisplayObject;
 	import maryfisher.austengames.view.components.button.ArrowButton;
 	import maryfisher.view.ui.interfaces.IButton;

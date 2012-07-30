@@ -1,14 +1,14 @@
-package maryfisher.view.ui.controller {
+package maryfisher.view.ui.mediator {
 	import maryfisher.view.ui.interfaces.IProgress;
 	/**
 	 * ...
 	 * @author mary_fisher
 	 */
-	public class ProgressController {
+	public class ProgressMediator {
 		
 		private var _progress:IProgress;
 		
-		public function ProgressController(progress:IProgress) {
+		public function ProgressMediator(progress:IProgress) {
 			_progress = progress;
 			
 		}

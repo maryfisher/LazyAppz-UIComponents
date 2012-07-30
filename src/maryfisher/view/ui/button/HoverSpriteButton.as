@@ -4,13 +4,14 @@ package maryfisher.view.ui.button {
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
 	import maryfisher.view.ui.component.BaseSpriteTooltip;
+	import maryfisher.view.ui.interfaces.IDisplayObject;
 	import maryfisher.view.ui.interfaces.ITooltip;
 	
 	/**
 	 * ...
 	 * @author mary_fisher
 	 */
-	public class HoverSpriteButton extends Sprite {
+	public class HoverSpriteButton extends Sprite implements IDisplayObject{
 		
 		protected var _tooltip:BaseSpriteTooltip;
 		

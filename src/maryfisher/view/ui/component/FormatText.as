@@ -2,12 +2,13 @@ package maryfisher.view.ui.component {
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
+	import maryfisher.view.ui.interfaces.ITextField;
 	
 	/**
 	 * ...
 	 * @author mary_fisher
 	 */
-	public class FormatText extends TextField {
+	public class FormatText extends TextField implements ITextField{
 		
 		private var _format:TextFormat;
 		

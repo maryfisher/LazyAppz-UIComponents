@@ -1,10 +1,7 @@
 package maryfisher.view.ui.button {
 	import flash.display.DisplayObject;
-	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
-	import maryfisher.view.ui.event.ButtonEvent;
-	import maryfisher.view.ui.interfaces.IButton;
 	import maryfisher.view.ui.interfaces.ITooltip;
 	
 	/**
@@ -98,7 +95,7 @@ package maryfisher.view.ui.button {
 		CONFIG::mouse
 		protected function onOver():void {
 			if (_overState) {
-				_upState.visible = false;
+				_upState && (_upState.visible = false);
 				_overState.visible = true;
 			}
 		}

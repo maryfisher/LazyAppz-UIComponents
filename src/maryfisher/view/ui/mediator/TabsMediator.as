@@ -1,15 +1,14 @@
-package maryfisher.view.ui.controller {
-	import flash.display.DisplayObject;
+package maryfisher.view.ui.mediator {
 	import flash.utils.Dictionary;
 	import maryfisher.view.ui.interfaces.IButton;
-	import maryfisher.view.ui.interfaces.ITabBar;
+	import maryfisher.view.ui.interfaces.IDisplayObject;
 	import maryfisher.view.ui.interfaces.ITabSelectedEffect;
 	import org.osflash.signals.Signal;
 	/**
 	 * ...
 	 * @author mary_fisher
 	 */
-	public class TabController {
+	public class TabsMediator implements ITabSelectedEffect{
 		
 		private var _tabButtons:Dictionary;
 		private var _content:Dictionary;
@@ -17,10 +16,11 @@ package maryfisher.view.ui.controller {
 		private var _effect:ITabSelectedEffect;
 		private var _tabUpdate:Signal;
 		
-		public function TabController() {
+		public function TabsMediator() {
 			_content = new Dictionary();
 			_tabButtons = new Dictionary();
 			_tabUpdate = new Signal(IButton);
+			_effect = this;
 			//_tabBar.addOnTabSelected(onTabSelected);
 		}
 		
@@ -28,27 +28,22 @@ package maryfisher.view.ui.controller {
 			selectTab(button.id);
 		}
 		
-		public function addContent(content:DisplayObject, tab:IButton):void {
-			content.visible = false;
+		public function addContent(content:IDisplayObject, tab:IButton):void {
 			_content[tab.id] = content;
 			_tabButtons[tab.id] = tab;
 			tab.addClickedListener(onTabSelected);
-			_effect && _effect.onAddContent(content);
+			_effect.onAddContent(content);
 		}
 		
 		public function selectTab(id:String):void {
-			if (_effect) {
-				_effect.onTabSelected(_content[_selectedTab], _content[id]);
-			}
+			_effect.startTransition(_content[_selectedTab], _content[id]);
 			
 			if (_selectedTab && _tabButtons[_selectedTab]) {
-				_content[_selectedTab].visible = false;
 				(_tabButtons[_selectedTab] as IButton).selected = false;
 			}
 			
 			_selectedTab = id;
 			
-			_content[_selectedTab] && (_content[_selectedTab].visible = true);
 			(_tabButtons[_selectedTab] as IButton).selected = true;
 			
 			_tabUpdate.dispatch((_tabButtons[_selectedTab] as IButton));
@@ -58,6 +53,19 @@ package maryfisher.view.ui.controller {
 			_content = new Dictionary();
 			_tabButtons = new Dictionary();
 			_selectedTab = null;
+		}
+		
+		/* INTERFACE maryfisher.view.ui.interfaces.ITabSelectedEffect */
+		
+		public function onAddContent(content:IDisplayObject):void {
+			content.visible = false;
+		}
+		
+		/* INTERFACE maryfisher.view.ui.interfaces.ITabSelectedEffect */
+		
+		public function startTransition(oldContent:IDisplayObject, newContent:IDisplayObject):void {
+			oldContent && (oldContent.visible = false);
+			newContent && (newContent.visible = true);
 		}
 		
 		public function set effect(value:ITabSelectedEffect):void {

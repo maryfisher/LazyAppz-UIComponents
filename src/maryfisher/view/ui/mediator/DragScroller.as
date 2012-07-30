@@ -1,4 +1,4 @@
-package maryfisher.view.ui.controller {
+package maryfisher.view.ui.mediator {
 	import flash.display.DisplayObject;
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;

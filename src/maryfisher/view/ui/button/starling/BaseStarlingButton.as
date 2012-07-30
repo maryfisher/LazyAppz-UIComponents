@@ -1,25 +1,29 @@
-package maryfisher.view.ui.button {
+package maryfisher.view.ui.button.starling {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
-	import flash.display.DisplayObject;
-	import flash.display.Sprite;
-	import flash.events.Event;
-	import flash.filters.ColorMatrixFilter;
-	import maryfisher.view.ui.event.ButtonEvent;
+	import flash.geom.Rectangle;
+	import flash.ui.Mouse;
+	import flash.ui.MouseCursor;
 	import maryfisher.view.ui.event.ButtonSignalEvent;
 	import maryfisher.view.ui.interfaces.IButton;
-	import maryfisher.view.ui.interfaces.IDisplayObject;
 	import maryfisher.view.ui.interfaces.ISound;
+	import maryfisher.view.ui.interfaces.ITooltip;
 	import maryfisher.view.util.ColorUtil;
 	import org.osflash.signals.DeluxeSignal;
-	import org.osflash.signals.events.GenericEvent;
 	import org.osflash.signals.Signal;
-	
+	import starling.display.DisplayObject;
+	import starling.display.DisplayObjectContainer;
+	import starling.display.Image;
+	import starling.events.Event;
+	import starling.events.Touch;
+	import starling.events.TouchEvent;
+	import starling.events.TouchPhase;
+	import starling.textures.Texture;
 	/**
 	 * ...
 	 * @author mary_fisher
 	 */
-	public class AbstractSpriteButton extends Sprite implements IButton, IDisplayObject{
+	public class BaseStarlingButton extends DisplayObjectContainer implements IButton{
 		
 		private var _clickedSignal:Signal;
 		private var _downSignal:Signal;
@@ -34,24 +38,92 @@ package maryfisher.view.ui.button {
 		protected var _disabledState:DisplayObject;
 		protected var _selectedState:DisplayObject;
 		protected var _defaultState:DisplayObject;
-		protected var _hitTest:DisplayObject;
+		//protected var _hitTest:DisplayObject;
+		private var _isDown:Boolean;
+		private var _isOver:Boolean;
+		
+		protected var _tooltip:ITooltip;
+		CONFIG::mouse
+		protected var _overState:DisplayObject;
 		
 		protected var _id:String;
 		
 		protected var _doBubble:Boolean = true;
 		
-		public function AbstractSpriteButton(id:String) {
+		public function BaseStarlingButton(id:String) {
 			_enabled = true;
 			_selected = false;
 			_id = id;
-			mouseChildren = false;
+			//mouseChildren = false;
 			
 			_bubblingSignal = new DeluxeSignal(this);
 			
 			addListeners();
+			
+			CONFIG::mouse {
+				//buttonMode = true;
+				useHandCursor = true;
+			}
+			
+			addEventListener(Event.ADDED_TO_STAGE, onAdded);
 		}
 		
-		protected function addListeners():void { }
+		private function onAdded(e:Event):void {
+			removeEventListener(Event.ADDED_TO_STAGE, onAdded);
+			
+			_upState && addChild(_upState);
+			_overState && addChild(_overState);
+			_downState && addChild(_downState);
+			_disabledState && addChild(_disabledState);
+			_selectedState && addChild(_selectedState);
+		}
+		
+		protected function addListeners():void {
+			//if (_hitTest) {
+				//_hitTest.addEventListener(TouchEvent.TOUCH, onTouch);
+				//return;
+			//}
+			
+			addEventListener(TouchEvent.TOUCH, onTouch);
+		}
+		
+		private function onTouch(e:TouchEvent):void {
+			
+            var touch:Touch = e.getTouch(this);
+            if (!_enabled || touch == null) return;
+            
+            if (touch.phase == TouchPhase.BEGAN) {
+                if (_isDown) {
+					return;
+				}
+				_isDown = true;
+				onDown();
+            } else if (touch.phase == TouchPhase.MOVED) {
+				
+			} else if (touch.phase == TouchPhase.HOVER) {
+				
+				if (!_enabled || _selected || _isOver) {
+					return;
+				}
+					/* TODO
+					 * Tween!
+					 */
+				_isOver = true;
+				onOver();
+			} else if (touch.phase == TouchPhase.ENDED) {
+				if (!_isDown) {
+					return;
+				}
+				onUp();
+				_isDown = false;
+				_isOver = false;
+			}else if(!e.interactsWith(e.target as DisplayObject)){
+				if (!_enabled || _selected) {
+					return;
+				}
+				showUpState();
+			}
+		}
 		
 		public function destroy():void {
 			removeListeners();
@@ -126,7 +198,7 @@ package maryfisher.view.ui.button {
 			}
 			
 			_enabled = value;
-			mouseEnabled = _enabled;
+			touchable = _enabled;
 			//buttonMode = _enabled;
 			
 			if (!value) {
@@ -145,30 +217,46 @@ package maryfisher.view.ui.button {
 				if (contains(_upState)) removeChild(_upState);
 			}
 			_upState = value;
-			_upState && addChildAt(_upState, 0);
+			if (!_upState || !stage) return;
+			
+			if (numChildren > 0) {
+				addChildAt(_upState, 0);				
+			}else{
+				addChild(_upState);
+			}
 		}
 		
 		public function set downState(value:DisplayObject):void {
 			_downState = value;
 			_downState.visible = false;
-			addChild(_downState);
+			//addChild(_downState);
 		}
 		
-		public function set hitTest(value:DisplayObject):void {
-			_hitTest = value;
-			mouseChildren = true;
-			mouseEnabled = false;
-			_hitTest.alpha = 0;
-			addChild(_hitTest);
-			/* TODO
-			 * es müssen die anderen states disabled werden
-			 */
-		}
+		//public function set hitTest(value:DisplayObject):void {
+			//_hitTest = value;
+			//mouseChildren = true;
+			//touchable = false;
+			//_hitTest.alpha = 0;
+			//addChild(_hitTest);
+			///* TODO
+			 //* es müssen die anderen states disabled werden
+			 //*/
+		//}
 		
 		public function set selectedState(value:DisplayObject):void {
 			_selectedState = value;
 			_selectedState.visible = false;
-			addChild(_selectedState);
+			//addChild(_selectedState);
+		}
+		
+		public function set overState(value:DisplayObject):void {
+			_overState = value;
+			_overState.visible = false;
+			//if (_downState) {
+				//addChildAt(_overState, numChildren - 2);
+				//return;
+			//}
+			//addChild(_overState);
 		}
 		
 		public function set doBubble(value:Boolean):void {
@@ -177,25 +265,20 @@ package maryfisher.view.ui.button {
 		
 		protected function drawDisabledState(desaturate:Boolean = true, transparent:Boolean = false):void {
 			
-			if (_defaultState is Bitmap) {
-				var bd:BitmapData
+			if (_defaultState is Image) {
+				var bd:BitmapData;
 				if (desaturate) {
-					bd = ColorUtil.desaturateBitmapData((_defaultState as Bitmap).bitmapData, transparent ? 0.5 : 1);
+					//bd = ColorUtil.desaturateBitmapData((_defaultState as Image).texture.bitmapData, transparent ? 0.5 : 1);
 				}else {
-					bd = (_defaultState as Bitmap).bitmapData.clone();
-					//if (transparent) {
-						//bd = ColorUtil.setTransparency((_defaultState as Bitmap).bitmapData, 0.5);
-					//}
+					//bd = (_defaultState as Bitmap).bitmapData.clone();
 				}
-				_disabledState = new Bitmap(bd);
-				if (transparent) {
-					_disabledState.alpha = 0.5;
-				}
+				//_disabledState = new Bitmap(bd);
+				//if (transparent) {
+					//_disabledState.alpha = 0.5;
+				//}
 				
 			}else {
-				//_disabledState = new Bitmap()
-				//_defaultState;
-				//ColorUtil.desaturate(_disabledState);
+				
 			}
 		}
 		
@@ -235,8 +318,19 @@ package maryfisher.view.ui.button {
 			}
 		}
 		
+		protected function onOver():void {
+			if (_overState) {
+				_upState.visible = false;
+				_overState.visible = true;
+			}
+		}
+		
 		private function onEnterFrame(e:Event):void {
 			_downSignal.dispatch(this);
+		}
+		
+		protected function createTexture(bm:Bitmap):Image {
+			return new Image(Texture.fromBitmap(bm));
 		}
 	}
 
