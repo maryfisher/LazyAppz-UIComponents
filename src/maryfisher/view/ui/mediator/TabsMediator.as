@@ -42,6 +42,13 @@ package maryfisher.view.ui.mediator {
 				(_tabButtons[_selectedTab] as IButton).selected = false;
 			}
 			
+			
+			if (_selectedTab == id) {
+				_selectedTab = null;
+				_tabUpdate.dispatch(null);
+				return;
+			}
+			
 			_selectedTab = id;
 			
 			(_tabButtons[_selectedTab] as IButton).selected = true;
@@ -65,7 +72,12 @@ package maryfisher.view.ui.mediator {
 		
 		public function startTransition(oldContent:IDisplayObject, newContent:IDisplayObject):void {
 			oldContent && (oldContent.visible = false);
+			if (oldContent == newContent) return;
 			newContent && (newContent.visible = true);
+		}
+		
+		public function getContent(b:IButton):IDisplayObject {
+			return _content[b.id];
 		}
 		
 		public function set effect(value:ITabSelectedEffect):void {

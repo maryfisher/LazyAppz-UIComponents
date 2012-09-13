@@ -37,6 +37,23 @@ package maryfisher.view.util {
 			
 			return bg;
 		}
+		
+		static public function getPowerOf2(width:int):int {
+			var origWidth:int = width;
+			var i:int = 64;
+			while (width == origWidth) {
+				width = Math.max(width, i);
+				i = i * 2;
+			}
+			
+			return width;
+		}
+		
+		static public function getPowerOf2Bitmap(b:BitmapData):BitmapData {
+			var b2:BitmapData = new BitmapData(getPowerOf2(b.width), getPowerOf2(b.height), true, 0);
+			b2.copyPixels(b, b.rect, new Point(), b, new Point(), true);
+			return b2;
+		}
 	}
 
 }

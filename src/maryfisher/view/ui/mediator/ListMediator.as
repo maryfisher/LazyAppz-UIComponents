@@ -46,9 +46,9 @@ package maryfisher.view.ui.mediator {
 			columns = rows;
 		}
 		
-		public function setDistances(d:Point):void {
-			distX = d.x;
-			distY = d.y;
+		public function setDistances(dX:int, dY:int):void {
+			distX = dX;
+			distY = dY;
 		}
 		
 		public function addListChild(child:IDisplayObject):void {
@@ -135,8 +135,22 @@ package maryfisher.view.ui.mediator {
 			updateChildPos();
 		}
 		
+		public function invalidate():void {
+			_index = 0;
+			_posX = _startX;
+			_posY = _startY;
+			var l:int = _children.length;
+			for (var i:int = 0; i < l; i++) {
+				setChildPos(_children[i]);
+			}
+		}
+		
 		public function set hasVariableDims(value:Boolean):void {
 			_hasVariableDims = value;
+		}
+		
+		public function get children():Vector.<IDisplayObject> {
+			return _children;
 		}
 	}
 }

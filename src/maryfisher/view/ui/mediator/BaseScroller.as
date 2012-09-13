@@ -1,9 +1,9 @@
 package maryfisher.view.ui.mediator {
-	import caurina.transitions.Tweener;
+	import com.greensock.easing.Sine;
+	import com.greensock.TweenLite;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
-	import maryfisher.view.ui.interfaces.IButton;
 	
 	/**
 	 *
@@ -59,6 +59,7 @@ package maryfisher.view.ui.mediator {
 		
 		public function assignContent(content:DisplayObject):void {
 			_content = content;
+			updateContent();
 		}
 		
 		public function updateContent():void {
@@ -74,12 +75,14 @@ package maryfisher.view.ui.mediator {
 				return;
 			}
 			
-			Tweener.removeTweens(_content);
-			//var tween:Object = { time:_scrollRows / 400, transition:"easeOutSine", delay:0.1 };
-			//var time:Number = Math.abs(_end - (_scrollSideways ? _content.x : _content.y)) / 300;
-			var tween:Object = { time: 0.3, transition:"easeOutSine" };
-			var tweenDelay:Object = _scrollSideways ? { base:tween, x:_end } : { base:tween, y:_end };
-			Tweener.addTween(_content, tweenDelay );
+			//Tweener.removeTweens(_content);
+			//var tween:Object = { time: 0.3, transition:"easeOutSine" };
+			//var tweenDelay:Object = _scrollSideways ? { base:tween, x:_end } : { base:tween, y:_end };
+			//Tweener.addTween(_content, tweenDelay );
+			
+			TweenLite.killTweensOf(_content);
+			_scrollSideways ? 	TweenLite.to(_content, 0.3, { x:_end, ease:Sine.easeOut } )
+							:	TweenLite.to(_content, 0.3, { y:_end, ease:Sine.easeOut } );
 		}
 		
 		private function createMask():DisplayObject {

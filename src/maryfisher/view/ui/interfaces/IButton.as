@@ -8,7 +8,7 @@ package maryfisher.view.ui.interfaces {
 	/* TODO
 	 * wieso extended das viewcomponent???
 	 */
-	public interface IButton extends IViewComponent{
+	public interface IButton {//extends IViewComponent{
 		function get id():String;
 		function set selected(value:Boolean):void;
 		function get selected():Boolean;

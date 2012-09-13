@@ -1,18 +1,12 @@
 package maryfisher.view.model3d {
-	import away3d.cameras.Camera3D;
-	import away3d.containers.Scene3D;
 	import away3d.containers.View3D;
 	import away3d.entities.Mesh;
-	import away3d.primitives.CubeGeometry;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import maryfisher.austengames.config.ViewConstants;
 	
 	/**
 	 * ...
 	 * @author mary_fisher
 	 */
-	public class BaseView3D extends View3D implements IView3D{
+	public class BaseView3D extends View3D{
 		
 		private var _move:Boolean = false;
 		private var _lastPanAngle:Number;
@@ -37,12 +31,6 @@ package maryfisher.view.model3d {
 			//_cameraController.init(_camera, _cube, 1000);
 			//_cameraController.panAngle
 			
-		}
-		
-		/* INTERFACE maryfisher.framework.view.IViewComponent */
-		
-		public function get componentType():String {
-			return ViewConstants.MODEL3D_VIEW;
 		}
 		
 		public function get cameraController():ICameraController {

@@ -150,6 +150,7 @@ package maryfisher.view.ui.button {
 		
 		public function set downState(value:DisplayObject):void {
 			_downState = value;
+			if (!_downState) return;
 			_downState.visible = false;
 			addChild(_downState);
 		}

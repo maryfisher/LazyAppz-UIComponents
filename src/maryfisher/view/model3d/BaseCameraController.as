@@ -116,7 +116,7 @@ package maryfisher.view.model3d {
 		}
 		
 		public function start(stage:Stage = null):void {
-			_stage = stage;
+			_stage = stage || _stage;
 			
 			_stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
@@ -301,8 +301,18 @@ package maryfisher.view.model3d {
 			return _tiltAngle;
 		}
 		
-		public function moveLookAtObject(pos:Vector3D):void {
+		public function moveLookAtObjectTo(pos:Vector3D):void {
 			_lookAtObject.position = pos.clone();
+			_positionX = _lookAtObject.x;
+			_positionZ = _lookAtObject.z;
+			updatePosition();
+			updateAngle();
+			updateLookAt();
+			updateCameraObjects();
+		}
+		
+		public function moveLookAtObject(pos:Vector3D):void {
+			_lookAtObject.position = _lookAtObject.position.add(pos);
 			_positionX = _lookAtObject.x;
 			_positionZ = _lookAtObject.z;
 			updatePosition();

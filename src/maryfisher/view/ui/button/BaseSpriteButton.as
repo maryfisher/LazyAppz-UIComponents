@@ -170,6 +170,8 @@ package maryfisher.view.ui.button {
 		CONFIG::mouse
 		public function set overState(value:DisplayObject):void {
 			_overState = value;
+			if (!_overState) return;
+			
 			_overState.visible = false;
 			if (_downState) {
 				addChildAt(_overState, numChildren - 2);

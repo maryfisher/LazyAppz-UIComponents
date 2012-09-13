@@ -30,6 +30,7 @@ package maryfisher.view.model3d {
 		private var _lastPositionZ:Number;
 		private var _touchPoints:int;
 		private var _seconds:int;
+		private var _dragDistance:int = 1;
 		
 		public function DragCamera(targetObject:Entity = null, panAngle:Number = 0, tiltAngle:Number = 90, distance:Number = 1000) {
 			super(targetObject, new Mesh(new CubeGeometry()), panAngle, tiltAngle, distance);
@@ -38,15 +39,15 @@ package maryfisher.view.model3d {
 		override public function start(stage:Stage = null):void {
 			super.start(stage);
 			CONFIG::mouse{
-				stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-				stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-				stage.addEventListener(MouseEvent.RIGHT_MOUSE_DOWN, onRightMouseDown);
-				stage.addEventListener(MouseEvent.RIGHT_MOUSE_UP, onRightMouseUp);
-				stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+				_stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+				_stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+				_stage.addEventListener(MouseEvent.RIGHT_MOUSE_DOWN, onRightMouseDown);
+				_stage.addEventListener(MouseEvent.RIGHT_MOUSE_UP, onRightMouseUp);
+				_stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 			}
 			CONFIG::touch{
-				stage.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
-				stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+				_stage.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
+				_stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
 			}
 			
 		}
@@ -54,7 +55,7 @@ package maryfisher.view.model3d {
 		CONFIG::mouse
 		private function onMouseWheel(e:MouseEvent):void {
 			//e.delta > 0 ist zoom rein
-			tiltAngle -= e.delta;
+			//tiltAngle -= e.delta;
 		}
 		
 		CONFIG::mouse
@@ -124,6 +125,7 @@ package maryfisher.view.model3d {
 			
 			if (_move) {
 				panAngle = 0.3 * (_stage.mouseX - _lastStageX) + _lastPanAngle;
+				tiltAngle = 0.3 * (_stage.mouseY - _lastStageY) + _lastTiltAngle;
 			}
 			
 			super.onEnterFrame(e);
@@ -135,8 +137,8 @@ package maryfisher.view.model3d {
 				_seconds++;
 			}
 			_lookAtObject.rotationY = _targetObject.rotationY;
-			var distX:int = (_stage.mouseX - _lastStageX);
-			var distZ:int = (_stage.mouseY - _lastStageY);
+			var distX:int = (_stage.mouseX - _lastStageX) * _dragDistance;
+			var distZ:int = (_stage.mouseY - _lastStageY) * _dragDistance;
 			_lookAtObject.moveLeft(distX);
 			_lookAtObject.moveForward(distZ);
 			_positionX = _lookAtObject.x;
@@ -170,6 +172,10 @@ package maryfisher.view.model3d {
 			//}
 			//_touchPoints = 0;
 			//return _drag;
+		}
+		
+		public function set dragDistance(value:int):void {
+			_dragDistance = value;
 		}
 	}
 
