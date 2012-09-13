@@ -1,4 +1,5 @@
 package maryfisher.view.ui.interfaces {
+	import flash.media.SoundTransform;
 	
 	/**
 	 * ...
@@ -7,6 +8,9 @@ package maryfisher.view.ui.interfaces {
 	public interface ISound {
 		function play():void;
 		function stop():void;
+		function set soundTransform(value:SoundTransform):void;
+		function fadeIn():void;
+		function fadeOut():void;
 	}
 	
 }
