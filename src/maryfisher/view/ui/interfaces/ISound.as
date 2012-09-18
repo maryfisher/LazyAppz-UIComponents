@@ -11,6 +11,8 @@ package maryfisher.view.ui.interfaces {
 		function set soundTransform(value:SoundTransform):void;
 		function fadeIn():void;
 		function fadeOut():void;
+		
+		function get soundType():String;
 	}
 	
 }

@@ -1,12 +1,6 @@
 package maryfisher.view.ui.component {
-	import caurina.transitions.Tweener;
-	import flash.display.DisplayObject;
-	import flash.display.Stage;
-	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
-	import maryfisher.view.ui.interfaces.ISlider;
-	import org.osflash.signals.Signal;
 	
 	/**
 	 * ...
@@ -44,6 +38,10 @@ package maryfisher.view.ui.component {
 		public function mouseWheel(delta:Number):void {
 			var pos:Number = (_isVertical ? _thumb.y : _thumb.x) - delta * 10;
 			assignDiff(pos);
+		}
+		
+		public function getPercent():Number {
+			return _currenPos / (_maxPos - _minPos);
 		}
 		
 		CONFIG::touch

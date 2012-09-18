@@ -4,6 +4,7 @@ package maryfisher.view.core {
 	import away3d.entities.Mesh;
 	import away3d.materials.MaterialBase;
 	import flash.events.Event;
+	import flash.geom.Vector3D;
 	import maryfisher.framework.command.view.ViewCommand;
 	import maryfisher.framework.view.IViewComponent;
 	
@@ -15,6 +16,10 @@ package maryfisher.view.core {
 		
 		public function BaseContainer3DView(){
 			
+		}
+		
+		public function setPosition(scenePosition:Vector3D):void {
+			position = scenePosition;
 		}
 		
 		/* INTERFACE maryfisher.framework.view.IViewComponent */

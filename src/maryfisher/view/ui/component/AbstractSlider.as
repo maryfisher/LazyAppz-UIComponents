@@ -1,5 +1,5 @@
 package maryfisher.view.ui.component {
-	import caurina.transitions.Tweener;
+	import com.greensock.TweenLite;
 	import flash.display.DisplayObject;
 	import flash.display.Stage;
 	import flash.events.Event;
@@ -60,6 +60,10 @@ package maryfisher.view.ui.component {
 			}
 		}
 		
+		public function setPercent(musicVolume:Number):void {
+			assignDiff((_maxPos - _minPos) * musicVolume);
+		}
+		
 		protected function init():void {
 			_updateSignal = new Signal(Number);
 		}
@@ -91,7 +95,7 @@ package maryfisher.view.ui.component {
 		
 		protected function assignDiff(diff:Number):void {
 			_currenPos = _isVertical ? _thumb.y : _thumb.x;
-			_currenPos += diff;
+			//_currenPos += diff;
 			var newPos:int = Math.min(Math.max(diff, _minPos), _maxPos);
 			if (newPos != _currenPos) {
 				_currenPos = newPos
@@ -108,9 +112,10 @@ package maryfisher.view.ui.component {
 		}
 		
 		protected function tweenThumb():void {
-			var base:Object = { time:0.3 };
-			var tween:Object = _isVertical ? { y: _currenPos, base: base } : { x: _currenPos, base: base };
-			Tweener.addTween(_thumb, tween);
+			//var base:Object = { time:0.3 };
+			var tween:Object = _isVertical ? { y: _currenPos } : { x: _currenPos };
+			//Tweener.addTween(_thumb, tween);
+			TweenLite.to(_thumb, 0.3, tween);
 		}
 		
 		/* INTERFACE maryfisher.ui.interfaces.IScrollTrack */

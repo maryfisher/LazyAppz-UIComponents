@@ -1,5 +1,6 @@
 package maryfisher.view.util {
 	import flash.display.BitmapData;
+	import flash.geom.Matrix;
 	import flash.geom.Point;
 	/**
 	 * ...
@@ -49,10 +50,28 @@ package maryfisher.view.util {
 			return width;
 		}
 		
-		static public function getPowerOf2Bitmap(b:BitmapData):BitmapData {
+		static public function getPowerOf2ScaledBitmap(b:BitmapData, center:Boolean = false):BitmapData {
 			var b2:BitmapData = new BitmapData(getPowerOf2(b.width), getPowerOf2(b.height), true, 0);
-			b2.copyPixels(b, b.rect, new Point(), b, new Point(), true);
+			var matrix:Matrix = new Matrix();
+			matrix.scale(b2.width / b.width, b2.height / b.height);
+			b2.draw(b, matrix);
 			return b2;
+		}
+		
+		static public function getPowerOf2Bitmap(b:BitmapData, center:Boolean = false):BitmapData {
+			var b2:BitmapData = new BitmapData(getPowerOf2(b.width), getPowerOf2(b.height), true, 0);
+			var offsetPoint:Point = center ? new Point((b2.width - b.width) / 2, (b2.height - b.height) / 2) : new Point();
+			b2.copyPixels(b, b.rect, offsetPoint, b, offsetPoint, true);
+			return b2;
+		}
+		
+		static public function getBitmapOverState(b:BitmapData, color:uint = 0x66FFFFFF):BitmapData {
+			var bWhite:BitmapData = new BitmapData(b.width, b.height, true, color);
+			var bOver:BitmapData = b.clone();
+			var point:Point = new Point();
+			bOver.copyPixels(bWhite, bWhite.rect, point, b, point, true);
+			
+			return bOver;
 		}
 	}
 

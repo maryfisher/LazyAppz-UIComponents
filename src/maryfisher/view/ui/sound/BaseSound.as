@@ -28,6 +28,9 @@ package maryfisher.view.ui.sound {
 		/* INTERFACE maryfisher.view.ui.interfaces.ISound */
 		
 		public function play():void {
+			if (_channel) {
+				_channel.stop();
+			}
 			_channel = _sound.play();
 			_channel.soundTransform = _soundTransform;
 		}
@@ -51,6 +54,12 @@ package maryfisher.view.ui.sound {
 			_fadingStep = -0.1;
 			initTimer();
 		}
+		
+		/* INTERFACE maryfisher.view.ui.interfaces.ISound */
+		
+		public function get soundType():String {
+			return "";
+		}
 
 		public function set volume(volume:Number):void {
 			_channel.soundTransform = new SoundTransform(volume);
@@ -58,6 +67,14 @@ package maryfisher.view.ui.sound {
 
 		public function get volume():Number {
 			return _channel.soundTransform.volume;
+		}
+		
+		public function set sound(value:Sound):void {
+			if (_channel) {
+				_channel.stop();
+				_channel = null;
+			}
+			_sound = value;
 		}
 
 		private function initTimer():void {
