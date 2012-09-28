@@ -32,7 +32,7 @@ package maryfisher.view.ui.sound {
 				_channel.stop();
 			}
 			_channel = _sound.play();
-			_channel.soundTransform = _soundTransform;
+			_soundTransform && (_channel.soundTransform = _soundTransform);
 		}
 		
 		public function stop():void {
@@ -41,7 +41,7 @@ package maryfisher.view.ui.sound {
 		
 		public function set soundTransform(value:SoundTransform):void {
 			_soundTransform = value;
-			_channel && (_channel.soundTransform = _soundTransform);
+			_channel && _soundTransform && (_channel.soundTransform = _soundTransform);
 		}
 
 		public function fadeIn():void {

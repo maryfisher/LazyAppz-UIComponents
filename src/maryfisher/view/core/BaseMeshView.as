@@ -28,7 +28,7 @@ package maryfisher.view.core {
 		}
 		
 		public function addOnFinished(listener:Function):void {
-			
+			listener(null);
 		}
 		
 		public function dispatch(e:Event):void {
