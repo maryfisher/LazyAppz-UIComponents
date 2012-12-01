@@ -7,12 +7,13 @@ package maryfisher.view.core {
 	import flash.geom.Vector3D;
 	import maryfisher.framework.command.view.ViewCommand;
 	import maryfisher.framework.view.IViewComponent;
+	import maryfisher.framework.view.IViewComponentContainer;
 	
 	/**
 	 * ...
 	 * @author mary_fisher
 	 */
-	public class BaseContainer3DView extends ObjectContainer3D implements IViewComponent {
+	public class BaseContainer3DView extends ObjectContainer3D implements IViewComponentContainer{
 		
 		public function BaseContainer3DView(){
 			
@@ -34,7 +35,7 @@ package maryfisher.view.core {
 		}
 		
 		public function addOnFinished(listener:Function):void {
-			
+			listener(null);
 		}
 		
 		public function dispatch(e:Event):void {
@@ -67,6 +68,16 @@ package maryfisher.view.core {
 		
 		public function hide():void {
 			visible = false;
+		}
+		
+		/* INTERFACE maryfisher.framework.view.IViewComponentContainer */
+		
+		public function addViewComponent(comp:IViewComponent):void {
+			addChild(comp as ObjectContainer3D);
+		}
+		
+		public function removeViewComponent(comp:IViewComponent):void {
+			removeChild(comp as ObjectContainer3D);
 		}
 		
 	}

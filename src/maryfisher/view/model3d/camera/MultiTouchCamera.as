@@ -1,4 +1,4 @@
-package maryfisher.view.model3d {
+package maryfisher.view.model3d.camera {
 	import away3d.entities.Entity;
 	
 	/**

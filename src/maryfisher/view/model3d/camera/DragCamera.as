@@ -1,4 +1,4 @@
-package maryfisher.view.model3d {
+package maryfisher.view.model3d.camera {
 	import away3d.containers.ObjectContainer3D;
 	import away3d.entities.Entity;
 	import away3d.entities.Mesh;
@@ -124,6 +124,9 @@ package maryfisher.view.model3d {
 		override protected function onEnterFrame(e:Event):void {
 			
 			if (_move) {
+				CONFIG::mouse {
+					_seconds++;
+				}
 				panAngle = 0.3 * (_stage.mouseX - _lastStageX) + _lastPanAngle;
 				tiltAngle = 0.3 * (_stage.mouseY - _lastStageY) + _lastTiltAngle;
 			}

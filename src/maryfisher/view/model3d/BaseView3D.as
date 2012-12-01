@@ -1,6 +1,7 @@
 package maryfisher.view.model3d {
 	import away3d.containers.View3D;
 	import away3d.entities.Mesh;
+	import maryfisher.view.model3d.camera.ICameraController;
 	
 	/**
 	 * ...

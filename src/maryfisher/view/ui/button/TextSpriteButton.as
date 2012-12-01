@@ -3,7 +3,6 @@ package maryfisher.view.ui.button {
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
-	import maryfisher.austengames.view.components.TextColorScheme;
 	import maryfisher.view.ui.component.FormatText;
 	/**
 	 * ...

@@ -1,4 +1,4 @@
-package maryfisher.view.model3d {
+package maryfisher.view.model3d.camera {
 	import away3d.containers.ObjectContainer3D;
 	import away3d.entities.Entity;
 	import away3d.entities.Mesh;
