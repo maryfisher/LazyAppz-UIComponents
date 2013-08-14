@@ -1,4 +1,5 @@
 package maryfisher.view.core {
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import maryfisher.framework.command.view.ViewCommand;
@@ -64,6 +65,16 @@ package maryfisher.view.core {
 		
 		public function removeListener(type:String, listener:Function, useCapture:Boolean = false):void {
 			removeEventListener(type, listener, useCapture);
+		}
+		
+		/* INTERFACE maryfisher.framework.view.IViewComponent */
+		
+		public function addViewComponent(comp:IViewComponent):void {
+			addChild(comp as DisplayObject);
+		}
+		
+		public function removeViewComponent(comp:IViewComponent):void {
+			removeChild(comp as DisplayObject);
 		}
 		
 		public function get componentType():String {

@@ -80,9 +80,7 @@ package maryfisher.view.ui.mediator {
 			//var tweenDelay:Object = _scrollSideways ? { base:tween, x:_end } : { base:tween, y:_end };
 			//Tweener.addTween(_content, tweenDelay );
 			
-			TweenLite.killTweensOf(_content);
-			_scrollSideways ? 	TweenLite.to(_content, 0.3, { x:_end, ease:Sine.easeOut } )
-							:	TweenLite.to(_content, 0.3, { y:_end, ease:Sine.easeOut } );
+			startScrolling();
 		}
 		
 		private function createMask():DisplayObject {
@@ -91,6 +89,16 @@ package maryfisher.view.ui.mediator {
 			_mask.y = _content.y;
 			_content.mask = _mask;
 			return _mask;
+		}
+		
+		protected function startScrolling():void {
+			TweenLite.killTweensOf(_content);
+			_scrollSideways ? 	TweenLite.to(_content, 0.3, { x:_end, ease:Sine.easeOut, onComplete: scrollingFinished } )
+							:	TweenLite.to(_content, 0.3, { y:_end, ease:Sine.easeOut, onComplete: scrollingFinished } );
+		}
+		
+		protected function scrollingFinished():void {
+			
 		}
 		
 		public function dispose():void {

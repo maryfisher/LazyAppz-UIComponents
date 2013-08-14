@@ -1,15 +1,29 @@
 package maryfisher.view.ui.component {
+	import com.greensock.TweenMax;
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	import flash.events.MouseEvent;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
+	import maryfisher.framework.core.ViewController;
+	import maryfisher.view.core.BaseSpriteView;
 	import maryfisher.view.ui.interfaces.ITooltip;
 	
 	/**
 	 * ...
 	 * @author mary_fisher
 	 */
-	public class BaseSpriteTooltip extends Sprite implements ITooltip {
+	public class BaseSpriteTooltip extends BaseSpriteView implements ITooltip {
 		
-		public function BaseSpriteTooltip() {
+		private var _mouseOver:Boolean = false;
+		private var _ownerMouseOut:Boolean = false;
+		private var _owner:DisplayObject;
+		protected var _distX:int;
+		protected var _distY:int;
+		
+		public function BaseSpriteTooltip(owner:DisplayObject) {
 			super();
+			_owner = owner;
 			
 		}
 		
@@ -19,16 +33,55 @@ package maryfisher.view.ui.component {
 			visible = !visible;
 		}
 		
-		public function show():void {
-			visible = true;
-		}
-		
-		public function hide():void {
-			visible = false;
-		}
-		
-		public function destroy():void {
+		override public function show():void {
 			
+			//addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
+			var p:Rectangle = _owner.getRect(stage);
+			x = p.x + _distX;
+			y = p.y + _distY;
+			
+			if (x + width > ViewController.stageWidth) {
+				x = p.x - width;
+			}
+			if (y + height > ViewController.stageHeight) {
+				y = p.y - height;
+			}
+			
+			super.show();
+		}
+		
+		private function onMouseOver(e:MouseEvent):void {
+			_mouseOver = true;
+			addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);			
+		}
+		
+		override public function hide():void {
+			//if (!_ownerMouseOut && _mouseOver) {
+				//_ownerMouseOut = true;
+				//return;
+			//}
+			//TweenMax.delayedCall(0.1, hideForReal);
+			//
+		//}
+		//
+		//private function hideForReal():void {
+			//trace(_mouseOver);
+			//if (_mouseOver) return;
+			//_ownerMouseOut = false;
+			//_mouseOver = false;
+			//removeEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
+			//removeEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
+			super.hide();
+		}
+		
+		private function onMouseOut(e:MouseEvent):void {
+			//this is for children that trigger mouse out
+			var rect:Rectangle = getRect(stage);
+			if(!(stage.mouseX < rect.left || stage.mouseX > rect.right || stage.mouseY < rect.top || stage.mouseY > rect.bottom)){
+				return;
+			}
+			_mouseOver = false;
+			hide();
 		}
 		
 	}

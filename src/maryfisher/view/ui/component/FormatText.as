@@ -1,8 +1,12 @@
 package maryfisher.view.ui.component {
+	import flash.events.MouseEvent;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
+	import maryfisher.framework.core.LocaleController;
+	import maryfisher.framework.data.LocaleContextData;
 	import maryfisher.view.ui.interfaces.ITextField;
+	import maryfisher.view.ui.interfaces.ITooltip;
 	
 	/**
 	 * ...
@@ -11,6 +15,7 @@ package maryfisher.view.ui.component {
 	public class FormatText extends TextField implements ITextField{
 		
 		private var _format:TextFormat;
+		private var _tooltip:ITooltip;
 		
 		public function FormatText(x:int = 0, y:int = 0, width:int = 100, height:int = 30) {
 			super();
@@ -84,6 +89,35 @@ package maryfisher.view.ui.component {
 			applyFormat();
 		}
 		
+		//public function attachSimpleTooltip(tooltipClass:Class, contextData:LocaleContextData):void {
+			//var t:ITooltip = new tooltipClass(this);
+			//t
+		//}
+		
+		public function attachTooltip(tooltip:ITooltip):void {
+			mouseEnabled = true;
+			
+			_tooltip = tooltip;
+			addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
+			addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
+		}
+		
+		private function onMouseOut(e:MouseEvent):void {
+			_tooltip.hide();
+		}
+		
+		private function onMouseOver(e:MouseEvent):void {
+			_tooltip.show();
+		}
+		
+		public function setLocaleById(context:String, id:String, addText:Boolean = false, ... pars):void {
+			setLocaleText(new LocaleContextData(context, id));
+		}
+		
+		public function setLocaleText(contextData:LocaleContextData, addText:Boolean = false, ... pars):void {
+			var t:String = LocaleController.getText(contextData).getText().text;
+			text = addText ? text + t : t;
+		}
 	}
 
 }

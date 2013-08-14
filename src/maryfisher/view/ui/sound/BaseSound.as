@@ -12,7 +12,7 @@ package maryfisher.view.ui.sound {
 	 * @author mary_fisher
 	 */
 	public class BaseSound implements ISound {
-		private var _channel:SoundChannel;
+		protected var _channel:SoundChannel;
 		private var _soundTransform:SoundTransform;
 		private var _fader:Timer;
 		private var _fadingStep:Number;
@@ -58,6 +58,7 @@ package maryfisher.view.ui.sound {
 		/* INTERFACE maryfisher.view.ui.interfaces.ISound */
 		
 		public function get soundType():String {
+			throw Error("Function needs to be overridden!")
 			return "";
 		}
 

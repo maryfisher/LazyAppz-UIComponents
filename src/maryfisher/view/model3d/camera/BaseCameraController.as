@@ -53,12 +53,14 @@ package maryfisher.view.model3d.camera {
 		protected var _lookAtObject:ObjectContainer3D;
 		protected var _stage:Stage;
 		
+		private var _cameraBehaviors:Vector.<AbstractCameraBehavior>;
+		
 		public function BaseCameraController(targetObject:Entity = null, lookAtObject:ObjectContainer3D = null, panAngle:Number = 0, tiltAngle:Number = 90, distance:Number = 1000){
 			_targetObject = targetObject;
 			_lookAtObject = lookAtObject || new ObjectContainer3D();
 			//super(targetObject, lookAtObject);
 			
-			this.distance = distance;
+			_distance = distance;
 			this.panAngle = panAngle;
 			this.tiltAngle = tiltAngle;
 			
@@ -72,10 +74,15 @@ package maryfisher.view.model3d.camera {
 			_panSignal = new Signal(int);
 			
 			_cameraObjects = new Vector.<ICameraObject>();
+			_cameraBehaviors = new Vector.<AbstractCameraBehavior>();
 			
 			updatePosition();
 			updateAngle();
 			updateLookAt();
+		}
+		
+		public function addBehavior(behav:AbstractCameraBehavior):void {
+			_cameraBehaviors.push(behav);
 		}
 		
 		public function assignBounds(minBoundsX:int, maxBoundsX:int, minBoundsY:int, maxBoundsY:int):void {
@@ -118,15 +125,25 @@ package maryfisher.view.model3d.camera {
 		public function start(stage:Stage = null):void {
 			_stage = stage || _stage;
 			
+			for each (var behav:AbstractCameraBehavior in _cameraBehaviors) {
+				behav.start(_stage);
+			}
+			
 			_stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
 		
 		protected function onEnterFrame(e:Event):void {
+			
+			for each (var behav:AbstractCameraBehavior in _cameraBehaviors) {
+				behav.onEnterFrame(e);
+			}
+			
 			if (_currentPositionX == _positionX && _currentPositionZ == _positionZ) {
 				if (_tiltAngle == _currentTiltAngle && _panAngle == _currentPanAngle) {
 					return;
 				}
 			}
+			
 			
 			updatePosition();
 			updateAngle();
@@ -157,6 +174,11 @@ package maryfisher.view.model3d.camera {
 		}
 		
 		public function stop():void {
+			
+			for each (var behav:AbstractCameraBehavior in _cameraBehaviors) {
+				behav.stop();
+			}
+			
 			_stage.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
 		
@@ -232,6 +254,8 @@ package maryfisher.view.model3d.camera {
 				return;
 			
 			_distance = val;
+			
+			updateLookAtObject();
 		}
 		
 		public function get distance():Number {
@@ -301,18 +325,33 @@ package maryfisher.view.model3d.camera {
 			return _tiltAngle;
 		}
 		
+		public function get currentPanAngle():Number {
+			return _currentPanAngle;
+		}
+		
+		public function get currentTiltAngle():Number {
+			return _currentTiltAngle;
+		}
+		
+		public function get lookAtObject():ObjectContainer3D {
+			return _lookAtObject;
+		}
+		
+		public function get targetObject():Entity {
+			return _targetObject;
+		}
+		
 		public function moveLookAtObjectTo(pos:Vector3D):void {
 			_lookAtObject.position = pos.clone();
-			_positionX = _lookAtObject.x;
-			_positionZ = _lookAtObject.z;
-			updatePosition();
-			updateAngle();
-			updateLookAt();
-			updateCameraObjects();
+			updateLookAtObject();
 		}
 		
 		public function moveLookAtObject(pos:Vector3D):void {
 			_lookAtObject.position = _lookAtObject.position.add(pos);
+			updateLookAtObject();
+		}
+		
+		public function updateLookAtObject():void {
 			_positionX = _lookAtObject.x;
 			_positionZ = _lookAtObject.z;
 			updatePosition();

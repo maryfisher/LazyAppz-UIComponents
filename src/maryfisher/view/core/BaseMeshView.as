@@ -1,5 +1,6 @@
 package maryfisher.view.core {
 	import away3d.core.base.Geometry;
+	import away3d.entities.Entity;
 	import away3d.entities.Mesh;
 	import away3d.materials.MaterialBase;
 	import flash.events.Event;
@@ -61,6 +62,16 @@ package maryfisher.view.core {
 		
 		public function hide():void {
 			visible = false;
+		}
+		
+		/* INTERFACE maryfisher.framework.view.IViewComponent */
+		
+		public function addViewComponent(comp:IViewComponent):void {
+			addChild(comp as Entity);
+		}
+		
+		public function removeViewComponent(comp:IViewComponent):void {
+			removeChild(comp as Entity);
 		}
 		
 	}

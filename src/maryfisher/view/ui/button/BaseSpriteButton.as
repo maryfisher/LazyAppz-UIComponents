@@ -2,6 +2,7 @@ package maryfisher.view.ui.button {
 	import flash.display.DisplayObject;
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
+	import maryfisher.view.ui.event.ButtonEvent;
 	import maryfisher.view.ui.interfaces.ITooltip;
 	
 	/**
@@ -98,6 +99,7 @@ package maryfisher.view.ui.button {
 				_upState && (_upState.visible = false);
 				_overState.visible = true;
 			}
+			dispatchEvent(new ButtonEvent(ButtonEvent.BUTTON_OVER, _id));
 		}
 		
 		CONFIG::mouse
@@ -117,6 +119,7 @@ package maryfisher.view.ui.button {
 		}
 		CONFIG::mouse
 		protected function onMouseOver(e:MouseEvent):void {
+			_tooltip && _tooltip.show();
 			if (!_enabled || _selected) {
 				return;
 			}
@@ -128,9 +131,11 @@ package maryfisher.view.ui.button {
 		}
 		CONFIG::mouse
 		protected function onMouseOut(e:MouseEvent):void {
+			_tooltip && _tooltip.hide();
 			if (!_enabled || _selected) {
 				return;
 			}
+			dispatchEvent(new ButtonEvent(ButtonEvent.BUTTON_OUT, _id));
 			showUpState();
 			
 		}
@@ -144,7 +149,6 @@ package maryfisher.view.ui.button {
 			CONFIG::mouse{
 				if (_overState) _overState.visible = false;
 			}
-			//_tooltip && _tooltip.hide();
 		}
 		
 		public function attachTooltip(tooltip:ITooltip):void {
@@ -158,12 +162,12 @@ package maryfisher.view.ui.button {
 				return;
 			}
 			
-			super.enabled = value;
 			CONFIG::mouse{
 				if (!value) {
 					onMouseOut(null);
 				}
 			}
+			super.enabled = value;
 			buttonMode = _enabled;
 		}
 		

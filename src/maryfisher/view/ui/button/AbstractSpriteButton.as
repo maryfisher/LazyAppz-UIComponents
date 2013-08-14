@@ -119,14 +119,14 @@ package maryfisher.view.ui.button {
 			
 			if (!value) {
 				//onMouseOut(null);
-				removeListeners();
+				//removeListeners();
 				_selected = false;
 			}else {
-				addListeners();
+				//addListeners();
 			}
 			
 			_enabled = value;
-			mouseEnabled = _enabled;
+			//mouseEnabled = _enabled;
 			//buttonMode = _enabled;
 			
 			if (!value) {
@@ -209,7 +209,7 @@ package maryfisher.view.ui.button {
 			/* TODO
 			 *nicht auf alle Arten dispatchen
 			 */
-			//dispatchEvent(new ButtonEvent(ButtonEvent.BUTTON_CLICKED, _id));
+			dispatchEvent(new ButtonEvent(ButtonEvent.BUTTON_CLICKED, _id));
 			_doBubble && (_bubblingSignal.dispatch(new ButtonSignalEvent()));
 			_clickedSignal && _clickedSignal.dispatch(this);
 			//_sound && _sound.play();

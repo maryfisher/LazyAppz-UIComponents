@@ -2,6 +2,7 @@ package maryfisher.view.ui.mediator {
 	import flash.display.DisplayObject;
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
+	import maryfisher.view.ui.interfaces.IScrollBar;
 	/**
 	 * ...
 	 * @author mary_fisher
@@ -11,6 +12,7 @@ package maryfisher.view.ui.mediator {
 		private var _lastPos:Number;
 		private var _offset:Number;
 		private var _dragMilage:int;
+		private var _scrollBar:IScrollBar;
 		
 		public function DragScroller() {
 			
@@ -21,10 +23,29 @@ package maryfisher.view.ui.mediator {
 			
 			CONFIG::mouse {
 				_content.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+				_content.addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
+				_content.addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 			}
 			CONFIG::touch{
 				_content.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
 			}
+		}
+		
+		CONFIG::mouse
+		private function onMouseOut(e:MouseEvent):void {
+			_content.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		}
+		
+		CONFIG::mouse
+		private function onMouseOver(e:MouseEvent):void {
+			_content.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		}
+		
+		CONFIG::mouse
+		private function onMouseWheel(e:MouseEvent):void {
+			_end += e.delta * 10;
+			
+			scrollContent();
 		}
 		
 		CONFIG::mouse
@@ -84,8 +105,6 @@ package maryfisher.view.ui.mediator {
 			_dragMilage += Math.abs(_lastPos - c);
 			_lastPos = c;
 			
-			
-			
 			scrollContent();
 		}
 		
@@ -96,6 +115,25 @@ package maryfisher.view.ui.mediator {
 			}
 			
 			return false;
+		}
+		
+		public function set scrollBar(value:IScrollBar):void {
+			_scrollBar = value;
+		}
+		
+		override public function updateContent():void {
+			super.updateContent();
+			_scrollBar && (_scrollBar.setScrollDims(_scrollMax, _scrollHeight));
+		}
+		
+		override protected function startScrolling():void {
+			super.startScrolling();
+			_scrollBar && (_scrollBar.startScrolling(_startPos - _end));
+		}
+		
+		override protected function scrollingFinished():void {
+			super.scrollingFinished();
+			_scrollBar && (_scrollBar.finishedScrolling());
 		}
 	}
 }

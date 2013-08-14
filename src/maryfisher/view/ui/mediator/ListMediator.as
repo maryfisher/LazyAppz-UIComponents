@@ -52,7 +52,7 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		public function addListChild(child:IDisplayObject):void {
-			_children.push(child);
+			child && (_children.push(child));
 			setChildPos(child);
 		}
 		
@@ -65,8 +65,11 @@ package maryfisher.view.ui.mediator {
 				_childHeight = _childHeight || child.height;
 			}
 			
-			child.x = _posX;
-			child.y = _posY;
+			if(child){
+				child.x = _posX;
+				child.y = _posY;
+			}
+			
 			if (_isHorizontal) {
 				_posX += _childWidth + distX;
 			}else {
@@ -143,6 +146,17 @@ package maryfisher.view.ui.mediator {
 			for (var i:int = 0; i < l; i++) {
 				setChildPos(_children[i]);
 			}
+		}
+		
+		public function getHeight():int {
+			if (_index % columns == 0) {
+				return _posY;
+			}
+			return _posY + _childHeight + distY;
+		}
+		
+		public function getWidht():int {
+			return _posX;
 		}
 		
 		public function set hasVariableDims(value:Boolean):void {
