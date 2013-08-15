@@ -5,11 +5,11 @@ package maryfisher.view.ui.button {
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.filters.ColorMatrixFilter;
-	import maryfisher.view.ui.event.ButtonEvent;
-	import maryfisher.view.ui.event.ButtonSignalEvent;
+	import maryfisher.framework.sound.ISound;
+	import maryfisher.view.event.ButtonEvent;
+	import maryfisher.view.event.ButtonSignalEvent;
 	import maryfisher.view.ui.interfaces.IButton;
 	import maryfisher.view.ui.interfaces.IDisplayObject;
-	import maryfisher.view.ui.interfaces.ISound;
 	import maryfisher.view.util.ColorUtil;
 	import org.osflash.signals.DeluxeSignal;
 	import org.osflash.signals.events.GenericEvent;

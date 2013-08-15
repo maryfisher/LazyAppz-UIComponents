@@ -11,10 +11,10 @@ package maryfisher.view.core {
 	import maryfisher.framework.command.view.ViewCommand;
 	import maryfisher.framework.core.IViewController;
 	import maryfisher.framework.core.ViewController;
+	import maryfisher.framework.view.BaseView3D;
+	import maryfisher.framework.view.ICameraController;
 	import maryfisher.framework.view.ICameraObject;
 	import maryfisher.framework.view.IViewComponent;
-	import maryfisher.view.model3d.BaseView3D;
-	import maryfisher.view.model3d.camera.ICameraController;
 	/**
 	 * ...
 	 * @author mary_fisher

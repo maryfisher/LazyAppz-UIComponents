@@ -6,6 +6,7 @@ package maryfisher.view.model3d.camera {
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.geom.Vector3D;
+	import maryfisher.framework.view.ICameraController;
 	import maryfisher.framework.view.ICameraObject;
 	import org.osflash.signals.Signal;
 	/**

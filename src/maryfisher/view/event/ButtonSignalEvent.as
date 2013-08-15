@@ -1,4 +1,4 @@
-package maryfisher.view.ui.event {
+package maryfisher.view.event {
 	import maryfisher.view.ui.button.AbstractSpriteButton;
 	import maryfisher.view.ui.interfaces.IButton;
 	import org.osflash.signals.events.GenericEvent;

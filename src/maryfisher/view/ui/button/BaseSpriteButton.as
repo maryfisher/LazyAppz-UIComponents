@@ -2,7 +2,7 @@ package maryfisher.view.ui.button {
 	import flash.display.DisplayObject;
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
-	import maryfisher.view.ui.event.ButtonEvent;
+	import maryfisher.view.event.ButtonEvent;
 	import maryfisher.view.ui.interfaces.ITooltip;
 	
 	/**

@@ -1,4 +1,5 @@
 package maryfisher.view.ui.interfaces {
+	import maryfisher.framework.sound.ISound;
 	import maryfisher.framework.view.IViewComponent;
 	
 	/**

@@ -1,11 +1,11 @@
-package maryfisher.view.ui.sound {
+package maryfisher.sound {
 	import flash.events.TimerEvent;
 	import flash.media.Sound;
 	import flash.media.SoundChannel;
 	import flash.media.SoundTransform;
 	import flash.utils.Timer;
 	import maryfisher.framework.core.SoundController;
-	import maryfisher.view.ui.interfaces.ISound;
+	import maryfisher.framework.sound.ISound;
 	
 	/**
 	 * ...

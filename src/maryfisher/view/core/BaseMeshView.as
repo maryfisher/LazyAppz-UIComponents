@@ -56,6 +56,10 @@ package maryfisher.view.core {
 			
 		}
 		
+		public function unpause():void {
+			
+		}
+		
 		public function show():void {
 			visible = true;
 		}
