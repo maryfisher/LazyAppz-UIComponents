@@ -64,16 +64,16 @@ package maryfisher.view.ui.button {
 		CONFIG::mouse
 		private function addMouseListeners():void {
 			if (_hitTest) {
-				_hitTest.addEventListener(MouseEvent.ROLL_OVER, onMouseOver, false, 0, true);
-				_hitTest.addEventListener(MouseEvent.CLICK, onMouseUp, false, 0, true);
-				_hitTest.addEventListener(MouseEvent.ROLL_OUT, onMouseOut, false, 0, true);
+				_hitTest.addEventListener(MouseEvent.ROLL_OVER, onMouseOver, false);
+				_hitTest.addEventListener(MouseEvent.CLICK, onMouseUp, false);
+				_hitTest.addEventListener(MouseEvent.ROLL_OUT, onMouseOut, false);
 				return;
 			}
 			
-			addEventListener(MouseEvent.ROLL_OVER, onMouseOver, false, 0, true);
-			addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown, false, 0, true);
-			addEventListener(MouseEvent.MOUSE_UP, onMouseUp, false, 0, true);
-			addEventListener(MouseEvent.ROLL_OUT, onMouseOut, false, 0, true);
+			addEventListener(MouseEvent.ROLL_OVER, onMouseOver, false);
+			addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown, false);
+			addEventListener(MouseEvent.MOUSE_UP, onMouseUp, false);
+			addEventListener(MouseEvent.ROLL_OUT, onMouseOut, false);
 		}
 		
 		override protected function removeListeners():void {
@@ -99,7 +99,10 @@ package maryfisher.view.ui.button {
 				_upState && (_upState.visible = false);
 				_overState.visible = true;
 			}
-			dispatchEvent(new ButtonEvent(ButtonEvent.BUTTON_OVER, _id));
+			/** TODO
+			 * 
+			 */
+			//dispatchEvent(new ButtonEvent(ButtonEvent.BUTTON_OVER, _id));
 		}
 		
 		CONFIG::mouse
@@ -123,9 +126,9 @@ package maryfisher.view.ui.button {
 			if (!_enabled || _selected) {
 				return;
 			}
-				/* TODO
-				 * Tween!
-				 */
+			/* TODO
+			 * Tween!
+			 */
 			onOver();
 			
 		}
@@ -135,12 +138,23 @@ package maryfisher.view.ui.button {
 			if (!_enabled || _selected) {
 				return;
 			}
-			dispatchEvent(new ButtonEvent(ButtonEvent.BUTTON_OUT, _id));
+			/** TODO
+			 * 
+			 */
+			//dispatchEvent(new ButtonEvent(ButtonEvent.BUTTON_OUT, _id));
 			showUpState();
 			
 		}
 		CONFIG::mouse
 		protected function onMouseUp(e:MouseEvent):void {
+			onUp();
+		}
+		
+		override protected function onUp():void {
+			if (!_enabled) {
+				return;
+			}
+			if (_overState) _overState.visible = true;
 			super.onUp();
 		}
 		
@@ -173,6 +187,9 @@ package maryfisher.view.ui.button {
 		
 		CONFIG::mouse
 		public function set overState(value:DisplayObject):void {
+			if (_overState) {
+				if (contains(_overState)) removeChild(_overState);
+			}
 			_overState = value;
 			if (!_overState) return;
 			

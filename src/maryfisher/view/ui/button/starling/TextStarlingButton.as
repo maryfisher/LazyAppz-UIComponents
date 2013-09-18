@@ -1,5 +1,5 @@
 package maryfisher.view.ui.button.starling {
-	import maryfisher.austengames.view.components.TextColorScheme;
+	import maryfisher.austengames.view.components.ButtonColorScheme;
 	import starling.text.TextField;
 	/**
 	 * ...
@@ -7,11 +7,11 @@ package maryfisher.view.ui.button.starling {
 	 */
 	public class TextStarlingButton extends BaseStarlingButton {
 		
-		protected var _colorScheme:TextColorScheme;
+		protected var _colorScheme:ButtonColorScheme;
 		
 		protected var _label:TextField;
 		
-		public function TextStarlingButton(id:String, colorScheme:TextColorScheme, textfield:TextField = null) {
+		public function TextStarlingButton(id:String, colorScheme:ButtonColorScheme, textfield:TextField = null) {
 			super(id);
 			_colorScheme = colorScheme;
 			_label = textfield || new TextField(100, 30, "");

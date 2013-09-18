@@ -8,6 +8,7 @@ package maryfisher.view.ui.button {
 	import maryfisher.framework.sound.ISound;
 	import maryfisher.view.event.ButtonEvent;
 	import maryfisher.view.event.ButtonSignalEvent;
+	import maryfisher.view.ui.component.BaseSprite;
 	import maryfisher.view.ui.interfaces.IButton;
 	import maryfisher.view.ui.interfaces.IDisplayObject;
 	import maryfisher.view.util.ColorUtil;
@@ -19,7 +20,7 @@ package maryfisher.view.ui.button {
 	 * ...
 	 * @author mary_fisher
 	 */
-	public class AbstractSpriteButton extends Sprite implements IButton, IDisplayObject{
+	public class AbstractSpriteButton extends BaseSprite implements IButton {
 		
 		private var _clickedSignal:Signal;
 		private var _downSignal:Signal;
@@ -44,7 +45,7 @@ package maryfisher.view.ui.button {
 			_enabled = true;
 			_selected = false;
 			_id = id;
-			mouseChildren = false;
+			//mouseChildren = false;
 			
 			_bubblingSignal = new DeluxeSignal(this);
 			
@@ -63,7 +64,8 @@ package maryfisher.view.ui.button {
 			if (!_clickedSignal) {
 				_clickedSignal = new Signal(IButton);
 			}
-			_clickedSignal.add(listener);
+			if(listener != null)
+				_clickedSignal.add(listener);
 		}
 		
 		public function addDownListener(listener:Function):void {
@@ -149,6 +151,9 @@ package maryfisher.view.ui.button {
 		}
 		
 		public function set downState(value:DisplayObject):void {
+			if (_downState) {
+				if (contains(_downState)) removeChild(_downState);
+			}
 			_downState = value;
 			if (!_downState) return;
 			_downState.visible = false;
@@ -209,7 +214,7 @@ package maryfisher.view.ui.button {
 			/* TODO
 			 *nicht auf alle Arten dispatchen
 			 */
-			dispatchEvent(new ButtonEvent(ButtonEvent.BUTTON_CLICKED, _id));
+			//dispatchEvent(new ButtonEvent(ButtonEvent.BUTTON_CLICKED, _id));
 			_doBubble && (_bubblingSignal.dispatch(new ButtonSignalEvent()));
 			_clickedSignal && _clickedSignal.dispatch(this);
 			//_sound && _sound.play();

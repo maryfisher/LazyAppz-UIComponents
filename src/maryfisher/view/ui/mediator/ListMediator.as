@@ -1,4 +1,5 @@
 package maryfisher.view.ui.mediator {
+	import com.greensock.TweenLite;
 	import flash.geom.Point;
 	import maryfisher.view.ui.interfaces.IDisplayObject;
 	
@@ -10,25 +11,34 @@ package maryfisher.view.ui.mediator {
 		
 		private var _posX:int;
 		private var _posY:int;
-		private var _index:int;
 		private var _childWidth:int;
 		private var _childHeight:int;
-		private var distX:int;
-		private var distY:int;
-		private var columns:int = 1;
-		//private var _initiated:Boolean;
-		private var _isHorizontal:Boolean = true;
-		private var _children:Vector.<IDisplayObject>;
+		private var _distX:int;
+		private var _distY:int;
 		private var _startY:int;
 		private var _startX:int;
+		
+		private var _columns:int = 1;
+		
+		private var _tableDistances:Array;
+		
+		private var _index:int;
+		private var _children:Vector.<IDisplayObject>;
+		
+		private var _isHorizontal:Boolean = true;
 		private var _hasVariableDims:Boolean = false;
+		private var _frontToBack:Boolean = true;
+		private var _doTween:Boolean = false;
 		
 		public function ListMediator() {
-			//_initiated = false;
 			_children = new Vector.<IDisplayObject>();
-			//reset();
 		}
 		
+		/**
+		 * 
+		 * @param	startX
+		 * @param	startY
+		 */
 		public function setStartPos(startX:int, startY:int):void {
 			_startX = startX;
 			_startY = startY;
@@ -36,60 +46,126 @@ package maryfisher.view.ui.mediator {
 			_posY = _startY;
 		}
 		
+		/**
+		 * dimensions of the to be listed children
+		 * @param	width
+		 * @param	height
+		 */
 		public function setDimensions(width:int, height:int):void {
 			_childWidth = width;
 			_childHeight = height;
 		}
 		
-		public function setColumns(rows:int, isHorizontal:Boolean = true):void {
-			_isHorizontal = isHorizontal;
-			columns = rows;
+		/**
+		 * 
+		 * @param	columns
+		 * @param	isVertical
+		 */
+		public function setColumns(columns:int, isVertical:Boolean = true):void {
+			_isHorizontal = isVertical;
+			_columns = columns;
 		}
 		
+		/**
+		 * for dimensions that vary with the index position
+		 * @param	dist
+		 */
+		public function setTableDistances(dist:Array):void {
+			_tableDistances = dist;
+		}
+		
+		/**
+		 * distance between the listed children
+		 * @param	dX
+		 * @param	dY
+		 */
 		public function setDistances(dX:int, dY:int):void {
-			distX = dX;
-			distY = dY;
+			_distX = dX;
+			_distY = dY;
 		}
 		
+		/**
+		 * variable dimensions takes children into account that have different dimensions
+		 */
+		public function set hasVariableDims(value:Boolean):void {
+			_hasVariableDims = value;
+		}
+		
+		/**
+		 * later children are listed further down 
+		 * (instead of putting them in the first position and recalculating positions of the other children)
+		 */
+		public function set frontToBack(value:Boolean):void {
+			_frontToBack = value;
+		}
+		
+		/**
+		 * do a tween animation when adding a new child
+		 */
+		public function set doTween(value:Boolean):void {
+			_doTween = value;
+		}
+		
+		/**
+		 * 
+		 * @param 	child
+		 */
 		public function addListChild(child:IDisplayObject):void {
-			child && (_children.push(child));
-			setChildPos(child);
+			if(_frontToBack){
+				child && (_children.push(child));
+				setChildPos(child);
+			}else {
+				child && (_children.unshift(child));
+				updateChildPos();
+			}
 		}
 		
 		private function setChildPos(child:IDisplayObject):void {
-			if (_hasVariableDims) {
-				_childWidth = child.width;
+			if(!_tableDistances) {
+				if (_hasVariableDims) {
+					_childWidth = child.width;
+					_childHeight = child.height;
+				}else{
+					_childWidth = _childWidth || child.width;
+					_childHeight = _childHeight || child.height;
+				}
+			}else {
+				_childWidth = _tableDistances[_columns];
 				_childHeight = child.height;
-			}else{
-				_childWidth = _childWidth || child.width;
-				_childHeight = _childHeight || child.height;
 			}
 			
-			if(child){
-				child.x = _posX;
-				child.y = _posY;
+			if (child) {
+				if (_doTween) {
+					TweenLite.to(child, 0.3, { x: _posX, y:_posY } );
+				}else{
+					child.x = _posX;
+					child.y = _posY;
+				}
 			}
 			
 			if (_isHorizontal) {
-				_posX += _childWidth + distX;
+				_posX += _childWidth + _distX;
 			}else {
-				_posY += _childHeight + distY;
+				_posY += _childHeight + _distY;
 			}
 			_index++;
 			
-			if (columns != -1) {
-				if (_index % columns == 0) {
+			if (_columns != -1) {
+				if (_index % _columns == 0) {
 					if(_isHorizontal){
 						_posX = _startX;
-						_posY += _childHeight + distY;
+						_posY += _childHeight + _distY;
 					}else {
 						_posY = _startY;
-						_posX += _childWidth + distX;
+						_posX += _childWidth + _distX;
 					}
 				}
 			}
 		}
 		
+		/**
+		 * calculates positions for all children anew
+		 */
 		public function updateChildPos():void {
 			_index = 0;
 			_posX = _startX;
@@ -99,32 +175,55 @@ package maryfisher.view.ui.mediator {
 			}
 		}
 		
+		/**
+		 * for costum gaps
+		 * @param	distX
+		 * @param	distY
+		 */
+		public function addToChildPos(distX:int, distY:int):void {
+			_posX += distX;
+			_posY += distY;
+		}
+		
+		/**
+		 * 
+		 * @param	child
+		 * @return position of the child
+		 */
 		public function getChildPos(child:IDisplayObject):Point {
 			var p:Point = new Point();
 			var index:int = _children.indexOf(child);
 			if (index) {
-				p.y = Math.ceil(index / columns);
-				p.x = index % columns;
+				p.y = Math.ceil(index / _columns);
+				p.x = index % _columns;
 			}
 			return p;
 		}
 		
+		/**
+		 * 
+		 * @return position of the last child
+		 */
 		public function getLastChildPos():Point {
 			var p:Point = new Point();
 			var index:int = _children.length - 1;
 			if (index >= 0) {
-				p.y = Math.ceil(index / columns);
-				p.x = index % columns;
+				p.y = Math.ceil(index / _columns);
+				p.x = index % _columns;
 			}
 			return p;
 		}
 		
+		/**
+		 * 
+		 * @return position of the next child
+		 */
 		public function getNextChildPos():Point {
 			return new Point(_posX, _posY);
 		}
 		
 		/**
-		 * resets index, start positions, removes all children
+		 * resets index / start positions, removes all children
 		 */
 		public function reset():void {
 			_children = new Vector.<IDisplayObject>();
@@ -133,38 +232,45 @@ package maryfisher.view.ui.mediator {
 			_posY = _startY;
 		}
 		
+		/**
+		 * removes on ListChild and updates positions of all others so no gaps appear
+		 * @param	child
+		 */
 		public function removeListChild(child:IDisplayObject):void {
 			_children.splice(_children.indexOf(child), 1);
 			updateChildPos();
 		}
 		
-		public function invalidate():void {
-			_index = 0;
-			_posX = _startX;
-			_posY = _startY;
-			var l:int = _children.length;
-			for (var i:int = 0; i < l; i++) {
-				setChildPos(_children[i]);
-			}
-		}
-		
-		public function getHeight():int {
-			if (_index % columns == 0) {
+		/**
+		 * 
+		 * @return height
+		 */
+		public function get height():int {
+			if (_index % _columns == 0) {
 				return _posY;
 			}
-			return _posY + _childHeight + distY;
+			return _posY + _childHeight + _distY;
 		}
 		
-		public function getWidht():int {
+		/**
+		 * @return width
+		 */
+		public function get width():int {
 			return _posX;
 		}
 		
-		public function set hasVariableDims(value:Boolean):void {
-			_hasVariableDims = value;
-		}
-		
+		/**
+		 * @return children
+		 */
 		public function get children():Vector.<IDisplayObject> {
 			return _children;
+		}
+		
+		/**
+		 * @return last child index
+		 */
+		public function get index():int {
+			return _index;
 		}
 	}
 }

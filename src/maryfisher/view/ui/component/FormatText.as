@@ -1,5 +1,8 @@
 package maryfisher.view.ui.component {
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
@@ -27,6 +30,18 @@ package maryfisher.view.ui.component {
 			selectable = false;
 			
 			_format = new TextFormat();
+		}
+		
+		public function addListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void {
+			addEventListener(type, listener, useCapture, priority, useWeakReference);
+		}
+		
+		public function removeListener(type:String, listener:Function, useCapture:Boolean = false):void {
+			removeEventListener(type, listener, useCapture);
+		}
+		
+		public function hasListener(type:String):Boolean {
+			return hasEventListener(type);
 		}
 		
 		public function setTextBlock(autoSize:String = TextFieldAutoSize.LEFT):void {
@@ -117,6 +132,14 @@ package maryfisher.view.ui.component {
 		public function setLocaleText(contextData:LocaleContextData, addText:Boolean = false, ... pars):void {
 			var t:String = LocaleController.getText(contextData).getText().text;
 			text = addText ? text + t : t;
+		}
+		
+		/* INTERFACE maryfisher.view.ui.interfaces.ITextField */
+		
+		public function set clipRect(value:Rectangle):void {
+			mask = new Bitmap(new BitmapData(value.width, value.height, false, 0));
+			mask.x = value.x;
+			mask.y = value.y;
 		}
 	}
 

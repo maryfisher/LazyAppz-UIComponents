@@ -16,9 +16,11 @@ package maryfisher.view.ui.mediator {
 		protected var _thumb:DisplayObject;
 		private var _scrollMax:int;
 		private var _scrollHeight:int;
+		private var _isInvisible:Boolean;
 		
-		public function BaseScrollBar() {
-			alpha = 0;
+		public function BaseScrollBar(isInvisible:Boolean) {
+			_isInvisible = isInvisible;
+			if(_isInvisible) alpha = 0;
 		}
 		
 		/* INTERFACE maryfisher.view.ui.interfaces.IScrollBar */
@@ -28,6 +30,8 @@ package maryfisher.view.ui.mediator {
 			_scrollHeight = scrollHeight;
 			_scrollMax = scrollMax;
 			
+			if (_scrollHeight >= _scrollMax) return;
+			
 			createTrack(_scrollHeight);
 			createThumb((_scrollHeight / _scrollMax) * _scrollHeight);
 		}
@@ -35,32 +39,29 @@ package maryfisher.view.ui.mediator {
 		public function startScrolling(scrollEnd:int):void {
 			//fade in
 			var perc:Number = scrollEnd / (_scrollMax - _scrollHeight);
-			var pos:int = (_scrollHeight - _thumb.height) * perc;
+			var px:int = scrollEnd > _thumb.y ? -1 : 1;
+			var pos:int = (_scrollHeight - _thumb.height) * perc + px;
 			
-			TweenMax.killTweensOf(this);
+			
 			TweenMax.killTweensOf(_thumb);
-			TweenMax.to(this, 0.7, { alpha: 1 } );
 			TweenMax.to(_thumb, 0.7, { y: pos } );
+			
+			if (!_isInvisible) return;
+			TweenMax.killTweensOf(this);
+			TweenMax.to(this, 0.7, { alpha: 1 } );
 		}
 		
 		/* INTERFACE maryfisher.view.ui.interfaces.IScrollBar */
 		
 		public function finishedScrolling():void {
+			if (!_isInvisible) return;
 			TweenMax.killTweensOf(this);
 			TweenMax.to(this, 0.7, { alpha: 0 } );
 		}
 		
-		protected function createTrack(trackHeight:int):void {
-			//_track = new Bitmap(new BitmapData(10, _scrollHeight));
-			//addChild(_track);
-		}
+		protected function createTrack(trackHeight:int):void {	}
 		
-		protected function createThumb(thumbHeight:int):void {
-			//_thumb = new Bitmap(new BitmapData(8, thumbHeight, false, 0x333333));
-			//_thumb.y = 1;
-			//_thumb.x = 1;
-			//addChild(_thumb);
-		}
+		protected function createThumb(thumbHeight:int):void {	}
 		
 	}
 

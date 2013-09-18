@@ -6,7 +6,7 @@ package maryfisher.view.ui.component {
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import maryfisher.framework.core.ViewController;
-	import maryfisher.view.core.BaseSpriteView;
+	import maryfisher.framework.view.core.BaseSpriteView;
 	import maryfisher.view.ui.interfaces.ITooltip;
 	
 	/**

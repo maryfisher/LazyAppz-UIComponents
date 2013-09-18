@@ -10,21 +10,26 @@ package maryfisher.view.ui.button {
 	 */
 	public class TextSpriteButton extends BaseSpriteButton {
 		
-		protected var _colorScheme:TextColorScheme;
+		protected var _colorScheme:ButtonColorScheme;
 		
 		protected var _label:FormatText;
 		
 		//private var _hasOver:Boolean = false;
 		//private var _hasDown:Boolean = false;
 		
-		public function TextSpriteButton(id:String, colorScheme:TextColorScheme, textfield:FormatText = null) {
+		public function TextSpriteButton(id:String, colorScheme:ButtonColorScheme, textfield:FormatText = null, centerButton:Boolean = true, overwrite:Boolean = true) {
 			super(id);
 			_colorScheme = colorScheme;
 			_label = textfield || new FormatText();
 			//_label.mouseEnabled = false;
-			_label.wordWrap = false;
-			_label.autoSize = TextFieldAutoSize.CENTER;
-			_label.align = "center";
+			if(overwrite && centerButton){
+				_label.wordWrap = false;
+				_label.autoSize = TextFieldAutoSize.CENTER;
+				_label.align = "center";
+			}else if (overwrite && !centerButton) {
+				_label.align = "left";
+				_label.autoSize = TextFieldAutoSize.LEFT;
+			}
 			_label.textColor = _colorScheme.upColor;
 			addChild(_label);
 		}
@@ -52,7 +57,7 @@ package maryfisher.view.ui.button {
 		
 		override protected function onUp():void {
 			super.onUp();
-			_label.textColor = _colorScheme.upColor;
+			_label.textColor = _colorScheme.overColor;
 		}
 		
 		public function set label(value:String):void {

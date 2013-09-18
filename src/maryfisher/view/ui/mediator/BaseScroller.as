@@ -4,27 +4,32 @@ package maryfisher.view.ui.mediator {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
+	import flash.geom.Rectangle;
+	import maryfisher.view.ui.interfaces.IDisplayObject;
 	
 	/**
 	 *
 	 * @author mary_fisher
 	 */
 	public class BaseScroller {
-		protected var _mask:Bitmap;
+		//protected var _mask:Bitmap;
 		
+		protected var _scrollStops:Vector.<int>;
 		protected var _scrollSideways:Boolean;
-		protected var _content:DisplayObject;
+		protected var _content:IDisplayObject;
 		protected var _scrollWidth:int;
 		protected var _scrollHeight:int;
 		protected var _startPos:int;
-		//protected var _currentPage:int;
-		//protected var _maxPages:int;
 		protected var _scrollRows:int;
 		protected var _end:int;
 		protected var _scrollMax:int;
 		
 		public function BaseScroller() {
 			
+		}
+		
+		public function setScrollStops(stops:Vector.<int>):void {
+			_scrollStops = stops;
 		}
 		
 		/**
@@ -35,7 +40,8 @@ package maryfisher.view.ui.mediator {
 		 * @param	scrollRows defines how much should be scrolled each time (if not set, default length is length of the mask)
 		 * @return mask object
 		 */
-		public function defineScrollArea(scrollWidth:int, scrollHeight:int, isHorizontal:Boolean = false, scrollRows:int = 0):DisplayObject {
+		//public function defineScrollArea(scrollWidth:int, scrollHeight:int, isHorizontal:Boolean = false, scrollRows:int = 0):DisplayObject {
+		public function defineScrollArea(scrollWidth:int, scrollHeight:int, isHorizontal:Boolean = false, scrollRows:int = 0):void {
 			
 			_scrollHeight = scrollHeight;
 			_scrollWidth = scrollWidth;
@@ -46,49 +52,58 @@ package maryfisher.view.ui.mediator {
 			if (scrollRows == 0) {
 				_scrollRows = _scrollSideways ? _scrollWidth : _scrollHeight;
 			}else {
-				//trace(_scrollRows, _scrollWidth / scrollRows)
 				_scrollRows = _scrollSideways ? _scrollWidth / scrollRows : _scrollHeight / scrollRows;
 			}
 			
 			if (_content) {
-				return createMask();
+				//return createMask();
+				createMask();
 			}
 			
-			return null;
+			//return null;
 		}
 		
-		public function assignContent(content:DisplayObject):void {
+		public function assignContent(content:IDisplayObject):void {
 			_content = content;
+			_startPos = _scrollSideways ? _content.x : _content.y;
 			updateContent();
 		}
 		
 		public function updateContent():void {
 			_scrollMax = _scrollSideways ? _content.width : _content.height;
-			//trace("_scrollMax", _scrollMax);
+		}
+		
+		protected function nextScrollStop(dir:int):void {
+			
+			if(_scrollStops){
+				var i:int = _scrollStops.indexOf((_scrollSideways ? _content.x : _content.y)) + dir;
+				if (i < 0 || i >= _scrollStops.length) return;
+				_end = _scrollStops[i];
+			}
 		}
 		
 		public function scrollContent():void {
 			
-			_end = Math.min(Math.max(_end, (_startPos - _scrollMax + (_scrollSideways ? _mask.width : _mask.height))), _startPos);
+			//make sure the end is within the bounds of start and max of the scrolling area
+			//_end = Math.min(Math.max(_end, (_startPos - _scrollMax + (_scrollSideways ? _mask.width : _mask.height))), _startPos);
+			_end = Math.min(Math.max(_end, (_startPos - _scrollMax + (_scrollSideways ? _scrollWidth : _scrollHeight))), _startPos);
 			
 			if ((_scrollSideways ? _content.x : _content.y) == _end) {
 				return;
 			}
 			
-			//Tweener.removeTweens(_content);
-			//var tween:Object = { time: 0.3, transition:"easeOutSine" };
-			//var tweenDelay:Object = _scrollSideways ? { base:tween, x:_end } : { base:tween, y:_end };
-			//Tweener.addTween(_content, tweenDelay );
-			
 			startScrolling();
 		}
 		
-		private function createMask():DisplayObject {
-			_mask = new Bitmap(new BitmapData(_scrollWidth, _scrollHeight, false, 0));
-			_mask.x = _content.x;
-			_mask.y = _content.y;
-			_content.mask = _mask;
-			return _mask;
+		//private function createMask():DisplayObject {
+		private function createMask():void {
+			//_mask = new Bitmap(new BitmapData(_scrollWidth, _scrollHeight, false, 0));
+			//_mask.x = _content.x;
+			//_mask.y = _content.y;
+			//_content.mask = _mask;
+			//return _mask;
+			
+			_content.clipRect = new Rectangle(_content.x, _content.y, _scrollWidth, _scrollHeight);
 		}
 		
 		protected function startScrolling():void {
@@ -106,7 +121,6 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		public function reset():void {
-			//_end = (_startPos - _scrollMax + (_scrollSideways ? _mask.width : _mask.height));
 			_end = _startPos;
 			if (_scrollSideways) {
 				_content.x = _end;
