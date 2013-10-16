@@ -42,7 +42,7 @@ package maryfisher.view.ui.button {
 		override protected function onOver():void {
 			super.onOver();
 			_label.textColor = _colorScheme.overColor;
-			
+			//trace(_label.textColor.toString(16));
 		}
 		
 		override protected function onDown():void {
@@ -80,7 +80,7 @@ package maryfisher.view.ui.button {
 			if (_enabled) {
 				textColor = _colorScheme.upColor;
 			}else {
-				textColor = _colorScheme.downColor;
+				textColor = _colorScheme.disabledColor;
 			}
 		}
 	}

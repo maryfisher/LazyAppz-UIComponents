@@ -141,6 +141,7 @@ package maryfisher.view.ui.button {
 		public function get enabled():Boolean {	return _enabled; }
 		
 		public function get id():String { return _id; }
+		public function set id(value:String):void { _id = value; }
 		
 		public function set upState(value:DisplayObject):void {
 			if (_upState) {
