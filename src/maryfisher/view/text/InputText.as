@@ -6,6 +6,7 @@ package maryfisher.view.text {
 	import flash.events.MouseEvent;
 	import flash.text.TextFieldType;
 	import flash.ui.Keyboard;
+	import maryfisher.view.ui.component.BaseSprite;
 	import maryfisher.view.ui.component.FormatText;
 	import org.osflash.signals.DeluxeSignal;
 	import org.osflash.signals.events.GenericEvent;
@@ -14,7 +15,7 @@ package maryfisher.view.text {
 	 * ...
 	 * @author mary_fisher
 	 */
-	public class InputText extends Sprite {
+	public class InputText extends BaseSprite {
 		
 		private var _bubbleSignal:DeluxeSignal;
 		protected var _inputLabel:FormatText;
@@ -31,9 +32,16 @@ package maryfisher.view.text {
 			_inputLabel.addEventListener(Event.CHANGE, onTextChange);
 			_inputLabel.type = TextFieldType.INPUT;
 			_inputLabel.maxChars = 15;
+			_inputLabel.mouseEnabled = true;
+			_inputLabel.selectable = true;
 			addChild(_inputLabel);
 			addEventListener(MouseEvent.CLICK, onMouseClicked);
+			//addEventListener(FocusEvent.FOCUS_IN, onFocusIn);
 		}
+		
+		//private function onMouseOutsideClicked(e:MouseEvent):void {
+			//changeFinished();
+		//}
 		
 		private function onTextChange(e:Event):void {
 			//nix??
@@ -64,6 +72,10 @@ package maryfisher.view.text {
 			return _inputLabel.text;
 		}
 		
+		public function set label(value:String):void {
+			_inputLabel.text = value;
+		}
+		
 		public function restrictLabel(value:String):void {
 			_inputLabel.restrict = value;
 		}
@@ -71,11 +83,12 @@ package maryfisher.view.text {
 		public function activate():void {
 			_activated = true;
 			_inputLabel.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
-			_inputLabel.addEventListener(FocusEvent.FOCUS_OUT, onFocusOut);
+			removeEventListener(MouseEvent.CLICK, onMouseClicked);
+			_inputLabel.addEventListener(FocusEvent.MOUSE_FOCUS_CHANGE, onFocusOut);
+			
 			_inputLabel.selectable = true;
 			stage.focus = _inputLabel;
 			_inputLabel.setSelection(0, _inputLabel.length);
-			
 		}
 		
 		private function onKeyDown(e:KeyboardEvent):void {
@@ -94,6 +107,7 @@ package maryfisher.view.text {
 			_activated = false;
 			
 			_inputLabel.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			addEventListener(MouseEvent.CLICK, onMouseClicked);
 			_inputLabel.removeEventListener(FocusEvent.FOCUS_OUT, onFocusOut);
 			
 			_inputLabel.selectable = false;
@@ -110,6 +124,11 @@ package maryfisher.view.text {
 				activate();
 			}
 		}
+		
+		//protected function onFocusIn(event:FocusEvent): void {
+			//trace("focus in");
+			//onMouseClicked(null);
+		//}
 		
 		private function onFocusOut(e:FocusEvent):void {
 			changeFinished();

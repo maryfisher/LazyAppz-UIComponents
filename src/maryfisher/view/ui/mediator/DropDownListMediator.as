@@ -7,6 +7,7 @@ package maryfisher.view.ui.mediator {
 	import maryfisher.view.ui.interfaces.IDisplayObjectContainer;
 	import maryfisher.view.ui.interfaces.IDropDownBase;
 	import maryfisher.view.ui.interfaces.IDropDownItem;
+	import starling.display.DisplayObjectContainer;
 	/**
 	 * ...
 	 * @author mary_fisher
@@ -27,6 +28,7 @@ package maryfisher.view.ui.mediator {
 		private var _dropBase:IDropDownBase;
 		private var _hideOnOut:Boolean;
 		private var _elementSelectedListener:Function;
+		private var _switchListener:Function;
 		
 		public function DropDownListMediator(dropTop:IDisplayObjectContainer, dropBase:IDropDownBase, hideOnOut:Boolean = false, dropListener:IDisplayObject = null) {
 			_hideOnOut = hideOnOut;
@@ -49,10 +51,10 @@ package maryfisher.view.ui.mediator {
 			_elementSelectedListener = value;
 		}
 		
-		public function set scrollClass(cl:Class):void {
-			_scroller = new cl();
-			_scroller.assignContent(_dropBase);
-		}
+		//public function set scrollClass(cl:Class):void {
+			//_scroller = new cl();
+			//_scroller.assignContent(_dropBase);
+		//}
 		
 		private function onElementSelected(e:MouseEvent):void {
 			
@@ -69,7 +71,6 @@ package maryfisher.view.ui.mediator {
 			
 			for each (var item:IDropDownItem in _listOrder) {
 				if (item.id == _selectedElement.id ) continue;
-				trace("add list item", item.id);
 				_listMediator.addListChild(item);
 				_dropBase.addDisplayChild(item);
 			}
@@ -107,8 +108,8 @@ package maryfisher.view.ui.mediator {
 				if(obj != _dropTop) _dropTop.addDisplayChild(obj);
 				_listMediator.setDimensions(obj.width, obj.height);
 				//_listMediator.setStartPos(0, obj.height);
-				_dropBase.x = 0;
-				_dropBase.y = obj.height;
+				//_dropBase.x = 0;
+				//_dropBase.y = obj.height;
 			}else {
 				if(obj.id != _selectedElement.id){
 					_listMediator.addListChild(obj);
@@ -128,8 +129,13 @@ package maryfisher.view.ui.mediator {
 		
 		private function onSwitch(e:MouseEvent):void {
 			_dropBase.visible = !_dropBase.visible;
+			_switchListener && _switchListener(_dropBase.visible);
 			//e.stopImmediatePropagation();
 			if (_dropBase.visible) {
+				/** TODO
+				 * 
+				 */
+				//(_dropBase.parent as DisplayObjectContainer).setChildIndex(_dropBase, 
 				if (_hideOnOut) {					
 					_dropBase.addListener(MouseEvent.MOUSE_OUT, onHide);
 				}
@@ -139,6 +145,7 @@ package maryfisher.view.ui.mediator {
 					removeOnHide();
 				}
 			}
+			
 		}
 		
 		private function onHide(e:MouseEvent):void {
@@ -167,8 +174,18 @@ package maryfisher.view.ui.mediator {
 			return _scroller;
 		}
 		
+		public function set scroller(value:BaseScroller):void {
+			_scroller = value;
+			_scroller.assignContent(_dropBase);
+			
+		}
+		
 		public function get listMediator():ListMediator {
 			return _listMediator;
+		}
+		
+		public function set droppedListener(value:Function):void {
+			_switchListener = value;
 		}
 		
 		public function setSelectedElementPos(posX:int, posY:int):void {

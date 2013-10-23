@@ -3,7 +3,10 @@ package maryfisher.view.ui.button {
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
 	import maryfisher.view.event.ButtonEvent;
+	import maryfisher.view.event.ButtonSignalEvent;
+	import maryfisher.view.ui.interfaces.IButton;
 	import maryfisher.view.ui.interfaces.ITooltip;
+	import org.osflash.signals.Signal;
 	
 	/**
 	 * ...
@@ -17,6 +20,8 @@ package maryfisher.view.ui.button {
 		CONFIG::mouse
 		protected var _overState:DisplayObject;
 		
+		private var _overSignal:Signal;
+		
 		public function BaseSpriteButton(id:String) {
 			//_isTouch = isTouch;
 			super(id);
@@ -24,6 +29,13 @@ package maryfisher.view.ui.button {
 			CONFIG::mouse {
 				buttonMode = true;
 			}
+		}
+		
+		public function addOverListener(listener:Function):void {
+			if (!_overSignal) {
+				_overSignal = new Signal(IButton);
+			}
+			_overSignal.add(listener);
 		}
 		
 		override protected function addListeners():void {
@@ -95,10 +107,11 @@ package maryfisher.view.ui.button {
 		
 		CONFIG::mouse
 		protected function onOver():void {
-			if (_overState) {
-				_upState && (_upState.visible = false);
-				_overState.visible = true;
-			}
+			showOverState();
+			
+			_overSignal && _overSignal.dispatch(this);
+			
+			//_doBubble && (_bubblingSignal.dispatch(new ButtonSignalEvent(ButtonSignalEvent.ON_OVER)));
 			/** TODO
 			 * 
 			 */
@@ -113,6 +126,14 @@ package maryfisher.view.ui.button {
 				removeEventListener(MouseEvent.MOUSE_UP, onMouseUp, false);
 				removeEventListener(MouseEvent.ROLL_OUT, onMouseOut, false);
 				return;
+			}
+		}
+		
+		CONFIG::mouse
+		public function showOverState():void {
+			if (_overState) {
+				_upState && (_upState.visible = false);
+				_overState.visible = true;
 			}
 		}
 		
@@ -158,7 +179,7 @@ package maryfisher.view.ui.button {
 			super.onUp();
 		}
 		
-		override protected function showUpState():void {
+		override public function showUpState():void {
 			super.showUpState();
 			CONFIG::mouse{
 				if (_overState) _overState.visible = false;

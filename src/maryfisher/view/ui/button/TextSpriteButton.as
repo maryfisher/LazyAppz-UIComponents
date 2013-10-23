@@ -34,13 +34,13 @@ package maryfisher.view.ui.button {
 			addChild(_label);
 		}
 		
-		protected function set textColor(color:uint):void {
+		public function set textColor(color:uint):void {
 			_label.textColor = color;
 		}
 		
 		CONFIG::mouse
-		override protected function onOver():void {
-			super.onOver();
+		override public function showOverState():void {
+			super.showOverState();
 			_label.textColor = _colorScheme.overColor;
 			//trace(_label.textColor.toString(16));
 		}
@@ -50,7 +50,7 @@ package maryfisher.view.ui.button {
 			_label.textColor = _colorScheme.downColor;
 		}
 		
-		override protected function showUpState():void {
+		override public function showUpState():void {
 			super.showUpState();
 			_label.textColor = _colorScheme.upColor;
 		}
@@ -82,6 +82,10 @@ package maryfisher.view.ui.button {
 			}else {
 				textColor = _colorScheme.disabledColor;
 			}
+		}
+		
+		public function set colorScheme(value:ButtonColorScheme):void {
+			_colorScheme = value;
 		}
 	}
 

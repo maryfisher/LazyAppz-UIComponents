@@ -17,6 +17,8 @@ package maryfisher.view.ui.mediator {
 		private var _scrollMax:int;
 		private var _scrollHeight:int;
 		private var _isInvisible:Boolean;
+		private var _fadeOutSpeed:Number = 0.7;
+		private var _fadeInSpeed:Number = 0.3;
 		
 		public function BaseScrollBar(isInvisible:Boolean) {
 			_isInvisible = isInvisible;
@@ -44,11 +46,11 @@ package maryfisher.view.ui.mediator {
 			
 			
 			TweenMax.killTweensOf(_thumb);
-			TweenMax.to(_thumb, 0.7, { y: pos } );
+			TweenMax.to(_thumb, _fadeInSpeed, { y: pos } );
 			
 			if (!_isInvisible) return;
 			TweenMax.killTweensOf(this);
-			TweenMax.to(this, 0.7, { alpha: 1 } );
+			TweenMax.to(this, _fadeInSpeed, { alpha: 1 } );
 		}
 		
 		/* INTERFACE maryfisher.view.ui.interfaces.IScrollBar */
@@ -56,12 +58,20 @@ package maryfisher.view.ui.mediator {
 		public function finishedScrolling():void {
 			if (!_isInvisible) return;
 			TweenMax.killTweensOf(this);
-			TweenMax.to(this, 0.7, { alpha: 0 } );
+			TweenMax.to(this, _fadeOutSpeed, { alpha: 0 } );
 		}
 		
 		protected function createTrack(trackHeight:int):void {	}
 		
 		protected function createThumb(thumbHeight:int):void {	}
+		
+		public function set fadeOutSpeed(value:Number):void {
+			_fadeOutSpeed = value;
+		}
+		
+		public function set fadeInSpeed(value:Number):void {
+			_fadeInSpeed = value;
+		}
 		
 	}
 

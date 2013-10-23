@@ -91,7 +91,7 @@ package maryfisher.view.ui.button {
 		
 		protected function removeListeners():void {	}
 		
-		protected function showUpState():void {
+		public function showUpState():void {
 			if(_upState) _upState.visible = true;
 			
 			if (_downState) _downState.visible = false;
@@ -216,7 +216,7 @@ package maryfisher.view.ui.button {
 			 *nicht auf alle Arten dispatchen
 			 */
 			//dispatchEvent(new ButtonEvent(ButtonEvent.BUTTON_CLICKED, _id));
-			_doBubble && (_bubblingSignal.dispatch(new ButtonSignalEvent()));
+			_doBubble && (_bubblingSignal.dispatch(new ButtonSignalEvent(ButtonSignalEvent.ON_CLICKED)));
 			_clickedSignal && _clickedSignal.dispatch(this);
 			//_sound && _sound.play();
 			
@@ -231,6 +231,9 @@ package maryfisher.view.ui.button {
 			}
 			if (_downState) _downState.visible = true;
 			_sound && _sound.play();
+			
+			//_doBubble && (_bubblingSignal.dispatch(new ButtonSignalEvent(ButtonSignalEvent.ON_DOWN)));
+			
 			if (_downSignal) {
 				_downSignal.dispatch(this);
 				/* TODO

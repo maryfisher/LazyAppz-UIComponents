@@ -1,8 +1,7 @@
 package maryfisher.view.ui.button {
-	import flash.display.Sprite;
-	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
+	import maryfisher.view.ui.component.BaseSprite;
 	import maryfisher.view.ui.interfaces.IDisplayObject;
 	import maryfisher.view.ui.interfaces.ITooltip;
 	
@@ -10,13 +9,12 @@ package maryfisher.view.ui.button {
 	 * ...
 	 * @author mary_fisher
 	 */
-	public class HoverField extends Sprite implements IDisplayObject{
+	public class HoverField extends BaseSprite implements IDisplayObject{
 		private var _tooltip:ITooltip;
 		
 		public function HoverField() {
-			mouseChildren = false;
+			//mouseChildren = false;
 			
-			addListeners();
 		}
 		
 		CONFIG::touch
@@ -25,12 +23,12 @@ package maryfisher.view.ui.button {
 		}
 		
 		CONFIG::mouse
-		private function onMouseOut(e:MouseEvent):void {
+		protected function onMouseOut(e:MouseEvent):void {
 			_tooltip && _tooltip.hide();
 		}
 		
 		CONFIG::mouse
-		private function onMouseOver(e:MouseEvent):void {
+		protected function onMouseOver(e:MouseEvent):void {
 			_tooltip && _tooltip.show();
 		}
 		
@@ -61,6 +59,7 @@ package maryfisher.view.ui.button {
 		public function attachTooltip(tooltip:ITooltip):void {
 			_tooltip = tooltip;
 			
+			addListeners();
 		}
 	}
 

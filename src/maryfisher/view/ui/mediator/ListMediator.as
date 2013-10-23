@@ -29,6 +29,8 @@ package maryfisher.view.ui.mediator {
 		private var _hasVariableDims:Boolean = false;
 		private var _frontToBack:Boolean = true;
 		private var _doTween:Boolean = false;
+		private var _hasDynamicColumns:Boolean;
+		private var _dynamicColumnWidth:int;
 		
 		public function ListMediator() {
 			_children = new Vector.<IDisplayObject>();
@@ -99,6 +101,11 @@ package maryfisher.view.ui.mediator {
 			_frontToBack = value;
 		}
 		
+		public function dynamicColumns(maxWidth:int):void {
+			_hasDynamicColumns = true;
+			_dynamicColumnWidth = maxWidth;
+		}
+		
 		/**
 		 * do a tween animation when adding a new child
 		 */
@@ -130,18 +137,18 @@ package maryfisher.view.ui.mediator {
 					_childHeight = _childHeight || child.height;
 				}
 			}else {
-				_childWidth = _tableDistances[_columns];
-				_childHeight = child.height;
+				_childWidth = _tableDistances[_index % _columns];
+				_childHeight = _childHeight || child.height;
 			}
 			
-			if (child) {
+			//if (child) {
 				if (_doTween) {
 					TweenLite.to(child, 0.3, { x: _posX, y:_posY } );
 				}else{
 					child.x = _posX;
 					child.y = _posY;
 				}
-			}
+			//}
 			
 			if (_isHorizontal) {
 				_posX += _childWidth + _distX;
@@ -150,7 +157,19 @@ package maryfisher.view.ui.mediator {
 			}
 			_index++;
 			
-			if (_columns != -1) {
+			if (_hasDynamicColumns) {
+				if (_isHorizontal) {
+					if (_posX >= _dynamicColumnWidth) {
+						_posX = _startX;
+						_posY += _childHeight + _distY;
+					}
+				}else {
+					if (_posY >= _dynamicColumnWidth) {
+						_posY = _startY;
+						_posX += _childWidth + _distX;
+					}
+				}
+			}else if (_columns != -1) {
 				if (_index % _columns == 0) {
 					if(_isHorizontal){
 						_posX = _startX;
@@ -176,7 +195,7 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		/**
-		 * for costum gaps
+		 * for custom gaps
 		 * @param	distX
 		 * @param	distY
 		 */
@@ -190,28 +209,30 @@ package maryfisher.view.ui.mediator {
 		 * @param	child
 		 * @return position of the child
 		 */
-		public function getChildPos(child:IDisplayObject):Point {
-			var p:Point = new Point();
-			var index:int = _children.indexOf(child);
-			if (index) {
-				p.y = Math.ceil(index / _columns);
-				p.x = index % _columns;
-			}
-			return p;
-		}
+		//public function getChildPos(child:IDisplayObject):Point {
+			//var p:Point = new Point();
+			//var index:int = _children.indexOf(child);
+			//if (index) {
+				//p.y = Math.ceil(index / _columns);
+				//p.x = index % _columns;
+			//}
+			//return p;
+		//}
 		
 		/**
 		 * 
 		 * @return position of the last child
 		 */
 		public function getLastChildPos():Point {
-			var p:Point = new Point();
-			var index:int = _children.length - 1;
-			if (index >= 0) {
-				p.y = Math.ceil(index / _columns);
-				p.x = index % _columns;
-			}
-			return p;
+			//var p:Point = new Point();
+			//var index:int = _children.length - 1;
+			//if (index >= 0) {
+				//p.y = Math.ceil(index / _columns);
+				//p.x = index % _columns;
+			//}
+			//return p;
+			var child:IDisplayObject = _children[_children.length - 1];
+			return new Point(child.x, child.y);
 		}
 		
 		/**

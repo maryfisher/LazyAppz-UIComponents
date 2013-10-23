@@ -8,9 +8,15 @@ package maryfisher.view.event {
 	 * @author mary_fisher
 	 */
 	public class ButtonSignalEvent extends GenericEvent {
+		public var type:String;
 		
-		public function ButtonSignalEvent() {
+		static public const ON_CLICKED:String = "ButtonSignalEvent/onClicked";
+		static public const ON_OVER:String = "ButtonSignalEvent/onOver";
+		static public const ON_DOWN:String = "ButtonSignalEvent/onDown";
+		
+		public function ButtonSignalEvent(type:String) {
 			super(true);
+			this.type = type;
 			
 		}
 		

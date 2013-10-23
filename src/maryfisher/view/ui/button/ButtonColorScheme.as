@@ -18,6 +18,9 @@ package maryfisher.view.ui.button {
 			this.selectedColor = selectedColor;
 		}
 		
+		public function clone():ButtonColorScheme {
+			return new ButtonColorScheme(upColor, overColor, downColor, disabledColor, selectedColor);
+		}
 	}
 
 }

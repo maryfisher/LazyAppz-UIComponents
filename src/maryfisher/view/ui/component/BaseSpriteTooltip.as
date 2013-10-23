@@ -46,7 +46,8 @@ package maryfisher.view.ui.component {
 			if (y + height > ViewController.stageHeight) {
 				y = p.y - height;
 			}
-			
+			//_owner.stage.addChild(this);
+			trace("show tooltip");
 			super.show();
 		}
 		
@@ -71,6 +72,8 @@ package maryfisher.view.ui.component {
 			//_mouseOver = false;
 			//removeEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 			//removeEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
+			//_owner.stage.contains(this) && _owner.stage.removeChild(this);
+			trace("hide tooltip");
 			super.hide();
 		}
 		
@@ -80,6 +83,7 @@ package maryfisher.view.ui.component {
 			if(!(stage.mouseX < rect.left || stage.mouseX > rect.right || stage.mouseY < rect.top || stage.mouseY > rect.bottom)){
 				return;
 			}
+			trace("hide tooltip");
 			_mouseOver = false;
 			hide();
 		}
