@@ -1,13 +1,10 @@
 package maryfisher.view.ui.mediator {
-	import flash.events.EventPhase;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
-	import maryfisher.corset.mysteries.view.components.BaseDropDownItem;
 	import maryfisher.view.ui.interfaces.IDisplayObject;
 	import maryfisher.view.ui.interfaces.IDisplayObjectContainer;
 	import maryfisher.view.ui.interfaces.IDropDownBase;
-	import maryfisher.view.ui.interfaces.IDropDownItem;
-	import starling.display.DisplayObjectContainer;
+	import maryfisher.view.ui.interfaces.IIDItem;
 	/**
 	 * ...
 	 * @author mary_fisher
@@ -15,22 +12,22 @@ package maryfisher.view.ui.mediator {
 	public class DropDownListMediator {
 		
 		private var _listMediator:ListMediator;
-		private var _selectedElement:IDropDownItem;
+		private var _selectedElement:IIDItem;
 		private var _selectedElementPos:Point;
 		//private var _maxHeight:int;
 		//private var _maxWidth:int;
 		//private var _listener:Function;
 		private var _scroller:BaseScroller;
 		private var _dropListener:IDisplayObject;
-		private var _listOrder:Vector.<IDropDownItem>;
+		private var _listOrder:Vector.<IIDItem>;
 		
-		private var _dropTop:IDisplayObjectContainer;
+		private var _dropTop:IDisplayObject;
 		private var _dropBase:IDropDownBase;
 		private var _hideOnOut:Boolean;
 		private var _elementSelectedListener:Function;
 		private var _switchListener:Function;
 		
-		public function DropDownListMediator(dropTop:IDisplayObjectContainer, dropBase:IDropDownBase, hideOnOut:Boolean = false, dropListener:IDisplayObject = null) {
+		public function DropDownListMediator(dropTop:IDisplayObject, dropBase:IDropDownBase, hideOnOut:Boolean = false, dropListener:IDisplayObject = null) {
 			_hideOnOut = hideOnOut;
 			_dropBase = dropBase;
 			_dropListener = dropListener;
@@ -44,7 +41,7 @@ package maryfisher.view.ui.mediator {
 			_listMediator = new ListMediator();
 			_listMediator.setColumns(1);
 			
-			_listOrder = new Vector.<IDropDownItem>();
+			_listOrder = new Vector.<IIDItem>();
 		}
 		
 		public function set elementSelectedListener(value:Function):void {
@@ -58,7 +55,7 @@ package maryfisher.view.ui.mediator {
 		
 		private function onElementSelected(e:MouseEvent):void {
 			
-			_selectedElement = e.target as IDropDownItem;
+			_selectedElement = e.target as IIDItem;
 			//if(_elementSelectedListener == null){
 				//_selectedElement.x = _selectedElementPos.x;
 				//_selectedElement.y = _selectedElementPos.y;
@@ -69,7 +66,7 @@ package maryfisher.view.ui.mediator {
 			_listMediator.reset();
 			_dropBase.removeContent();
 			
-			for each (var item:IDropDownItem in _listOrder) {
+			for each (var item:IIDItem in _listOrder) {
 				if (item.id == _selectedElement.id ) continue;
 				_listMediator.addListChild(item);
 				_dropBase.addDisplayChild(item);
@@ -97,7 +94,7 @@ package maryfisher.view.ui.mediator {
 			_scroller && (_scroller.defineScrollArea(_selectedElement.width, h));
 		}
 		
-		public function addListElement(obj:IDropDownItem, isEmpty:Boolean = false):void {
+		public function addListElement(obj:IIDItem, isEmpty:Boolean = false):void {
 			if (!_selectedElement) {
 				_selectedElement = obj;
 				_selectedElement.x = _selectedElementPos.x;
@@ -105,7 +102,7 @@ package maryfisher.view.ui.mediator {
 				if (!_dropListener) {
 					_dropListener = _selectedElement;
 				}
-				if(obj != _dropTop) _dropTop.addDisplayChild(obj);
+				//if(obj != _dropTop) _dropTop.addDisplayChild(obj);
 				_listMediator.setDimensions(obj.width, obj.height);
 				//_listMediator.setStartPos(0, obj.height);
 				//_dropBase.x = 0;
