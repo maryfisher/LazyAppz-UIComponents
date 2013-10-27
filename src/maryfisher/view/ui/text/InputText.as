@@ -1,4 +1,4 @@
-package maryfisher.view.text {
+package maryfisher.view.ui.text {
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.FocusEvent;

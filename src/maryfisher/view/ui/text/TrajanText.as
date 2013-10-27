@@ -1,4 +1,4 @@
-package maryfisher.view.text {
+package maryfisher.view.ui.text {
 	import flash.text.Font;
 	import flash.text.TextFormat;
 	import maryfisher.view.ui.component.FormatText;
@@ -9,7 +9,7 @@ package maryfisher.view.text {
 	 */
 	public class TrajanText extends FormatText {
 		
-		[Embed(source="../../../assets/fonts/TrajanPro-Regular.otf", embedAsCFF = 'false', fontName = "TrajanFont", mimeType = "application/x-font-opentype")]
+		[Embed(source="../../../../assets/fonts/TrajanPro-Regular.otf", embedAsCFF = 'false', fontName = "TrajanFont", mimeType = "application/x-font-opentype")]
 		private static var austenFont:Class;
 		
 		public function TrajanText(x:int = 0, y:int = 0, width:int = 100, height:int = 30) {
