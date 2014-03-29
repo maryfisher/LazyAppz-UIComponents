@@ -1,4 +1,4 @@
-package maryfisher.view.text {
+package maryfisher.view.ui.text {
 	import flash.text.Font;
 	import flash.text.TextFormat;
 	import maryfisher.view.ui.component.FormatText;

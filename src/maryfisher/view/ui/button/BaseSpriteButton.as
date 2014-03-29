@@ -46,6 +46,19 @@ package maryfisher.view.ui.button {
 				addTouchListeners();
 			}
 		}
+		
+		override protected function addRightClick():void {
+			CONFIG::mouse{
+				addEventListener(MouseEvent.RIGHT_CLICK, onRightClick);
+			}
+			
+			CONFIG::touch {
+				/** TODO
+				 * 
+				 */
+			}
+		}
+		
 		CONFIG::touch
 		private function addTouchListeners():void {
 			if (_hitTest) {
@@ -86,6 +99,11 @@ package maryfisher.view.ui.button {
 			addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown, false);
 			addEventListener(MouseEvent.MOUSE_UP, onMouseUp, false);
 			addEventListener(MouseEvent.ROLL_OUT, onMouseOut, false);
+		}
+		
+		CONFIG::mouse
+		private function onRightClick(e:MouseEvent):void {
+			onRight();
 		}
 		
 		override protected function removeListeners():void {
@@ -139,12 +157,18 @@ package maryfisher.view.ui.button {
 		
 		CONFIG::mouse
 		protected function onMouseDown(e:MouseEvent):void {
+			if (!enabled) {
+				return;
+			}
 			onDown();
 		}
 		CONFIG::mouse
 		protected function onMouseOver(e:MouseEvent):void {
+			if (!enabled) {
+				return;
+			}
 			_tooltip && _tooltip.show();
-			if (!_enabled || _selected) {
+			if (_selected) {
 				return;
 			}
 			/* TODO
@@ -175,7 +199,8 @@ package maryfisher.view.ui.button {
 			if (!_enabled) {
 				return;
 			}
-			if (_overState) _overState.visible = true;
+			showOverState();
+			//if (_overState) _overState.visible = true;
 			super.onUp();
 		}
 		
@@ -196,7 +221,6 @@ package maryfisher.view.ui.button {
 			if (_enabled == value) {
 				return;
 			}
-			
 			CONFIG::mouse{
 				if (!value) {
 					onMouseOut(null);

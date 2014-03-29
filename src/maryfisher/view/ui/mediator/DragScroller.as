@@ -7,12 +7,16 @@ package maryfisher.view.ui.mediator {
 	 * ...
 	 * @author mary_fisher
 	 */
-	public class DragScroller extends BaseScroller {
+	public class DragScroller extends BarScroller {
+		
+		/** TODO
+		 * merge with DragMediator
+		 */
 		
 		private var _lastPos:Number;
 		private var _offset:Number;
 		private var _dragMilage:int;
-		private var _scrollBar:IScrollBar;
+		//private var _scrollBar:IScrollBar;
 		private var _dragMax:int = 10;
 		
 		public function DragScroller(dragMax:int = 10) {
@@ -26,8 +30,8 @@ package maryfisher.view.ui.mediator {
 			CONFIG::mouse {
 				if(!_content.hasListener(MouseEvent.MOUSE_DOWN)){
 					_content.addListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-					_content.addListener(MouseEvent.MOUSE_OVER, onMouseOver);
-					_content.addListener(MouseEvent.MOUSE_OUT, onMouseOut);
+					//_content.addListener(MouseEvent.MOUSE_OVER, onMouseOver);
+					//_content.addListener(MouseEvent.MOUSE_OUT, onMouseOut);
 				}
 			}
 			CONFIG::touch {
@@ -37,22 +41,22 @@ package maryfisher.view.ui.mediator {
 			}
 		}
 		
-		CONFIG::mouse
-		private function onMouseOut(e:MouseEvent):void {
-			_content.removeListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-		}
+		//CONFIG::mouse
+		//private function onMouseOut(e:MouseEvent):void {
+			//_content.removeListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		//}
+		//
+		//CONFIG::mouse
+		//private function onMouseOver(e:MouseEvent):void {
+			//_content.addListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		//}
 		
-		CONFIG::mouse
-		private function onMouseOver(e:MouseEvent):void {
-			_content.addListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-		}
-		
-		CONFIG::mouse
-		private function onMouseWheel(e:MouseEvent):void {
-			_end += e.delta * 10;
-			
-			scrollContent();
-		}
+		//CONFIG::mouse
+		//private function onMouseWheel(e:MouseEvent):void {
+			//_end += e.delta * 10;
+			//
+			//scrollContent();
+		//}
 		
 		CONFIG::mouse
 		private function onMouseDown(e:MouseEvent):void {
@@ -127,27 +131,27 @@ package maryfisher.view.ui.mediator {
 			return false;
 		}
 		
-		public function set scrollBar(value:IScrollBar):void {
-			_scrollBar = value;
-		}
+		//public function set scrollBar(value:IScrollBar):void {
+			//_scrollBar = value;
+		//}
 		
 		public function set dragMax(value:int):void {
 			_dragMax = value;
 		}
 		
-		override public function updateContent():void {
-			super.updateContent();
-			_scrollBar && (_scrollBar.setScrollDims(_scrollMax, _scrollHeight));
-		}
+		//override public function updateContent():void {
+			//super.updateContent();
+			//_scrollBar && (_scrollBar.setScrollDims(_scrollMax, _scrollHeight));
+		//}
 		
-		override protected function startScrolling():void {
-			super.startScrolling();
-			_scrollBar && (_scrollBar.startScrolling(_startPos - _end));
-		}
-		
-		override protected function scrollingFinished():void {
-			super.scrollingFinished();
-			_scrollBar && (_scrollBar.finishedScrolling());
-		}
+		//override protected function startScrolling():void {
+			//super.startScrolling();
+			//_scrollBar && (_scrollBar.startScrolling(_startPos - _end));
+		//}
+		//
+		//override protected function scrollingFinished():void {
+			//super.scrollingFinished();
+			//_scrollBar && (_scrollBar.finishedScrolling());
+		//}
 	}
 }

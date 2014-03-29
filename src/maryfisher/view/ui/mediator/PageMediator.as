@@ -1,6 +1,5 @@
 package maryfisher.view.ui.mediator {
 	import flash.geom.Point;
-	import maryfisher.austengames.view.ui.preparation.invitation.TraitPage;
 	import maryfisher.view.ui.interfaces.IButton;
 	import maryfisher.view.ui.interfaces.IDisplayObject;
 	import maryfisher.view.ui.interfaces.IPage;
@@ -27,6 +26,7 @@ package maryfisher.view.ui.mediator {
 		private var _lastButton:IButton;
 		private var _firstButton:IButton;
 		private var _distances:Point;
+		private var _onSelectListener:Function;
 		//private var _numberButtons:Vector.<IButton>;
 		
 		public function PageMediator() {
@@ -43,17 +43,17 @@ package maryfisher.view.ui.mediator {
 			_distances = dist;
 		}
 		
-		public function addContent(content:IDisplayObject):IPage {
+		public function addContent(content:IDisplayObject, onNewPage:Boolean = false):IPage {
 			if (!_pageType) {
 				throw new Error("PageMediator Error: Please set a page type first!");
 			}
-			if (!_pageBar) {
-				throw new Error("PageMediator Error: Please assign a page bar first!");
-			}
+			//if (!_pageBar) {
+				//throw new Error("PageMediator Error: Please assign a page bar first!");
+			//}
 			var l:int = _pages.length;
-			if (l == 0 || !hasRoom(content, _pages[l - 1])) {
+			if (l == 0 || onNewPage || !hasRoom(content, _pages[l - 1])) {
 				var page:IPage = new _pageType();
-				page.listMediator.setDistances(_distances);
+				page.listMediator.setDistances(_distances.x, _distances.y);
 				page.addContent(content);
 				addPage(page);
 				//_pages.push(page);
@@ -76,6 +76,9 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		public function addPage(page:IPage):void {
+			//if (!_pageBar) {
+				//throw new Error("PageMediator Error: Please assign a page bar first!");
+			//}
 			var l:int = _pages.length;
 			_pages.push(page);
 			if (l == 0) {
@@ -92,7 +95,7 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		public function reset():void {
-			_currentPageNum = 0;
+			_currentPageNum = -1;
 			_pageBar.reset();
 			_pages = new Vector.<IPage>();
 		}
@@ -118,8 +121,13 @@ package maryfisher.view.ui.mediator {
 			_pageBar.pageMediator = this;
 		}
 		
+		public function init():void {
+			_pageBar.setMaxPages(_pages.length);
+			selectPage(0);
+		}
+		
 		private function onNumberButtonSelected(b:IButton):void {
-			assignNewPage(parseInt(b.id) - 1);
+			selectPage(parseInt(b.id) - 1);
 		}
 		
 		public function onButtonSelected(b:IButton):void {
@@ -142,26 +150,27 @@ package maryfisher.view.ui.mediator {
 				default:
 			}
 			
-			assignNewPage(newpage);
+			selectPage(newpage);
 		}
 		
-		private function assignNewPage(newpage:int):void {
+		public function selectPage(newpage:int):void {
 			
 			if (newpage == _currentPageNum) return;
 			
-			_pages[_currentPageNum].hide();
+			(_currentPageNum > -1 ) && _pages[_currentPageNum].hide();
 			_currentPageNum = newpage;
 			_pages[_currentPageNum].show();
-			
+			_pageBar.setPage(_currentPageNum);
 			enableButtons();
 			
+			_onSelectListener && _onSelectListener();
 		}
 		
 		public function enableButtons():void {
-			_firstButton.enabled = _currentPageNum != 0;
-			_prevButton.enabled = _currentPageNum != 0
-			_lastButton.enabled = _currentPageNum != _pages.length - 1;
-			_nextButton.enabled = _currentPageNum != _pages.length - 1;
+			_firstButton && (_firstButton.enabled = _currentPageNum != 0);
+			_prevButton && (_prevButton.enabled = _currentPageNum != 0);
+			_lastButton && (_lastButton.enabled = _currentPageNum != _pages.length - 1);
+			_nextButton && (_nextButton.enabled = _currentPageNum != _pages.length - 1);
 		}
 		
 		public function addButtons(nextButton:IButton = null, prevButton:IButton = null, lastButton:IButton = null,
@@ -184,7 +193,7 @@ package maryfisher.view.ui.mediator {
 			}
 		}
 		
-		public function destory():void {
+		public function destroy():void {
 			_pageBar.destroy();
 			_firstButton.destroy();
 			_prevButton.destroy();
@@ -195,5 +204,17 @@ package maryfisher.view.ui.mediator {
 		public function get currentPage():IPage {
 			return _pages[_currentPageNum];
 		}
+		
+		public function get currentPageIndex():int {
+			return _currentPageNum;
+		}
+		
+		public function set onSelectListener(value:Function):void {
+			_onSelectListener = value;
+		}
+		
+		//public function selectPage(index:int):void {
+			//assignNewPage(index);
+		//}
 	}
 }

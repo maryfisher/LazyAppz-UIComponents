@@ -40,15 +40,23 @@ package maryfisher.view.ui.component {
 			x = p.x + _distX;
 			y = p.y + _distY;
 			
-			if (x + width > ViewController.stageWidth) {
-				x = p.x - width;
+			if (x + contentWidth > ViewController.stageWidth) {
+				x = p.x - contentWidth;
 			}
-			if (y + height > ViewController.stageHeight) {
-				y = p.y - height;
+			if (y + contentHeight > ViewController.stageHeight) {
+				y -= (p.y + contentHeight) - ViewController.stageHeight + 20;
 			}
 			//_owner.stage.addChild(this);
-			trace("show tooltip");
+			//trace("show tooltip");
 			super.show();
+		}
+		
+		protected function get contentHeight():int {
+			return height;
+		}
+		
+		protected function get contentWidth():int {
+			return width;
 		}
 		
 		private function onMouseOver(e:MouseEvent):void {
@@ -73,7 +81,7 @@ package maryfisher.view.ui.component {
 			//removeEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 			//removeEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 			//_owner.stage.contains(this) && _owner.stage.removeChild(this);
-			trace("hide tooltip");
+			//trace("hide tooltip");
 			super.hide();
 		}
 		
@@ -88,6 +96,10 @@ package maryfisher.view.ui.component {
 			hide();
 		}
 		
+		override public function destroy():void {
+			hide();
+			super.destroy();
+		}
 	}
 
 }

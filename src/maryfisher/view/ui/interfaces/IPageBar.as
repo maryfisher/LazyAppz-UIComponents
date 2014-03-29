@@ -11,6 +11,10 @@ package maryfisher.view.ui.interfaces {
 		function destroy():void;
 		
 		function reset():void;
+		
+		function setPage(currentPageNum:int):void;
+		
+		function setMaxPages(max:int):void;
 	}
 	
 }

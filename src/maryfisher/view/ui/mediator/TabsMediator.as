@@ -25,7 +25,7 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		private function onTabSelected(button:IButton):void {
-			selectTab(button.id);
+			selectTab(button.id, true);
 		}
 		
 		public function addContent(content:IDisplayObject, tab:IButton):void {
@@ -35,7 +35,9 @@ package maryfisher.view.ui.mediator {
 			_effect.onAddContent(content);
 		}
 		
-		public function selectTab(id:String):void {
+		public function selectTab(id:String, deselectSame:Boolean):void {
+			
+			if (_selectedTab == id && !deselectSame) return;
 			_effect.startTransition(_content[_selectedTab], _content[id]);
 			
 			if (_selectedTab && _tabButtons[_selectedTab]) {
@@ -50,10 +52,15 @@ package maryfisher.view.ui.mediator {
 			}
 			
 			_selectedTab = id;
+			var tabButton:IButton = (_tabButtons[_selectedTab] as IButton);
+			tabButton && (tabButton.selected = true);
 			
-			(_tabButtons[_selectedTab] as IButton).selected = true;
-			
-			_tabUpdate.dispatch((_tabButtons[_selectedTab] as IButton));
+			_tabUpdate.dispatch(tabButton);
+		}
+		
+		public function enableTab(id:String, isEnabled:Boolean):void {
+			var tabButton:IButton = (_tabButtons[_selectedTab] as IButton);
+			tabButton && (tabButton.enabled = isEnabled);
 		}
 		
 		public function reset():void {

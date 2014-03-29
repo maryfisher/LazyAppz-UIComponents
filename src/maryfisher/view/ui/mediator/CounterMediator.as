@@ -30,6 +30,10 @@ package maryfisher.view.ui.mediator {
 			_max = max;
 		}
 		
+		/**
+		 * 
+		 * @param	listener Function.<int>
+		 */
 		public function addAmountChangedListener(listener:Function):void {
 			_updateSignal.add(listener);
 		}
@@ -42,6 +46,7 @@ package maryfisher.view.ui.mediator {
 			_textCounter.text = amount.toString();
 			_minusCounter.addClickedListener(onMinus);
 			_plusCounter.addClickedListener(onPlus);
+			setEnabled();
 		}
 		
 		private function onMinus(button:IButton):void {

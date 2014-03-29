@@ -28,6 +28,11 @@ package maryfisher.view.ui.mediator {
 			
 		}
 		
+		public function scrollTo(pos:int):void {
+			_end = -pos;
+			scrollContent();
+		}
+		
 		public function setScrollStops(stops:Vector.<int>):void {
 			_scrollStops = stops;
 		}
@@ -49,11 +54,12 @@ package maryfisher.view.ui.mediator {
 			//_scrollMax = _scrollSideways ? _scrollWidth : _scrollHeight;
 			_startPos = _scrollSideways ? _content.x : _content.y;
 			
-			if (scrollRows == 0) {
-				_scrollRows = _scrollSideways ? _scrollWidth : _scrollHeight;
-			}else {
-				_scrollRows = _scrollSideways ? _scrollWidth / scrollRows : _scrollHeight / scrollRows;
-			}
+			this.scrollRows = scrollRows;
+			//if (scrollRows == 0) {
+				//_scrollRows = _scrollSideways ? _scrollWidth : _scrollHeight;
+			//}else {
+				//_scrollRows = _scrollSideways ? _scrollWidth / scrollRows : _scrollHeight / scrollRows;
+			//}
 			
 			if (_content) {
 				//return createMask();
@@ -113,7 +119,7 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		protected function scrollingFinished():void {
-			
+			//trace("scrollingFinished");
 		}
 		
 		public function dispose():void {
@@ -126,6 +132,15 @@ package maryfisher.view.ui.mediator {
 				_content.x = _end;
 			}else {
 				_content.y = _end;
+			}
+		}
+		
+		public function set scrollRows(value:int):void {
+			if (value == 0) {
+				_scrollRows = _scrollSideways ? _scrollWidth : _scrollHeight;
+			}else {
+				//_scrollRows = _scrollSideways ? _scrollWidth / value : _scrollHeight / value;
+				_scrollRows = _scrollSideways ? _content.width / value : _content.height / value;
 			}
 		}
 		

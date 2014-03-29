@@ -1,12 +1,13 @@
 package maryfisher.view.ui.interfaces {
 	import flash.display.Stage;
 	import flash.geom.Rectangle;
+	import maryfisher.framework.view.IEventListener;
 	
 	/**
 	 * ...
 	 * @author mary_fisher
 	 */
-	public interface IDisplayObject{
+	public interface IDisplayObject extends IEventListener{
 		function get width():Number;
 		function get height():Number;
 		function get x():Number;
@@ -18,10 +19,9 @@ package maryfisher.view.ui.interfaces {
 		function set alpha(value:Number):void;
 		function set clipRect(value:Rectangle):void;
 		
-		function addListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false) : void
-		function removeListener(type:String, listener:Function, useCapture:Boolean=false) : void
-		function hasListener(type:String):Boolean;
-		
+		/** TODO
+		 * addStageListener to make it independent from flash.display.Stage
+		 */
 		function get stage():Stage;
 		
 	}

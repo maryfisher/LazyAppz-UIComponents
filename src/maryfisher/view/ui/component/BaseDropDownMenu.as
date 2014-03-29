@@ -2,7 +2,6 @@ package maryfisher.view.ui.component {
 	import flash.display.DisplayObject;
 	import flash.events.Event;
 	import flash.geom.Rectangle;
-	import maryfisher.corset.mysteries.view.components.ScrollBar;
 	import maryfisher.view.ui.button.ButtonColorScheme;
 	import maryfisher.view.ui.component.BaseSprite;
 	import maryfisher.view.ui.interfaces.IButton;
@@ -10,7 +9,7 @@ package maryfisher.view.ui.component {
 	import maryfisher.view.ui.interfaces.IIDItem;
 	import maryfisher.view.ui.interfaces.IScrollBar;
 	import maryfisher.view.ui.mediator.BaseScroller;
-	import maryfisher.view.ui.mediator.DragScroller;
+	import maryfisher.view.ui.mediator.BarScroller;
 	import maryfisher.view.ui.mediator.DropDownListMediator;
 	import org.osflash.signals.DeluxeSignal;
 	import org.osflash.signals.events.GenericEvent;
@@ -70,7 +69,7 @@ package maryfisher.view.ui.component {
 			return null;
 		}
 		
-		protected function resetTop():void {
+		public function resetTop():void {
 			throw new Error("[BaseDropDownMenu] [resetTop] Please overwrite this method to reset the _dropTop.")
 		}
 		
@@ -158,13 +157,9 @@ package maryfisher.view.ui.component {
 		
 		public function reset():void {
 			_selectedIndex = -1;
-			_dropBase.removeContent();
+			//_dropBase.removeContent();
 			_dropMediator.reset();
 			_buttons.length = 0;
-			/** TODO
-			 * 
-			 */
-			//_dropTop.label = _topText;
 			resetTop();
 			_scroller && _scroller.reset();
 		}

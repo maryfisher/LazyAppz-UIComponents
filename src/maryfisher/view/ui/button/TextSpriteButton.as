@@ -12,7 +12,7 @@ package maryfisher.view.ui.button {
 		
 		protected var _colorScheme:ButtonColorScheme;
 		
-		protected var _label:FormatText;
+		protected var _textField:FormatText;
 		
 		//private var _hasOver:Boolean = false;
 		//private var _hasDown:Boolean = false;
@@ -20,56 +20,62 @@ package maryfisher.view.ui.button {
 		public function TextSpriteButton(id:String, colorScheme:ButtonColorScheme, textfield:FormatText = null, centerButton:Boolean = true, overwrite:Boolean = true) {
 			super(id);
 			_colorScheme = colorScheme;
-			_label = textfield || new FormatText();
+			_textField = textfield || new FormatText();
+			
 			//_label.mouseEnabled = false;
-			if(overwrite && centerButton){
-				_label.wordWrap = false;
-				_label.autoSize = TextFieldAutoSize.CENTER;
-				_label.align = "center";
+			if (overwrite && centerButton) {
+				_textField.wordWrap = false;
+				//trace(_textField.x);
+				_textField.autoSize = TextFieldAutoSize.CENTER;
+				//trace(_textField.x);
+				_textField.align = "center";
 			}else if (overwrite && !centerButton) {
-				_label.align = "left";
-				_label.autoSize = TextFieldAutoSize.LEFT;
+				_textField.align = "left";
+				_textField.autoSize = TextFieldAutoSize.LEFT;
 			}
-			_label.textColor = _colorScheme.upColor;
-			addChild(_label);
+			//_textField.x = 0;
+			_textField.textColor = _colorScheme.upColor;
+			addChild(_textField);
 		}
 		
 		public function set textColor(color:uint):void {
-			_label.textColor = color;
+			_textField.textColor = color;
 		}
 		
 		CONFIG::mouse
 		override public function showOverState():void {
 			super.showOverState();
-			_label.textColor = _colorScheme.overColor;
+			_textField.textColor = _colorScheme.overColor;
 			//trace(_label.textColor.toString(16));
 		}
 		
 		override protected function onDown():void {
 			super.onDown();
-			_label.textColor = _colorScheme.downColor;
+			_textField.textColor = _colorScheme.downColor;
 		}
 		
 		override public function showUpState():void {
 			super.showUpState();
-			_label.textColor = _colorScheme.upColor;
+			_textField.textColor = _colorScheme.upColor;
 		}
 		
-		override protected function onUp():void {
-			super.onUp();
-			_label.textColor = _colorScheme.overColor;
-		}
+		//override protected function onUp():void {
+			//super.onUp();
+			//_textField.textColor = _colorScheme.overColor;
+		//}
 		
 		public function set label(value:String):void {
-			_label.text = value;
+			_textField.text = value;
+			_textField.y = int((height - _textField.height) / 2);
+			//trace(_textField.y, height, _textField.height);
 		}
 		
 		public function get label():String {
-			return _label.text;
+			return _textField.text;
 		}
 		
 		public function set textFormat(value:TextFormat):void {
-			_label.format = value;
+			_textField.format = value;
 			//_textFormat = value;
 			//_label.defaultTextFormat = _textFormat;
 			//_label.setTextFormat(_textFormat);
@@ -86,6 +92,10 @@ package maryfisher.view.ui.button {
 		
 		public function set colorScheme(value:ButtonColorScheme):void {
 			_colorScheme = value;
+		}
+		
+		public function get textField():FormatText {
+			return _textField;
 		}
 	}
 

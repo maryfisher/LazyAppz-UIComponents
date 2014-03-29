@@ -4,6 +4,7 @@ package maryfisher.view.ui.button {
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.filters.ColorMatrixFilter;
 	import maryfisher.framework.sound.ISound;
 	import maryfisher.view.event.ButtonEvent;
@@ -23,8 +24,11 @@ package maryfisher.view.ui.button {
 	public class AbstractSpriteButton extends BaseSprite implements IButton {
 		
 		private var _clickedSignal:Signal;
+		private var _rightClickSignal:Signal;
 		private var _downSignal:Signal;
 		private var _bubblingSignal:DeluxeSignal;
+		private var _onStayDown:Boolean;
+		//private var _upSignal:Signal;
 		protected var _sound:ISound;
 		
 		protected var _enabled:Boolean;
@@ -58,8 +62,13 @@ package maryfisher.view.ui.button {
 			removeListeners();
 			_clickedSignal && _clickedSignal.removeAll();
 			_downSignal && _downSignal.removeAll();
+			//_upSignal && _upSignal.removeAll();
 		}
 		
+		/**
+		 * 
+		 * @param	listener Function.<IButton>
+		 */
 		public function addClickedListener(listener:Function):void {
 			if (!_clickedSignal) {
 				_clickedSignal = new Signal(IButton);
@@ -68,12 +77,42 @@ package maryfisher.view.ui.button {
 				_clickedSignal.add(listener);
 		}
 		
-		public function addDownListener(listener:Function):void {
+		/**
+		 * 
+		 * @param	listener Function.<IButton>
+		 */
+		public function addRightClickListener(listener:Function):void {
+			if (!_rightClickSignal) {
+				addRightClick();
+				_rightClickSignal = new Signal(IButton);
+			}
+			if(listener != null)
+				_rightClickSignal.add(listener);
+		}
+		
+		protected function addRightClick():void {
+			
+		}
+		
+		/**
+		 * 
+		 * @param	listener Function.<IButton>
+		 * @param	onStayDown if true dispatches per frame that button is down
+		 */
+		public function addDownListener(listener:Function, onStayDown:Boolean):void {
+			_onStayDown = onStayDown;
 			if (!_downSignal) {
 				_downSignal = new Signal(IButton);
 			}
 			_downSignal.add(listener);
 		}
+		
+		//public function addUpListener(onMonocleDown:Function):void {
+			//if (!_upSignal) {
+				//_upSignal = new Signal(IButton);
+			//}
+			//_upSignal.add(listener);
+		//}
 		
 		public function addOnFinished(listener:Function):void {
 			
@@ -104,14 +143,7 @@ package maryfisher.view.ui.button {
 				return;
 			}
 			
-			_selected = value;
-			if (_selected) {
-				upState = _selectedState;
-			}else {
-				upState = _defaultState;
-			}
-			//handleMouseOut(null);
-			showUpState();
+			changeSelected(value);
 		}
 		
 		public function set enabled(value:Boolean):void {
@@ -144,11 +176,15 @@ package maryfisher.view.ui.button {
 		public function set id(value:String):void { _id = value; }
 		
 		public function set upState(value:DisplayObject):void {
+			var index:int = 0;
 			if (_upState) {
-				if (contains(_upState)) removeChild(_upState);
+				if (contains(_upState)) {
+					index = getChildIndex(_upState);
+					removeChild(_upState);
+				}
 			}
 			_upState = value;
-			_upState && addChildAt(_upState, 0);
+			_upState && addChildAt(_upState, index);
 		}
 		
 		public function set downState(value:DisplayObject):void {
@@ -206,6 +242,10 @@ package maryfisher.view.ui.button {
 			}
 		}
 		
+		protected function onRight():void {
+			_rightClickSignal && _rightClickSignal.dispatch(this);
+		}
+		
 		protected function onUp():void {
 			if (!_enabled) {
 				return;
@@ -220,17 +260,20 @@ package maryfisher.view.ui.button {
 			_clickedSignal && _clickedSignal.dispatch(this);
 			//_sound && _sound.play();
 			
-			if (_downSignal) {
+			if (_downSignal && _onStayDown) {
 				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			}
 		}
 		
 		protected function onDown():void {
-			if (!_enabled || _selected) {
+			if (!_enabled) {
+				return;
+			}
+			_sound && _sound.play();
+			if (_selected) {
 				return;
 			}
 			if (_downState) _downState.visible = true;
-			_sound && _sound.play();
 			
 			//_doBubble && (_bubblingSignal.dispatch(new ButtonSignalEvent(ButtonSignalEvent.ON_DOWN)));
 			
@@ -239,7 +282,7 @@ package maryfisher.view.ui.button {
 				/* TODO
 				 * optional
 				 */
-				if(!_clickedSignal){
+				if(_onStayDown){
 					addEventListener(Event.ENTER_FRAME, onEnterFrame);
 				}
 			}
@@ -247,6 +290,17 @@ package maryfisher.view.ui.button {
 		
 		private function onEnterFrame(e:Event):void {
 			_downSignal.dispatch(this);
+		}
+		
+		protected function changeSelected(value:Boolean):void {
+			_selected = value;
+			if (_selected) {
+				upState = _selectedState;
+			}else {
+				upState = _defaultState;
+			}
+			//handleMouseOut(null);
+			showUpState();
 		}
 	}
 

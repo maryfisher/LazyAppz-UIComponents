@@ -1,6 +1,5 @@
 package maryfisher.view.ui.mediator {
 	import flash.geom.Rectangle;
-	import maryfisher.corset.mysteries.view.components.LineInputText;
 	import maryfisher.framework.util.ErrorUtil;
 	import maryfisher.view.ui.data.AlignData;
 	import maryfisher.view.ui.data.AlignIntData;
@@ -12,6 +11,14 @@ package maryfisher.view.ui.mediator {
 	 */
 	public class AlignMediator {
 		
+		/** TODO
+		 * Dictionaries instead of Vectors, key is target:IDisplayObject, one vector for all of them to loop through
+		 * update(target)
+		 * AlignDatas hold both x and y info (so one data instead of two)
+		 * 
+		 * POSSIBLE??
+		 * interface IAlignable - DisplayObject holds AlignData, uses static AlignMediator methods
+		 */
 		private var _alignDatasX:Vector.<AlignData>;
 		private var _alignDatasY:Vector.<AlignData>;
 		private var _alignInts:Vector.<AlignIntData>;
@@ -53,6 +60,9 @@ package maryfisher.view.ui.mediator {
 			return 0;
 		}
 		
+		/** TODO
+		 * static??
+		 */
 		private function alignTarget(data:AlignData, isX:Boolean):void {
 			if (!data.nextTo) {
 				if (isX) {
@@ -104,19 +114,19 @@ package maryfisher.view.ui.mediator {
 			ErrorUtil.notImplemented("AlignMediator", "alignYLine");
 		}
 		
-		public function alignXOnLine(target:IDisplayObject, nextTo:IDisplayObject):void {
+		public function alignOnX(target:IDisplayObject, nextTo:IDisplayObject):void {
 			addAlignmentX(target, AlignData.ON_LINE, nextTo);
 		}
 		
-		public function alignYOnLine(target:IDisplayObject, nextTo:IDisplayObject):void {
+		public function alignOnY(target:IDisplayObject, nextTo:IDisplayObject):void {
 			addAlignmentY(target, AlignData.ON_LINE, nextTo);
 		}
 		
-		public function alignXNextTo(target:IDisplayObject, nextTo:IDisplayObject, dist:int = 0):void {
+		public function alignNextTo(target:IDisplayObject, nextTo:IDisplayObject, dist:int = 0):void {
 			addAlignmentX(target, AlignData.NEXT_TO, nextTo, dist);
 		}
 		
-		public function alignYNextTo(target:IDisplayObject, nextTo:IDisplayObject, dist:int = 0):void {
+		public function alignBelow(target:IDisplayObject, nextTo:IDisplayObject, dist:int = 0):void {
 			addAlignmentY(target, AlignData.NEXT_TO, nextTo, dist);
 		}
 		

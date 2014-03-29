@@ -1,13 +1,16 @@
 package maryfisher.view.ui.mediator {
 	import flash.display.DisplayObject;
-	import maryfisher.austengames.view.components.button.ArrowButton;
 	import maryfisher.view.ui.interfaces.IButton;
+	import maryfisher.view.ui.interfaces.IDisplayObject;
 	import maryfisher.view.ui.interfaces.IScrollContainer;
 	/**
 	 * ...
 	 *
 	 */
 	public class ArrowScroller extends BaseScroller {
+		
+		static public const NEXT:String = "next";
+		static public const PREV:String = "prev";
 		
 		private var _nextButton:IButton;
 		private var _prevButton:IButton;
@@ -33,9 +36,9 @@ package maryfisher.view.ui.mediator {
 				_prevButton.addClickedListener(onPrevButtonClicked);
 				_nextButton.addClickedListener(onNextButtonClicked);
 			}else {
-				_prevButton.addDownListener(onButtonDown);
+				_prevButton.addDownListener(onButtonDown, false);
 				_prevButton.addClickedListener(onButtonUp);
-				_nextButton.addDownListener(onButtonDown);
+				_nextButton.addDownListener(onButtonDown, false);
 				_nextButton.addClickedListener(onButtonUp);
 			}
 			
@@ -55,7 +58,7 @@ package maryfisher.view.ui.mediator {
 		
 		private function onButtonDown(button:IButton):void {
 			
-			_downDirection = button.id == ArrowButton.NEXT ? 1 : -1;
+			_downDirection = button == _nextButton ? 1 : -1;
 			_end = _end - (_scrollWidth / 5 * _downDirection);
 			scrollContent();
 		}
@@ -83,13 +86,18 @@ package maryfisher.view.ui.mediator {
 			_nextButton.enabled = (_currentPage < _maxPages - 1);
 		}
 		
+		override public function scrollTo(pos:int):void {
+			_currentPage = Math.ceil(-( -pos - _startPos) / _scrollRows);
+			super.scrollTo(pos);
+		}
+		
 		private function calculateMove():void {
 			_end = -((_scrollRows) * _currentPage) + _startPos;
-			trace("calculateMove", _end, _currentPage, _startPos);
+			//trace("calculateMove", _end, _currentPage, _startPos);
 			scrollContent();
 		}
 		
-		override public function assignContent(content:DisplayObject):void {
+		override public function assignContent(content:IDisplayObject):void {
 			super.assignContent(content);
 			
 			_currentPage = 0;
@@ -103,9 +111,9 @@ package maryfisher.view.ui.mediator {
 		override public function updateContent():void {
 			super.updateContent();
 			if (_scrollSideways) {
-				_maxPages = (_content.width - (_scrollWidth - _scrollRows)) / _scrollRows;
+				_maxPages = Math.ceil((_content.width - (_scrollWidth - _scrollRows)) / _scrollRows);
 			}else {
-				_maxPages = (_content.height - (_scrollHeight - _scrollRows)) / _scrollRows;
+				_maxPages = Math.ceil((_content.height - (_scrollHeight - _scrollRows)) / _scrollRows);
 			}
 			enableButtons();
 		}
@@ -115,7 +123,7 @@ package maryfisher.view.ui.mediator {
 		 */
 		protected function setCurrentPage(direction:int):void {
 			var index:int = _currentPage + direction;
-			trace(_currentPage, _maxPages, direction);
+			//trace(_currentPage, _maxPages, direction);
 			if (index >= _maxPages || index < 0) {
 				return;
 			}

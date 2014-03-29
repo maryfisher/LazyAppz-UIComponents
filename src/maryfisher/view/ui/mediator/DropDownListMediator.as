@@ -84,6 +84,7 @@ package maryfisher.view.ui.mediator {
 			_dropBase.removeContent();
 			//_dropTop.removeChildren();
 			_scroller && (_scroller.reset());
+			_selectedElement = _dropTop as IIDItem;
 		}
 		
 		/**
@@ -108,7 +109,7 @@ package maryfisher.view.ui.mediator {
 				//_dropBase.x = 0;
 				//_dropBase.y = obj.height;
 			}else {
-				if(obj.id != _selectedElement.id){
+				if (obj.id != _selectedElement.id) {
 					_listMediator.addListChild(obj);
 					_dropBase.addDisplayChild(obj);
 				}else {
@@ -156,10 +157,19 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		public function init():void {
-			if (_dropBase.height > _listMediator.getNextChildPos().y) _dropBase.actHeight = _listMediator.getNextChildPos().y;
-			_dropListener.addListener(MouseEvent.CLICK, onSwitch, false);
+			var nextChild:int = _listMediator.getNextChildPos().y;
+			if (nextChild == 0) return;
+			if (_dropBase.height > nextChild) _dropBase.actHeight = nextChild;
 			_scroller && (_scroller.updateContent());
+			_dropListener.addListener(MouseEvent.CLICK, onSwitch, false);
 		}
+		
+		//public function update():void {
+			//trace("next child", _listMediator.getNextChildPos().y);
+			//var nextChild:int = _listMediator.getNextChildPos().y;
+			//if (_dropBase.height > nextChild) _dropBase.actHeight = nextChild;
+			//_scroller && (_scroller.updateContent());
+		//}
 		
 		//public function set dropDownList(value:IDropDownList):void {
 			//_dropDownList = value;

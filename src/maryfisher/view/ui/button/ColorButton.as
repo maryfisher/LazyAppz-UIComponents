@@ -10,7 +10,7 @@ package maryfisher.view.ui.button {
 	public class ColorButton extends TextSpriteButton {
 		
 		public function ColorButton(id:String, w:int, h:int, colorScheme:ButtonColorScheme, textColorScheme:ButtonColorScheme, textfield:FormatText = null) {
-			super(id, textColorScheme, textfield);
+			
 			
 			var bd:BitmapData = new BitmapData(w, h, false, colorScheme.upColor);
 			var bd2:BitmapData = new BitmapData(w, h, false, colorScheme.overColor);
@@ -26,7 +26,12 @@ package maryfisher.view.ui.button {
 			this.overState = new Bitmap(bd2);
 			this.downState = new Bitmap(bd3);
 			
-			_label.width = w;
+			super(id, textColorScheme, textfield);
+			
+			_textField.x = 0;
+			_textField.width = w;
+			//_textField.y = int((h - _textField.height) / 2);
+			//trace(_textField.y);
 		}
 		
 	}

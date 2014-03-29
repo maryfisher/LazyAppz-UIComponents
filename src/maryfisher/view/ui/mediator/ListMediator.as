@@ -66,6 +66,12 @@ package maryfisher.view.ui.mediator {
 		public function setColumns(columns:int, isVertical:Boolean = true):void {
 			_isHorizontal = isVertical;
 			_columns = columns;
+			//if (isVertical) {
+				//_posX = _startX;
+			//}else {
+				//_posY = _startY;
+			//}
+			_index = 0;
 		}
 		
 		/**
@@ -113,6 +119,10 @@ package maryfisher.view.ui.mediator {
 			_doTween = value;
 		}
 		
+		public function addEmpty():void {
+			updatePosition();
+		}
+		
 		/**
 		 * 
 		 * @param 	child
@@ -143,6 +153,9 @@ package maryfisher.view.ui.mediator {
 			
 			//if (child) {
 				if (_doTween) {
+					/** TODO
+					 * replace with ILocationTweenEffect
+					 */
 					TweenLite.to(child, 0.3, { x: _posX, y:_posY } );
 				}else{
 					child.x = _posX;
@@ -150,6 +163,12 @@ package maryfisher.view.ui.mediator {
 				}
 			//}
 			
+			updatePosition();
+			
+			
+		}
+		
+		private function updatePosition():void {
 			if (_isHorizontal) {
 				_posX += _childWidth + _distX;
 			}else {
@@ -192,6 +211,14 @@ package maryfisher.view.ui.mediator {
 			for (var i:int; i < _children.length; i++ ) {
 				setChildPos(_children[i]);
 			}
+		}
+		
+		public function updateLastChildPos():void {
+			if (_children.length == 0) return;
+			var child:IDisplayObject = _children[_children.length - 1];
+			_posX = child.x;
+			_posY = child.y;
+			setChildPos(child);
 		}
 		
 		/**

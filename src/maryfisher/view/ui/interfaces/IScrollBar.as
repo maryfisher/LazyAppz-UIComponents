@@ -1,4 +1,5 @@
 package maryfisher.view.ui.interfaces {
+	import maryfisher.view.ui.mediator.BarScroller;
 	
 	/**
 	 * ...
@@ -8,6 +9,7 @@ package maryfisher.view.ui.interfaces {
 		function setScrollDims(scrollMax:int, scrollHeight:int):void;
 		function startScrolling(scrollEnd:int):void;
 		function finishedScrolling():void;
+		function set scroller(value:BarScroller):void;
 	}
 	
 }

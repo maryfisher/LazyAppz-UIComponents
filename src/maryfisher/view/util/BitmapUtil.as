@@ -21,7 +21,7 @@ package maryfisher.view.util {
 			//var data:BitmapData = bm.bitmapData;
 			var matrix:Matrix = new Matrix();
 			matrix.scale(width / data.width, height / data.height);
-			var bitmapData:BitmapData = new BitmapData(width, height, data.transparent);
+			var bitmapData:BitmapData = new BitmapData(width, height, true, 0);
 			bitmapData.draw(data, matrix);
 			//return new Bitmap(bitmapData);
 			return bitmapData;

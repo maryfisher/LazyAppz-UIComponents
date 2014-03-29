@@ -9,7 +9,7 @@ package maryfisher.view.ui.button {
 	 * ...
 	 * @author mary_fisher
 	 */
-	public class HoverField extends BaseSprite implements IDisplayObject{
+	public class HoverField extends BaseSprite {
 		private var _tooltip:ITooltip;
 		
 		public function HoverField() {
