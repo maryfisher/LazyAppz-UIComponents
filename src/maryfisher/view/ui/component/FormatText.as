@@ -1,6 +1,7 @@
 package maryfisher.view.ui.component {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
 	import flash.text.TextField;
@@ -42,6 +43,10 @@ package maryfisher.view.ui.component {
 		
 		public function hasListener(type:String):Boolean {
 			return hasEventListener(type);
+		}
+		
+		public function dispatch(e:Event):void {
+			dispatchEvent(e);
 		}
 		
 		public function setTextBlock(autoSize:String = TextFieldAutoSize.LEFT):void {

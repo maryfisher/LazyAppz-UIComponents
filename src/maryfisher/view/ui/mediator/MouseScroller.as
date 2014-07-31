@@ -23,17 +23,17 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		CONFIG::mouse
-		private function onMouseOut(e:MouseEvent):void {
+		protected function onMouseOut(e:MouseEvent):void {
 			_content.removeListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 		}
 		
 		CONFIG::mouse
-		private function onMouseOver(e:MouseEvent):void {
+		protected function onMouseOver(e:MouseEvent):void {
 			_content.addListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 		}
 		
 		CONFIG::mouse
-		private function onMouseWheel(e:MouseEvent):void {
+		protected function onMouseWheel(e:MouseEvent):void {
 			_end += e.delta * 10;
 			
 			scrollContent();

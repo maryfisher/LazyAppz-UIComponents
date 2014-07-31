@@ -30,6 +30,7 @@ package maryfisher.view.ui.mediator {
 		private var _doLoop:Boolean;
 		private var _fadeIn:Boolean;
 		private var _fadeOut:Boolean;
+		private var _interval:int = 0;
 		
 		public function SoundMediator() {
 			
@@ -106,17 +107,20 @@ package maryfisher.view.ui.mediator {
 			 * dont remove this stupid looking code 
 			 * _channel.soundTransform.volume += 0.01 wont work!!!!
 			 */
-			var s:SoundTransform = _channel.soundTransform;
-			s.volume += 0.01;
-			_channel.soundTransform = s;
-			if (_channel.soundTransform.volume >= _soundTransform.volume) {
-				new StageCommand(StageCommand.UNREGISTER_TICK, this);
-				//new SoundCommand(SoundCommand.REGISTER_CHANNEL, _soundType, 0, _channel);
-				new SoundCommand(SoundCommand.REGISTER_CHANNEL, _soundType, 0, this);
-				if (_doLoop) {
-					_fadeIn = false;
+			if(_interval % 10 == 0){
+				var s:SoundTransform = _channel.soundTransform;
+				s.volume += 0.01;
+				_channel.soundTransform = s;
+				if (_channel.soundTransform.volume >= _soundTransform.volume) {
+					new StageCommand(StageCommand.UNREGISTER_TICK, this);
+					//new SoundCommand(SoundCommand.REGISTER_CHANNEL, _soundType, 0, _channel);
+					new SoundCommand(SoundCommand.REGISTER_CHANNEL, _soundType, 0, this);
+					if (_doLoop) {
+						_fadeIn = false;
+					}
 				}
 			}
+			_interval++;
 		}
 		
 		public function destroy():void {
@@ -128,11 +132,13 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		public function set channelTransform(value:SoundTransform):void {
-			_channel && (_channel.soundTransform = _soundTransform);
+			//_channel && (_channel.soundTransform = _soundTransform);
+			_channel && (_channel.soundTransform = value);
 		}
 		
 		public function set soundTransform(value:SoundTransform):void {
 			_soundTransform = value;
+			_interval = 0;
 			new StageCommand(StageCommand.REGISTER_TICK, this);
 		}
 		

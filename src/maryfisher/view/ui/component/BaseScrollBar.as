@@ -22,6 +22,7 @@ package maryfisher.view.ui.component {
 		private var _fadeOutSpeed:Number = 0.7;
 		private var _fadeInSpeed:Number = 0.3;
 		private var _scroller:BarScroller;
+		private var _lastPos:int;
 		
 		public function BaseScrollBar(isInvisible:Boolean) {
 			_isInvisible = isInvisible;
@@ -31,7 +32,7 @@ package maryfisher.view.ui.component {
 		/* INTERFACE maryfisher.view.ui.interfaces.IScrollBar */
 		
 		public function setScrollDims(scrollMax:int, scrollHeight:int):void {
-			removeChildren();
+			reset();
 			_scrollHeight = scrollHeight;
 			_scrollMax = scrollMax;
 			
@@ -42,9 +43,8 @@ package maryfisher.view.ui.component {
 			
 			if (!_isInvisible) {
 				CONFIG::mouse {
-					if (!hasEventListener(MouseEvent.MOUSE_DOWN)) {
-						addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-						stage && stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseUp);
+					if (!_thumb.hasEventListener(MouseEvent.MOUSE_DOWN)) {
+						_thumb.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 					}
 				}
 			}
@@ -52,17 +52,46 @@ package maryfisher.view.ui.component {
 		
 		CONFIG::mouse
 		private function onMouseUp(e:MouseEvent):void {
-			
+			trace("remove");
+			stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 		}
 		
 		CONFIG::mouse
 		private function onMouseDown(e:MouseEvent):void {
-			addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+			trace("add");
+			_lastPos = e.stageY;
+			stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 		}
 		
 		CONFIG::mouse
 		private function onMouseMove(e:MouseEvent):void {
+			calculateMove();
+		}
+		
+		private function calculateMove():void {
+			var endY:int = stage.mouseY - _lastPos;
 			
+			//var diffY:int = - _lastPos + stage.mouseY;
+			//var endY:int = _thumb.y + diffY;
+			//if (endY > (_scrollHeight - _thumb.height)) {
+				//endY = _scrollHeight - _thumb.height - 1;
+			//}else if (endY < 1) {
+				//endY = 1;
+			//}
+			
+			var scrollEnd:int = endY * (_scrollMax - _scrollHeight) / (_scrollHeight - _thumb.height);
+			//TweenMax.killTweensOf(_thumb);
+			//TweenMax.to(_thumb, _fadeInSpeed, { y: endY } );
+			//trace("[BaseScrollBar] calculateMove scrollEnd", scrollEnd);
+			_scroller.scrollTo(scrollEnd);
+		}
+		
+		protected function reset():void {
+			removeChildren();
+			if (_thumb && _thumb.hasEventListener(MouseEvent.MOUSE_DOWN)) {
+				_thumb.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			}
 		}
 		
 		public function startScrolling(scrollEnd:int):void {

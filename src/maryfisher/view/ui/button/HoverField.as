@@ -11,6 +11,7 @@ package maryfisher.view.ui.button {
 	 */
 	public class HoverField extends BaseSprite {
 		private var _tooltip:ITooltip;
+		private var _hasListener:Boolean;
 		
 		public function HoverField() {
 			//mouseChildren = false;
@@ -20,6 +21,19 @@ package maryfisher.view.ui.button {
 		CONFIG::touch
 		private function onTap(e:TouchEvent):void {
 			_tooltip && _tooltip.switchVisibility();
+		}
+		
+		private function removeListeners():void {
+			if (!_hasListener) return;
+			_hasListener = false;
+			CONFIG::mouse {
+				removeEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
+				removeEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
+			}
+			
+			CONFIG::touch {
+				removeEventListener(TouchEvent.TOUCH_TAP, onTap);
+			}
 		}
 		
 		CONFIG::mouse
@@ -32,7 +46,9 @@ package maryfisher.view.ui.button {
 			_tooltip && _tooltip.show();
 		}
 		
-		private function addListeners():void {
+		protected function addListeners():void {
+			if (_hasListener) return;
+			_hasListener = true;
 			CONFIG::mouse {
 				addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 				addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
@@ -44,22 +60,18 @@ package maryfisher.view.ui.button {
 		}
 		
 		public function destroy():void {
-			CONFIG::mouse {
-				removeEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
-				removeEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
-			}
-			
-			CONFIG::touch {
-				removeEventListener(TouchEvent.TOUCH_TAP, onTap);
-			}
+			removeListeners();
 			
 			_tooltip.destroy();
 		}
 		
 		public function attachTooltip(tooltip:ITooltip):void {
+			if (_tooltip) {
+				_tooltip.destroy();
+			}
 			_tooltip = tooltip;
-			
-			addListeners();
+			if(_tooltip)
+				addListeners();
 		}
 	}
 

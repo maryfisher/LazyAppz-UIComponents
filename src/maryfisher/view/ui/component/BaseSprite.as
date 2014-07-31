@@ -3,6 +3,7 @@ package maryfisher.view.ui.component {
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.geom.Rectangle;
 	import maryfisher.view.ui.interfaces.IDisplayObject;
 	import maryfisher.view.ui.interfaces.IDisplayObjectContainer;
@@ -29,6 +30,10 @@ package maryfisher.view.ui.component {
 		
 		public function hasListener(type:String):Boolean {
 			return hasEventListener(type);
+		}
+		
+		public function dispatch(e:Event):void {
+			dispatchEvent(e);
 		}
 		
 		/* INTERFACE maryfisher.view.ui.interfaces.IDisplayObjectContainer */

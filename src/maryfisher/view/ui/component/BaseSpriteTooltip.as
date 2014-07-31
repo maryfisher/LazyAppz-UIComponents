@@ -97,7 +97,8 @@ package maryfisher.view.ui.component {
 		}
 		
 		override public function destroy():void {
-			hide();
+			//hide();
+			removeView();
 			super.destroy();
 		}
 	}

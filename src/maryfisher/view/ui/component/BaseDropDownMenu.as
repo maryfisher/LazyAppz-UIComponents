@@ -33,7 +33,7 @@ package maryfisher.view.ui.component {
 		protected var _topH:int;
 		protected var _w:int;
 		
-		public function BaseDropDownMenu(id:String, w:int, maxHeight:int, topH:int, buttonScheme:ButtonColorScheme = null, textScheme:ButtonColorScheme = null, dropScheme:ButtonColorScheme = null) {
+		public function BaseDropDownMenu(id:String, w:int, maxHeight:int, topH:int, autoBuild:Boolean = true) {
 			_w = w;
 			_topH = topH;
 			_maxHeight = maxHeight;
@@ -43,17 +43,8 @@ package maryfisher.view.ui.component {
 			
 			_buttons = new Vector.<IButton>();
 			
-			
-			createTop();
-			addChild(_dropTop as DisplayObject);
-			
-			createBase();
-			
-			_dropMediator = new DropDownListMediator(_dropTop, _dropBase, false, _dropTop);
-			_dropMediator.elementSelectedListener = onElementSelected;
-			_dropMediator.droppedListener = onDropped;
-			//_dropMediator.listMediator.setStartPos(0, 0);
-			_dropMediator.addListElement(_dropTop);
+			if(autoBuild)
+				buildMenu();
 		}
 		
 		protected function createTop():void {
@@ -100,6 +91,18 @@ package maryfisher.view.ui.component {
 			init();
 		}
 		
+		public function buildMenu():void {
+			createTop();
+			addChild(_dropTop as DisplayObject);
+			createBase();
+			
+			_dropMediator = new DropDownListMediator(_dropTop, _dropBase, false, _dropTop);
+			_dropMediator.elementSelectedListener = onElementSelected;
+			_dropMediator.droppedListener = onDropped;
+			//_dropMediator.listMediator.setStartPos(0, 0);
+			_dropMediator.addListElement(_dropTop);
+		}
+		
 		protected function onVisible():void {
 			
 		}
@@ -112,7 +115,7 @@ package maryfisher.view.ui.component {
 			
 			if(_scroller){
 				_dropMediator.scroller = _scroller;
-				_dropMediator.listHeight = _maxHeight;
+				_dropMediator.listHeight = _dropBase.actHeight//_maxHeight;
 			}
 		}
 		
@@ -121,6 +124,8 @@ package maryfisher.view.ui.component {
 			_selectedIndex = _buttons.indexOf(el);
 			_selectedListener && _selectedListener(_selectedIndex);
 			_bubbleSignal.dispatch(new GenericEvent(true));
+			//_dropBase.actHeight = _maxHeight - _topH;
+			//_scroller && (_dropMediator.listHeight = _maxHeight - _topH);
 		}
 		
 		public function addListElement(id:String, label:String):IButton {
@@ -167,6 +172,7 @@ package maryfisher.view.ui.component {
 		public function select(index:int):void {
 			_selectedIndex = index;
 			updateTop(_buttons[index]);
+			_dropMediator.selectElement(_buttons[index]);
 		}
 		
 		public function get id():String {

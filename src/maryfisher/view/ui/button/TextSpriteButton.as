@@ -10,8 +10,8 @@ package maryfisher.view.ui.button {
 	 */
 	public class TextSpriteButton extends BaseSpriteButton {
 		
-		protected var _colorScheme:ButtonColorScheme;
-		
+		protected var _textScheme:ButtonColorScheme;
+		protected var _height:int;		
 		protected var _textField:FormatText;
 		
 		//private var _hasOver:Boolean = false;
@@ -19,7 +19,7 @@ package maryfisher.view.ui.button {
 		
 		public function TextSpriteButton(id:String, colorScheme:ButtonColorScheme, textfield:FormatText = null, centerButton:Boolean = true, overwrite:Boolean = true) {
 			super(id);
-			_colorScheme = colorScheme;
+			_textScheme = colorScheme;
 			_textField = textfield || new FormatText();
 			
 			//_label.mouseEnabled = false;
@@ -34,8 +34,9 @@ package maryfisher.view.ui.button {
 				_textField.autoSize = TextFieldAutoSize.LEFT;
 			}
 			//_textField.x = 0;
-			_textField.textColor = _colorScheme.upColor;
+			_textField.textColor = _textScheme.upColor;
 			addChild(_textField);
+			_height = height;
 		}
 		
 		public function set textColor(color:uint):void {
@@ -45,18 +46,18 @@ package maryfisher.view.ui.button {
 		CONFIG::mouse
 		override public function showOverState():void {
 			super.showOverState();
-			_textField.textColor = _colorScheme.overColor;
+			_textField.textColor = _textScheme.overColor;
 			//trace(_label.textColor.toString(16));
 		}
 		
 		override protected function onDown():void {
 			super.onDown();
-			_textField.textColor = _colorScheme.downColor;
+			_textField.textColor = _textScheme.downColor;
 		}
 		
 		override public function showUpState():void {
 			super.showUpState();
-			_textField.textColor = _colorScheme.upColor;
+			_textField.textColor = _textScheme.upColor;
 		}
 		
 		//override protected function onUp():void {
@@ -66,7 +67,7 @@ package maryfisher.view.ui.button {
 		
 		public function set label(value:String):void {
 			_textField.text = value;
-			_textField.y = int((height - _textField.height) / 2);
+			_textField.y = (_height - _textField.height) >> 1;
 			//trace(_textField.y, height, _textField.height);
 		}
 		
@@ -84,14 +85,14 @@ package maryfisher.view.ui.button {
 		override public function set enabled(value:Boolean):void {
 			super.enabled = value;
 			if (_enabled) {
-				textColor = _colorScheme.upColor;
+				textColor = _textScheme.upColor;
 			}else {
-				textColor = _colorScheme.disabledColor;
+				textColor = _textScheme.disabledColor;
 			}
 		}
 		
-		public function set colorScheme(value:ButtonColorScheme):void {
-			_colorScheme = value;
+		public function set textScheme(value:ButtonColorScheme):void {
+			_textScheme = value;
 		}
 		
 		public function get textField():FormatText {

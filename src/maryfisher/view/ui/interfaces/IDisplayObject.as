@@ -18,6 +18,7 @@ package maryfisher.view.ui.interfaces {
 		function get visible():Boolean;
 		function set alpha(value:Number):void;
 		function set clipRect(value:Rectangle):void;
+		function set filters(value:Array):void;
 		
 		/** TODO
 		 * addStageListener to make it independent from flash.display.Stage

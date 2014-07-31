@@ -2,6 +2,9 @@ package maryfisher.view.ui.button {
 	import flash.display.DisplayObject;
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
+	import flash.ui.Mouse;
+	import flash.ui.MouseCursor;
+	import maryfisher.framework.core.ViewController;
 	import maryfisher.view.event.ButtonEvent;
 	import maryfisher.view.event.ButtonSignalEvent;
 	import maryfisher.view.ui.interfaces.IButton;
@@ -21,6 +24,9 @@ package maryfisher.view.ui.button {
 		protected var _overState:DisplayObject;
 		
 		private var _overSignal:Signal;
+		private var _outSignal:Signal;
+		protected var _overCursor:String = MouseCursor.BUTTON;
+		protected var _outCursor:String = MouseCursor.ARROW;
 		
 		public function BaseSpriteButton(id:String) {
 			//_isTouch = isTouch;
@@ -36,6 +42,13 @@ package maryfisher.view.ui.button {
 				_overSignal = new Signal(IButton);
 			}
 			_overSignal.add(listener);
+		}
+		
+		public function addOutListener(listener:Function):void {
+			if (!_outSignal) {
+				_outSignal = new Signal(IButton);
+			}
+			_outSignal.add(listener);
 		}
 		
 		override protected function addListeners():void {
@@ -128,7 +141,8 @@ package maryfisher.view.ui.button {
 			showOverState();
 			
 			_overSignal && _overSignal.dispatch(this);
-			
+			Mouse.cursor = _overCursor;
+			//trace("[BaseSpriteButton] onOver cursor:", _overCursor);
 			//_doBubble && (_bubblingSignal.dispatch(new ButtonSignalEvent(ButtonSignalEvent.ON_OVER)));
 			/** TODO
 			 * 
@@ -187,6 +201,8 @@ package maryfisher.view.ui.button {
 			 * 
 			 */
 			//dispatchEvent(new ButtonEvent(ButtonEvent.BUTTON_OUT, _id));
+			Mouse.cursor = _outCursor;
+			_outSignal && _outSignal.dispatch(this);
 			showUpState();
 			
 		}
@@ -199,7 +215,7 @@ package maryfisher.view.ui.button {
 			if (!_enabled) {
 				return;
 			}
-			showOverState();
+			if(!_selected) showOverState();
 			//if (_overState) _overState.visible = true;
 			super.onUp();
 		}
@@ -232,18 +248,31 @@ package maryfisher.view.ui.button {
 		
 		CONFIG::mouse
 		public function set overState(value:DisplayObject):void {
+			//var index:int = numChildren - 2;
 			if (_overState) {
-				if (contains(_overState)) removeChild(_overState);
+				if (contains(_overState)) {
+					//var index:int = getChildIndex(_overState);
+					removeChild(_overState);
+				}
 			}
 			_overState = value;
 			if (!_overState) return;
 			
 			_overState.visible = false;
-			if (_downState) {
-				addChildAt(_overState, numChildren - 2);
+			if (_downState && contains(_downState)) {
+				trace(getChildIndex(_downState));
+				addChildAt(_overState, getChildIndex(_downState));
 				return;
 			}
-			addChild(_overState);
+			addChildAt(_overState, getChildIndex(_upState));
+		}
+		
+		public function set overCursor(value:String):void {
+			_overCursor = value;
+		}
+		
+		public function set outCursor(value:String):void {
+			_outCursor = value;
 		}
 		
 		//public function set defaultState(value:DisplayObject):void {

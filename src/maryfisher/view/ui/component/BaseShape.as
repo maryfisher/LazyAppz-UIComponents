@@ -1,5 +1,6 @@
 package maryfisher.view.ui.component {
 	import flash.display.Shape;
+	import flash.events.Event;
 	import flash.geom.Rectangle;
 	import maryfisher.view.ui.interfaces.IDisplayObject;
 	
@@ -18,6 +19,10 @@ package maryfisher.view.ui.component {
 		}
 		
 		public function removeListener(type:String, listener:Function, useCapture:Boolean = false):void {
+			
+		}
+		
+		public function dispatch(e:Event):void {
 			
 		}
 		

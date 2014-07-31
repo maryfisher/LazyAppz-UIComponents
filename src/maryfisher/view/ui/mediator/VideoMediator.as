@@ -39,7 +39,7 @@ package maryfisher.view.ui.mediator {
 			
 			//_activeUrl = url;
 			_loaderData = AssetController.getLoaderData(id);
-			_activeUrl = _loaderData.path + fileId + ".f4v";
+			_activeUrl = _loaderData.path + fileId + ".flv";
 			_stream = new NetStream(_netConnection);
 			_stream.bufferTime = _bufferTime;
 			/** TODO

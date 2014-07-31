@@ -120,6 +120,9 @@ package maryfisher.view.ui.mediator {
 		
 		protected function scrollingFinished():void {
 			//trace("scrollingFinished");
+			/** TODO
+			 * dispatch update
+			 */
 		}
 		
 		public function dispose():void {

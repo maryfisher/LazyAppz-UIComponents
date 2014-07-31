@@ -119,6 +119,33 @@ package maryfisher.view.util {
 			return bg;
 		}
 		
+		static public function build3TileWBackground(left:BitmapData, middle:BitmapData, right:BitmapData, width:int):BitmapData {
+			var leftPlusRight:int = left.width + right.width;
+			var bg:BitmapData;
+			var point:Point = new Point();
+			
+			if (leftPlusRight >= width) {
+				bg = new BitmapData(leftPlusRight, left.height, true, 0);
+				bg.copyPixels(left, left.rect, point);
+				bg.copyPixels(right, right.rect, new Point(left.width, 0));
+			}else {
+				var missingWidth:int = width - leftPlusRight;
+				var repeat:int = Math.ceil(missingWidth / middle.width);
+				
+				bg = new BitmapData(leftPlusRight + repeat * middle.width, left.height, true, 0);
+				bg.copyPixels(left, left.rect, point);
+				
+				for (var i:int = 0; i < repeat; i++) {
+					point.x = left.width + i * middle.width;
+					bg.copyPixels(middle, middle.rect, point);
+				}
+				
+				bg.copyPixels(right, right.rect, new Point(left.width + repeat * middle.width, 0));
+			}
+			
+			return bg;
+		}
+		
 		static public function getPowerOf2(width:int):int {
 			var origWidth:int = width;
 			var i:int = 64;

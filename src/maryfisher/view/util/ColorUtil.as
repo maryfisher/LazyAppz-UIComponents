@@ -15,6 +15,14 @@ package maryfisher.view.util {
 			
 		}
 		
+		static public function getHexNum(color:uint):String {
+			return color.toString(16);
+		}
+		
+		static public function getAlphaColor(alpha:uint, color:uint):uint {
+			return (alpha << 24) | color;
+		}
+		
 		static public function adjustSaturation(color:uint, s:Number):uint {
 			var invs:Number = 1 - s;
 			

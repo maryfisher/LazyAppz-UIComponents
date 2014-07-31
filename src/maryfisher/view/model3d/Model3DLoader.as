@@ -1,44 +1,36 @@
 package maryfisher.view.model3d {
-	import away3d.animators.data.Skeleton;
-	import away3d.animators.SkeletonAnimationSet;
-	import away3d.animators.SkeletonAnimationState;
-	import away3d.animators.VertexAnimator;
-	import away3d.containers.ObjectContainer3D;
 	import away3d.entities.Mesh;
 	import away3d.events.AssetEvent;
 	import away3d.events.LoaderEvent;
-	import away3d.events.MouseEvent3D;
 	import away3d.library.assets.AssetType;
 	import away3d.loaders.AssetLoader;
 	import away3d.loaders.misc.AssetLoaderContext;
 	import away3d.loaders.misc.AssetLoaderToken;
 	import away3d.loaders.parsers.ParserBase;
-	import away3d.materials.lightpickers.StaticLightPicker;
 	import away3d.materials.TextureMaterial;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import maryfisher.framework.command.view.SequenceProgress;
-	import maryfisher.framework.command.view.ViewCommand;
-	import maryfisher.framework.view.IViewComponent;
 	import org.osflash.signals.Signal;
 	
 	/**
 	 * ...
 	 * @author mary_fisher
 	 */
-	public class ModelLoader extends ObjectContainer3D implements IViewComponent {
-		protected var _lightPicker:StaticLightPicker;
-		protected var _onFinishedListener:Function;
+	public class Model3DLoader {
 		
-		//private var _assetLoader:AssetLoader;
+		private var _mesh:Mesh;
+		private var _material:TextureMaterial;
+		private var _id:String;
 		
 		protected var _finishedSignal:Signal;
 		//protected var _loader:Loader3D;
 		
 		protected var _sequenceProgress:SequenceProgress;
 		
-		public function ModelLoader() {
-			_finishedSignal = new Signal();
+		public function Model3DLoader(id:String) {
+			_id = id;
+			_finishedSignal = new Signal(String);
 			//_assetLoader = new AssetLoader();
 			
 			//_loader = new Loader3D(false);
@@ -46,52 +38,26 @@ package maryfisher.view.model3d {
 			//_loader.addEventListener(LoaderEvent.RESOURCE_COMPLETE, onResourceComplete);
 		}
 		
-		//protected function loadModel(model:Class, assetLoaderContext):void {
-			//
-		//}
-		
-		/* INTERFACE maryfisher.framework.view.IViewComponent */
-		
-		public function get componentType():String {
-			return "";
-		}
-		
-		public function destroy():void {
-			
-		}
-		
 		/* INTERFACE maryfisher.framework.view.IViewComponent */
 		
 		public function addOnFinished(listener:Function):void {
-			_onFinishedListener = listener;
+			_finishedSignal.addOnce(listener);
 		}
 		
 		private function onAssetComplete(e:AssetEvent):void {
 			if (e.asset.assetType == AssetType.MESH) {
-				parseMesh(e.asset as Mesh);
+				_mesh = (e.asset as Mesh);
 			} else if (e.asset.assetType == AssetType.MATERIAL) {
-				parseMaterial(e.asset as TextureMaterial);
-			}else if (e.asset.assetType == AssetType.ANIMATION_STATE) {
-				parseAnimation(e.asset as SkeletonAnimationState);
+				_material = (e.asset as TextureMaterial);
+			//}else if (e.asset.assetType == AssetType.ANIMATION_STATE) {
+				//parseAnimation(e.asset as SkeletonAnimationState);
 			//}else if (e.asset.assetType == AssetType.ANIMATOR) {
 				//parseAnimator(e.asset as VertexAnimator);
-			}else if (e.asset.assetType == AssetType.ANIMATION_SET) {
-				parseAnimationSet(e.asset as SkeletonAnimationSet);
-			}else if (e.asset.assetType == AssetType.SKELETON) {
-				parseSkeleton(e.asset as Skeleton);
+			//}else if (e.asset.assetType == AssetType.ANIMATION_SET) {
+				//parseAnimationSet(e.asset as SkeletonAnimationSet);
+			//}else if (e.asset.assetType == AssetType.SKELETON) {
+				//parseSkeleton(e.asset as Skeleton);
 			}
-		}
-		
-		protected function parseSkeleton(skeleton:Skeleton):void {
-			
-		}
-		
-		protected function parseAnimationSet(skeletonAnimationSet:SkeletonAnimationSet):void {
-			
-		}
-		
-		protected function parseAnimator(vertexAnimator:VertexAnimator):void {
-			
 		}
 		
 		protected function parseData(data : * , context : AssetLoaderContext = null, parser : ParserBase = null):void {
@@ -142,82 +108,20 @@ package maryfisher.view.model3d {
 		}
 		
 		protected function onResourceFinished():void {
-			_onFinishedListener && _onFinishedListener();
+			_finishedSignal.dispatch(_id);
 		}
 		
-		protected function parseAnimation(anim:SkeletonAnimationState):void {
-			
+		public function get mesh():Mesh {
+			return _mesh;
 		}
 		
-		protected function parseMaterial(bitmapMaterial:TextureMaterial):void {
-			
+		public function get material():TextureMaterial {
+			return _material;
 		}
 		
-		protected function parseMesh(mesh:Mesh):void {
-			
-		}
-		
-		public function addLight(lightPicker:StaticLightPicker):void {
-			_lightPicker = lightPicker;
-			//_mesh.material.lightPicker = lightPicker;
-		}
-		
-		public function mouseEnableMesh(mesh:Mesh, enableOver:Boolean = false):void {
-			mesh.mouseEnabled = true;
-			if(enableOver){
-				mesh.addEventListener(MouseEvent3D.MOUSE_OVER, onMouseOver);
-				mesh.addEventListener(MouseEvent3D.MOUSE_OUT, onMouseOut);
-			}
-			mesh.addEventListener(MouseEvent3D.CLICK, onClick);
-		}
-		
-		protected function onClick(e:MouseEvent3D):void {
-			
-		}
-		
-		public function onMouseOut(e:MouseEvent3D):void {
-			
-		}
-		
-		public function onMouseOver(e:MouseEvent3D):void {
-			
-		}
-		
-		/* INTERFACE maryfisher.framework.view.IViewComponent */
-		
-		public function dispatch(e:Event):void {
-			dispatchEvent(e);
-		}
-		
-		public function addListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void {
-			addEventListener(type, listener, useCapture, priority, useWeakReference);
-		}
-		
-		public function addView():void {
-			new ViewCommand(this);
-		}
-		
-		public function removeView():void {
-			new ViewCommand(this, ViewCommand.REMOVE_VIEW);
-		}
-		
-		public function pause():void {
-			
-		}
-		
-		public function show():void {
-			visible = true;
-		}
-		
-		public function hide():void {
-			visible = false;
-		}
-		
-		/* INTERFACE maryfisher.framework.view.IViewComponent */
-		
-		public function removeListener(type:String, listener:Function, useCapture:Boolean = false):void {
-			removeEventListener(type, listener, useCapture);
-		}
+		//public function get id():String {
+			//return _id;
+		//}
 	}
 
 }

@@ -184,17 +184,22 @@ package maryfisher.view.ui.button {
 				}
 			}
 			_upState = value;
+			//_defaultState = value;
 			_upState && addChildAt(_upState, index);
 		}
 		
 		public function set downState(value:DisplayObject):void {
+			var index:int = 0;
 			if (_downState) {
-				if (contains(_downState)) removeChild(_downState);
+				if (contains(_downState)) {
+					index = getChildIndex(_downState);
+					removeChild(_downState);
+				}
 			}
 			_downState = value;
 			if (!_downState) return;
 			_downState.visible = false;
-			addChild(_downState);
+			addChildAt(_downState, index);
 		}
 		
 		public function set hitTest(value:DisplayObject):void {
@@ -216,6 +221,14 @@ package maryfisher.view.ui.button {
 		
 		public function set doBubble(value:Boolean):void {
 			_doBubble = value;
+		}
+		
+		public function set disabledState(value:DisplayObject):void {
+			_disabledState = value;
+		}
+		
+		public function set defaultState(value:DisplayObject):void {
+			_defaultState = value;
 		}
 		
 		protected function drawDisabledState(desaturate:Boolean = true, transparent:Boolean = false):void {

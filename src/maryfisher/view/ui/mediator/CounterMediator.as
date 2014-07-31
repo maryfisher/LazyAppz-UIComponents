@@ -32,18 +32,18 @@ package maryfisher.view.ui.mediator {
 		
 		/**
 		 * 
-		 * @param	listener Function.<int>
+		 * @param	listener Function.<>
 		 */
 		public function addAmountChangedListener(listener:Function):void {
 			_updateSignal.add(listener);
 		}
 		
-		public function assignCounterButtons(plusCounter:IButton, minusCounter:IButton, textCounter:ITextField, amount:int):void {
+		public function assignCounterButtons(plusCounter:IButton, minusCounter:IButton, textCounter:ITextField = null, amount:int = 0):void {
 			_amount = amount;
 			_textCounter = textCounter;
 			_minusCounter = minusCounter;
 			_plusCounter = plusCounter;
-			_textCounter.text = amount.toString();
+			_textCounter && (_textCounter.text = amount.toString());
 			_minusCounter.addClickedListener(onMinus);
 			_plusCounter.addClickedListener(onPlus);
 			setEnabled();
@@ -64,7 +64,7 @@ package maryfisher.view.ui.mediator {
 		
 		private function changeAmount(dir:int):void {
 			_amount += _steps * dir;
-			_textCounter.text = _amount.toString();
+			_textCounter && (_textCounter.text = _amount.toString());
 			_updateSignal.dispatch();
 			setEnabled();
 		}
@@ -89,7 +89,7 @@ package maryfisher.view.ui.mediator {
 		
 		public function set amount(value:int):void {
 			_amount = value;
-			_textCounter.text = _amount.toString();
+			_textCounter && (_textCounter.text = _amount.toString());
 			setEnabled();
 		}
 	}

@@ -15,6 +15,7 @@ package maryfisher.view.ui.mediator {
 		private var _selectedTab:String;
 		private var _effect:ITabSelectedEffect;
 		private var _tabUpdate:Signal;
+		private var _deselectSame:Boolean = true;
 		
 		public function TabsMediator() {
 			_content = new Dictionary();
@@ -25,7 +26,16 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		private function onTabSelected(button:IButton):void {
-			selectTab(button.id, true);
+			selectTab(button.id, _deselectSame);
+		}
+		
+		public function deselectTab():void {
+			if (_selectedTab && _tabButtons[_selectedTab]) {
+				(_tabButtons[_selectedTab] as IButton).selected = false;
+			}
+			_effect.startTransition(_content[_selectedTab], _content[null]);
+			_selectedTab = null;
+			_tabUpdate.dispatch(null);
 		}
 		
 		public function addContent(content:IDisplayObject, tab:IButton):void {
@@ -37,13 +47,15 @@ package maryfisher.view.ui.mediator {
 		
 		public function selectTab(id:String, deselectSame:Boolean):void {
 			
-			if (_selectedTab == id && !deselectSame) return;
-			_effect.startTransition(_content[_selectedTab], _content[id]);
+			if (_selectedTab == id && (!deselectSame || !_deselectSame)) {
+				return;
+			}
 			
 			if (_selectedTab && _tabButtons[_selectedTab]) {
 				(_tabButtons[_selectedTab] as IButton).selected = false;
 			}
 			
+			_effect.startTransition(_content[_selectedTab], _content[id]);
 			
 			if (_selectedTab == id) {
 				_selectedTab = null;
@@ -59,7 +71,7 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		public function enableTab(id:String, isEnabled:Boolean):void {
-			var tabButton:IButton = (_tabButtons[_selectedTab] as IButton);
+			var tabButton:IButton = (_tabButtons[id] as IButton);
 			tabButton && (tabButton.enabled = isEnabled);
 		}
 		
@@ -93,6 +105,10 @@ package maryfisher.view.ui.mediator {
 		
 		public function get tabUpdate():Signal {
 			return _tabUpdate;
+		}
+		
+		public function set deselectSame(value:Boolean):void {
+			_deselectSame = value;
 		}
 		
 		//private function addOnTabSelected(listener:Function):void {

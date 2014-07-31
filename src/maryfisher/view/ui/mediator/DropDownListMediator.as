@@ -55,22 +55,7 @@ package maryfisher.view.ui.mediator {
 		
 		private function onElementSelected(e:MouseEvent):void {
 			
-			_selectedElement = e.target as IIDItem;
-			//if(_elementSelectedListener == null){
-				//_selectedElement.x = _selectedElementPos.x;
-				//_selectedElement.y = _selectedElementPos.y;
-				//_dropTop.removeChildren();
-				//_dropTop.addDisplayChild(_selectedElement);
-			//}
-			
-			_listMediator.reset();
-			_dropBase.removeContent();
-			
-			for each (var item:IIDItem in _listOrder) {
-				if (item.id == _selectedElement.id ) continue;
-				_listMediator.addListChild(item);
-				_dropBase.addDisplayChild(item);
-			}
+			selectElement(e.target as IIDItem);
 			
 			_elementSelectedListener && _elementSelectedListener(_selectedElement);
 		}
@@ -85,6 +70,7 @@ package maryfisher.view.ui.mediator {
 			//_dropTop.removeChildren();
 			_scroller && (_scroller.reset());
 			_selectedElement = _dropTop as IIDItem;
+			_listOrder.length = 0;
 		}
 		
 		/**
@@ -154,6 +140,30 @@ package maryfisher.view.ui.mediator {
 		private function removeOnHide():void {
 			_dropBase.stage.removeEventListener(MouseEvent.CLICK, onHide, true)
 			if(_hideOnOut) _dropBase.removeListener(MouseEvent.MOUSE_OUT, onHide);
+		}
+		
+		//public function selectElementById(index:int):void {
+			//
+		//}
+		
+		public function selectElement(im:IIDItem):void {
+			_selectedElement = im;
+			//if(_elementSelectedListener == null){
+				//_selectedElement.x = _selectedElementPos.x;
+				//_selectedElement.y = _selectedElementPos.y;
+				//_dropTop.removeChildren();
+				//_dropTop.addDisplayChild(_selectedElement);
+			//}
+			
+			_listMediator.reset();
+			_dropBase.removeContent();
+			
+			for each (var item:IIDItem in _listOrder) {
+				if (item.id == _selectedElement.id ) continue;
+				_listMediator.addListChild(item);
+				_dropBase.addDisplayChild(item);
+			}
+			//_dropBase.updateHeight();
 		}
 		
 		public function init():void {

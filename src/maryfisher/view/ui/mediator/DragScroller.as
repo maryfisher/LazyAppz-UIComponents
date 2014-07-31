@@ -1,4 +1,6 @@
 package maryfisher.view.ui.mediator {
+	import flash.display.Stage;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
 	import maryfisher.view.ui.interfaces.IDisplayObject;
@@ -18,6 +20,7 @@ package maryfisher.view.ui.mediator {
 		private var _dragMilage:int;
 		//private var _scrollBar:IScrollBar;
 		private var _dragMax:int = 10;
+		private var _stage:Stage;
 		
 		public function DragScroller(dragMax:int = 10) {
 			_dragMax = dragMax;
@@ -26,6 +29,11 @@ package maryfisher.view.ui.mediator {
 		
 		override public function assignContent(content:IDisplayObject):void {
 			super.assignContent(content);
+			if(!_content.stage){
+				_content.addListener(Event.ADDED_TO_STAGE, onAdded);
+			}else{
+				_stage = content.stage;
+			}
 			
 			CONFIG::mouse {
 				if(!_content.hasListener(MouseEvent.MOUSE_DOWN)){
@@ -39,6 +47,11 @@ package maryfisher.view.ui.mediator {
 					_content.addListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
 				}
 			}
+		}
+		
+		private function onAdded(e:Event):void {
+			_content.removeListener(Event.ADDED_TO_STAGE, onAdded);
+			_stage = _content.stage;
 		}
 		
 		//CONFIG::mouse
@@ -62,7 +75,7 @@ package maryfisher.view.ui.mediator {
 		private function onMouseDown(e:MouseEvent):void {
 			_content.addListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			_content.addListener(MouseEvent.MOUSE_UP, onMouseUp);
-			_content.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			_stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			
 			_dragMilage = 0;
 			_lastPos = _scrollSideways ? e.stageX : e.stageY;
@@ -73,7 +86,7 @@ package maryfisher.view.ui.mediator {
 		private function onTouchBegin (e:TouchEvent):void {
 			_content.stage.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
 			_content.addListener(TouchEvent.TOUCH_END, onTouchEnd);
-			_content.stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+			_stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
 			
 			_dragMilage = 0;
 			_lastPos = _scrollSideways ? e.stageX : e.stageY;
@@ -99,14 +112,14 @@ package maryfisher.view.ui.mediator {
 		private function onMouseUp(e:MouseEvent):void {
 			_content.removeListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			//_content.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			_content.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			_stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 		}
 		
 		CONFIG::touch
 		private function onTouchEnd(e:TouchEvent):void {
-			_content.stage.removeEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+			_stage.removeEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
 			//_content.removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);
-			_content.stage.removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+			_stage.removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);
 		}
 		
 		private function calculateMove():void {

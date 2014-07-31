@@ -2,6 +2,7 @@ package maryfisher.view.ui.component {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Stage;
+	import flash.events.Event;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	import maryfisher.view.ui.interfaces.IDisplayObject;
@@ -42,6 +43,10 @@ package maryfisher.view.ui.component {
 		}
 		
 		public function removeListener(type:String, listener:Function, useCapture:Boolean = false):void {
+			
+		}
+		
+		public function dispatch(e:Event):void {
 			
 		}
 		

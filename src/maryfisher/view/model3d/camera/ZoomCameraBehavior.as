@@ -34,7 +34,7 @@ package maryfisher.view.model3d.camera {
 			/** TODO
 			 * distance check
 			 */
-			trace(_cameraController.distance);
+			//trace(_cameraController.distance);
 			if (e.delta > 0 && _cameraController.distance <= _minDistance) return;
 			if (e.delta < 0 && _cameraController.distance >= _maxDistance) return;
 			//e.delta > 0 ist zoom rein
