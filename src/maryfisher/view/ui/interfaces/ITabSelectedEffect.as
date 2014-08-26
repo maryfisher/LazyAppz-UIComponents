@@ -1,5 +1,6 @@
 package maryfisher.view.ui.interfaces {
 	import flash.display.DisplayObject;
+	import maryfisher.framework.view.IDisplayObject;
 	
 	/**
 	 * ...

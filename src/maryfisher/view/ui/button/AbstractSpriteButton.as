@@ -2,19 +2,13 @@ package maryfisher.view.ui.button {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
-	import flash.display.Sprite;
 	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import flash.filters.ColorMatrixFilter;
 	import maryfisher.framework.sound.ISound;
-	import maryfisher.view.event.ButtonEvent;
 	import maryfisher.view.event.ButtonSignalEvent;
 	import maryfisher.view.ui.component.BaseSprite;
 	import maryfisher.view.ui.interfaces.IButton;
-	import maryfisher.view.ui.interfaces.IDisplayObject;
 	import maryfisher.view.util.ColorUtil;
 	import org.osflash.signals.DeluxeSignal;
-	import org.osflash.signals.events.GenericEvent;
 	import org.osflash.signals.Signal;
 	
 	/**

@@ -1,8 +1,8 @@
 package maryfisher.view.ui.mediator {
+	import flash.display.DisplayObject;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
-	import maryfisher.view.ui.interfaces.IDisplayObject;
-	import maryfisher.view.ui.interfaces.IDisplayObjectContainer;
+	import maryfisher.framework.view.IDisplayObject;
 	import maryfisher.view.ui.interfaces.IDropDownBase;
 	import maryfisher.view.ui.interfaces.IIDItem;
 	/**
@@ -112,14 +112,11 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		private function onSwitch(e:MouseEvent):void {
+			//trace("[DropdDownListMediator] onSwitch");
+			
 			_dropBase.visible = !_dropBase.visible;
-			_switchListener && _switchListener(_dropBase.visible);
-			//e.stopImmediatePropagation();
 			if (_dropBase.visible) {
-				/** TODO
-				 * 
-				 */
-				//(_dropBase.parent as DisplayObjectContainer).setChildIndex(_dropBase, 
+				_switchListener && _switchListener(_dropBase.visible);
 				if (_hideOnOut) {					
 					_dropBase.addListener(MouseEvent.MOUSE_OUT, onHide);
 				}
@@ -128,11 +125,18 @@ package maryfisher.view.ui.mediator {
 				if (_dropBase.stage.hasEventListener(MouseEvent.CLICK)) {
 					removeOnHide();
 				}
+				_switchListener && _switchListener(_dropBase.visible);
+				
 			}
 			
 		}
 		
 		private function onHide(e:MouseEvent):void {
+			
+			//Fix for double click: hide -> switch
+			if (e.target == _dropListener) return;
+			
+			//trace("[DropdDownListMediator] onHide");
 			_dropBase.visible = false;
 			removeOnHide();
 		}

@@ -1,7 +1,7 @@
 package maryfisher.view.ui.mediator {
 	import com.greensock.TweenLite;
 	import flash.geom.Point;
-	import maryfisher.view.ui.interfaces.IDisplayObject;
+	import maryfisher.framework.view.IDisplayObject;
 	
 	/**
 	 * ...
@@ -147,8 +147,16 @@ package maryfisher.view.ui.mediator {
 					_childHeight = _childHeight || child.height;
 				}
 			}else {
+				/** TODO
+				 * isVertical?
+				 */
 				_childWidth = _tableDistances[_index % _columns];
-				_childHeight = _childHeight || child.height;
+				
+				if (_hasVariableDims) {
+					_childHeight = child.height;
+				}else {
+					_childHeight = _childHeight || child.height;
+				}
 			}
 			
 			//if (child) {

@@ -1,5 +1,5 @@
 package maryfisher.view.ui.data {
-	import maryfisher.view.ui.interfaces.IDisplayObject;
+	import maryfisher.framework.view.IDisplayObject;
 	/**
 	 * ...
 	 * @author mary_fisher

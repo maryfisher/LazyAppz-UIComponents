@@ -1,7 +1,7 @@
 package maryfisher.view.ui.mediator {
 	import flash.display.DisplayObject;
+	import maryfisher.framework.view.IDisplayObject;
 	import maryfisher.view.ui.interfaces.IButton;
-	import maryfisher.view.ui.interfaces.IDisplayObject;
 	import maryfisher.view.ui.interfaces.IScrollContainer;
 	/**
 	 * ...

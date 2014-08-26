@@ -11,7 +11,7 @@ package maryfisher.view.ui.button {
 	public class ColorButton extends TextSpriteButton {
 		protected var _bgScheme:ButtonColorScheme;
 		
-		public function ColorButton(id:String, w:int, h:int, colorScheme:ButtonColorScheme, textColorScheme:ButtonColorScheme, textfield:FormatText = null) {
+		public function ColorButton(id:String, w:int, h:int, colorScheme:ButtonColorScheme, textColorScheme:ButtonColorScheme, textfield:FormatText = null, hasSelectedState:Boolean = true) {
 			_bgScheme = colorScheme;
 			//var bd:BitmapData = new BitmapData(w, h, false, colorScheme.upColor);
 			//var bd2:BitmapData = new BitmapData(w, h, false, colorScheme.overColor);
@@ -30,6 +30,9 @@ package maryfisher.view.ui.button {
 			this.overState = getState(w, h, colorScheme.overColor);
 			//this.downState = new Bitmap(bd3);
 			this.downState = getState(w, h, colorScheme.downColor);
+			if (hasSelectedState) {
+				_selectedState = getState(w, h, colorScheme.downColor);
+			}
 			
 			super(id, textColorScheme, textfield);
 			

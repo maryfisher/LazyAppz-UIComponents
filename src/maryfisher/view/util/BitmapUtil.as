@@ -172,6 +172,25 @@ package maryfisher.view.util {
 			return b2;
 		}
 		
+		static public function tileBitmap(tile:BitmapData, w:int, h:int):BitmapData {
+			
+			var tw:int = tile.width;
+			var th:int = tile.height;
+			var repeatW:int = Math.ceil(w / tw);
+			var repeatH:int = Math.ceil(h / th);
+			var point:Point = new Point();
+			var tiled:BitmapData = new BitmapData(w, h, tile.transparent, 0);
+			for (var i:int = 0; i < repeatW; i++) {
+				for (var j:int = 0; j < repeatH; j++) {
+					point.x = i * tw;
+					point.y = j * th;
+					tiled.copyPixels(tile, tile.rect, point);
+				}
+			}
+			
+			return tiled;
+		}
+		
 		static public function getBitmapOverState(b:BitmapData, color:uint = 0x66FFFFFF):BitmapData {
 			var bWhite:BitmapData = new BitmapData(b.width, b.height, true, color);
 			var bOver:BitmapData = b.clone();

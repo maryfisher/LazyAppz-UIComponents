@@ -5,7 +5,7 @@ package maryfisher.view.ui.mediator {
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.geom.Rectangle;
-	import maryfisher.view.ui.interfaces.IDisplayObject;
+	import maryfisher.framework.view.IDisplayObject;
 	
 	/**
 	 *

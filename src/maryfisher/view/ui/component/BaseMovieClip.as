@@ -4,8 +4,8 @@ package maryfisher.view.ui.component {
 	import flash.display.Sprite;
 	import flash.utils.Dictionary;
 	import maryfisher.framework.command.view.StageCommand;
+	import maryfisher.framework.view.IMovieClip;
 	import maryfisher.framework.view.ITickedObject;
-	import maryfisher.view.ui.interfaces.IMovieClip;
 	
 	/**
 	 * ...
@@ -51,6 +51,7 @@ package maryfisher.view.ui.component {
 			_isPlaying = true;
 			_currentFrames = _framesById[_frameId];
 			trace("[BaseMovieClip] play register Tick");
+			nextTick(0);
 			new StageCommand(StageCommand.REGISTER_TICK, this);
 		}
 		

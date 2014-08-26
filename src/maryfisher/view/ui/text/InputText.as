@@ -48,7 +48,7 @@ package maryfisher.view.ui.text {
 		
 		private function onTextChange(e:Event):void {
 			//nix??
-			trace("input text changed??");
+			//trace("input text changed??");
 		}
 		
 		public function setFormatting(font:String, color:int, size:int, bold:Boolean = false, align:String = "left", italic:Boolean = false):void {
@@ -164,6 +164,7 @@ package maryfisher.view.ui.text {
 				 * is this going to be a problem with clicking elsewhere especially considering autoDeactivation??
 				 */
 				if (stage.focus != _inputLabel) {
+					//trace("_inputLabel.setSelection onMouseClicked", _inputLabel.selectedText);
 					_inputLabel.setSelection(_inputLabel.length, _inputLabel.length);
 				}
 				_bubbleSignal.dispatch(new TextInputSignalEvent(TextInputSignalEvent.ON_SELECTION_CHANGED));

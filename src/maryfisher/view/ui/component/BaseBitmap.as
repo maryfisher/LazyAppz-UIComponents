@@ -5,7 +5,7 @@ package maryfisher.view.ui.component {
 	import flash.events.Event;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
-	import maryfisher.view.ui.interfaces.IDisplayObject;
+	import maryfisher.framework.view.IDisplayObject;
 	
 	/**
 	 * ...

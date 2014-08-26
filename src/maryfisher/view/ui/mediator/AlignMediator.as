@@ -1,9 +1,9 @@
 package maryfisher.view.ui.mediator {
 	import flash.geom.Rectangle;
 	import maryfisher.framework.util.ErrorUtil;
+	import maryfisher.framework.view.IDisplayObject;
 	import maryfisher.view.ui.data.AlignData;
 	import maryfisher.view.ui.data.AlignIntData;
-	import maryfisher.view.ui.interfaces.IDisplayObject;
 	
 	/**
 	 * ...

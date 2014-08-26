@@ -3,7 +3,7 @@ package maryfisher.view.ui.mediator {
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
-	import maryfisher.view.ui.interfaces.IDisplayObject;
+	import maryfisher.framework.view.IDisplayObject;
 	import maryfisher.view.ui.interfaces.IScrollBar;
 	/**
 	 * ...

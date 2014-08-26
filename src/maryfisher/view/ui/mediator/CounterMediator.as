@@ -16,6 +16,7 @@ package maryfisher.view.ui.mediator {
 		private var _min:int;
 		private var _steps:int = 1;
 		private var _updateSignal:Signal;
+		private var _lastDirection:String;
 		
 		public function CounterMediator() {
 			_updateSignal = new Signal();
@@ -51,12 +52,14 @@ package maryfisher.view.ui.mediator {
 		
 		private function onMinus(button:IButton):void {
 			if (_amount - _steps >= _min) {
+				_lastDirection = button.id;
 				changeAmount(-1);
 			}
 		}
 		
 		private function onPlus(button:IButton):void {
 			if (_amount + _steps <= _max) {
+				_lastDirection = button.id;
 				changeAmount(1);
 			}
 			
@@ -91,6 +94,10 @@ package maryfisher.view.ui.mediator {
 			_amount = value;
 			_textCounter && (_textCounter.text = _amount.toString());
 			setEnabled();
+		}
+		
+		public function get lastDirection():String {
+			return _lastDirection;
 		}
 	}
 

@@ -4,7 +4,7 @@ package maryfisher.view.ui.mediator {
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import maryfisher.view.ui.interfaces.IDisplayObject;
+	import maryfisher.framework.view.IDisplayObject;
 	import org.osflash.signals.Signal;
 	/**
 	 * ...
@@ -20,8 +20,14 @@ package maryfisher.view.ui.mediator {
 		private var _scrollWidth:int;
 		private var _scrollHeight:int;
 		private var _update:Signal;
+		private var _dragType:String;
+		private var _dragTypeDown:String;
+		private var _dragTypeUp:String;
 		
-		public function FreeScroller() {
+		public function FreeScroller(dragType:String = "middleMouse") {
+			_dragType = dragType;
+			_dragTypeDown = _dragType + "Down";
+			_dragTypeUp = _dragType + "Up";
 			_startPos = new Point();
 			_lastPos = new Point();
 			_end = new Point();
@@ -49,20 +55,24 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		public function addListener():void {
-			if(!_content.hasListener(MouseEvent.MIDDLE_MOUSE_DOWN)){
-				_content.addListener(MouseEvent.MIDDLE_MOUSE_DOWN, onMiddleDown);
+			//if(!_content.hasListener(MouseEvent.MIDDLE_MOUSE_DOWN)){
+				//_content.addListener(MouseEvent.MIDDLE_MOUSE_DOWN, onMiddleDown);
+			//}
+			if(!_content.hasListener(_dragTypeDown)){
+				_content.addListener(_dragTypeDown, onMiddleDown);
 			}
 		}
 		
 		public function removeListener():void {
 			
-			_content.removeListener(MouseEvent.MIDDLE_MOUSE_DOWN, onMiddleDown);
+			//_content.removeListener(MouseEvent.MIDDLE_MOUSE_DOWN, onMiddleDown);
+			_content.removeListener(_dragTypeDown, onMiddleDown);
 		}
 		
-		public function scrollTo(posx:int, posy:int):void {
+		public function scrollTo(posx:int, posy:int, instantScroll:Boolean):void {
 			_end.x = posx;
 			_end.y = posy;
-			scrollContent();
+			scrollContent(instantScroll);
 		}
 		
 		private function onMiddleDown(e:MouseEvent):void {
@@ -70,8 +80,10 @@ package maryfisher.view.ui.mediator {
 			/** TODO
 			 * 
 			 */
-			_content.addListener(MouseEvent.MIDDLE_MOUSE_UP, onMouseUp);
-			_content.stage.addEventListener(MouseEvent.MIDDLE_MOUSE_UP, onMouseUp);
+			//_content.addListener(MouseEvent.MIDDLE_MOUSE_UP, onMouseUp);
+			//_content.stage.addEventListener(MouseEvent.MIDDLE_MOUSE_UP, onMouseUp);
+			_content.addListener(_dragTypeUp, onMouseUp);
+			_content.stage.addEventListener(_dragTypeUp, onMouseUp);
 			_content.addListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			
 			_lastPos.x = e.stageX;
@@ -83,8 +95,10 @@ package maryfisher.view.ui.mediator {
 			/** TODO
 			 * 
 			 */
-			_content.removeListener(MouseEvent.MIDDLE_MOUSE_UP, onMouseUp);
-			_content.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			//_content.removeListener(MouseEvent.MIDDLE_MOUSE_UP, onMouseUp);
+			//_content.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			_content.removeListener(_dragTypeUp, onMouseUp);
+			_content.stage.removeEventListener(_dragTypeUp, onMouseUp);
 			_content.removeListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 		}
 		
@@ -95,19 +109,23 @@ package maryfisher.view.ui.mediator {
 				_lastPos.x = _content.stage.mouseX; 
 				_lastPos.y = _content.stage.mouseY;
 				
-				scrollContent();
+				scrollContent(false);
 			}
 		}
 		
-		private function scrollContent():void {
+		private function scrollContent(instantScroll:Boolean):void {
 			_end.x = Math.min(Math.max(_end.x, _startPos.x -(_content.width - _scrollWidth)), _startPos.x);
 			_end.y = Math.min(Math.max(_end.y, _startPos.y-(_content.height - _scrollHeight)), _startPos.y);
 			if (_content.x == _end.x && _content.y == _end.y) {
 				return;
 			}
-			
-			TweenLite.killTweensOf(_content);
-			TweenLite.to(_content, 0.3, { y: _end.y, x:_end.x, ease:Sine.easeOut, onComplete: scrollingFinished } );
+			if(!instantScroll){
+				TweenLite.killTweensOf(_content);
+				TweenLite.to(_content, 0.3, { y: _end.y, x:_end.x, ease:Sine.easeOut, onComplete: scrollingFinished } );
+			}else {
+				_content.y = _end.y;
+				_content.x = _end.x;
+			}
 			//TweenLite.to(_content, 0.3, { x: _end.x, ease:Sine.easeOut } );
 		}
 		

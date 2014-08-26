@@ -1,6 +1,6 @@
 package maryfisher.view.ui.mediator {
 	import flash.events.MouseEvent;
-	import maryfisher.view.ui.interfaces.IDisplayObject;
+	import maryfisher.framework.view.IDisplayObject;
 	/**
 	 * ...
 	 * @author mary_fisher
