@@ -25,9 +25,7 @@ package maryfisher.view.ui.button {
 			//_label.mouseEnabled = false;
 			if (overwrite && centerButton) {
 				_textField.wordWrap = false;
-				//trace(_textField.x);
 				_textField.autoSize = TextFieldAutoSize.CENTER;
-				//trace(_textField.x);
 				_textField.align = "center";
 			}else if (overwrite && !centerButton) {
 				_textField.align = "left";
@@ -47,7 +45,6 @@ package maryfisher.view.ui.button {
 		override public function showOverState():void {
 			super.showOverState();
 			_textField.textColor = _textScheme.overColor;
-			//trace(_label.textColor.toString(16));
 		}
 		
 		override protected function onDown():void {
@@ -68,7 +65,6 @@ package maryfisher.view.ui.button {
 		public function set label(value:String):void {
 			_textField.text = value;
 			_textField.y = (_height - _textField.height) >> 1;
-			//trace(_textField.y, height, _textField.height);
 		}
 		
 		public function get label():String {

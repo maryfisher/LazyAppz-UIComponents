@@ -260,7 +260,6 @@ package maryfisher.view.ui.button {
 			
 			_overState.visible = false;
 			if (_downState && contains(_downState)) {
-				trace(getChildIndex(_downState));
 				addChildAt(_overState, getChildIndex(_downState));
 				return;
 			}

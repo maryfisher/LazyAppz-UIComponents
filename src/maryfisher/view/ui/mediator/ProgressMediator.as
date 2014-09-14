@@ -1,14 +1,14 @@
 package maryfisher.view.ui.mediator {
-	import maryfisher.view.ui.interfaces.IProgress;
+	import maryfisher.view.ui.interfaces.IProgressBar;
 	/**
 	 * ...
 	 * @author mary_fisher
 	 */
 	public class ProgressMediator {
 		
-		private var _progress:IProgress;
+		private var _progress:IProgressBar;
 		
-		public function ProgressMediator(progress:IProgress) {
+		public function ProgressMediator(progress:IProgressBar) {
 			_progress = progress;
 			
 		}
@@ -17,7 +17,7 @@ package maryfisher.view.ui.mediator {
 			_progress.maskWidth = percent * _progress.totalWidth;
 		}
 		
-		public function get progress():IProgress {
+		public function get progress():IProgressBar {
 			return _progress;
 		}
 	}

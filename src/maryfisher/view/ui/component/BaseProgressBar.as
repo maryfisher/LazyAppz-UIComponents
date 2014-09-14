@@ -4,12 +4,13 @@ package maryfisher.view.ui.component {
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import maryfisher.view.ui.button.HoverField;
+	import maryfisher.view.ui.interfaces.IProgressBar;
 	
 	/**
 	 * ...
 	 * @author mary_fisher
 	 */
-	public class BaseProgressBar extends HoverField {
+	public class BaseProgressBar extends HoverField implements IProgressBar {
 		
 		//protected var _mask:Bitmap;
 		protected var _mask:DisplayObject;
