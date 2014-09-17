@@ -9,15 +9,15 @@ package maryfisher.view.ui.mediator {
 	import maryfisher.framework.command.sound.SoundCommand;
 	import maryfisher.framework.command.view.StageCommand;
 	import maryfisher.framework.core.AssetController;
-	import maryfisher.framework.core.SoundController;
 	import maryfisher.framework.data.LoaderData;
 	import maryfisher.framework.sound.ISound;
 	import maryfisher.framework.view.ITickedObject;
+	
 	/**
 	 * ...
 	 * @author mary_fisher
 	 */
-	public class SoundMediator implements ISound, ITickedObject{
+	public class SoundMediator implements ISound, ITickedObject {
 		
 		private var _loaderData:LoaderData;
 		private var _channel:SoundChannel;
@@ -33,7 +33,7 @@ package maryfisher.view.ui.mediator {
 		private var _interval:int = 0;
 		
 		public function SoundMediator() {
-			
+		
 		}
 		
 		public function init(assetId:String, fileIds:Vector.<String>, soundId:String, doLoop:Boolean = false):void {
@@ -44,7 +44,7 @@ package maryfisher.view.ui.mediator {
 			_soundType = soundId;
 			
 			_loaderData = AssetController.getLoaderData(assetId);
-			
+		
 		}
 		
 		public function start():void {
@@ -54,17 +54,17 @@ package maryfisher.view.ui.mediator {
 		
 		private function loadFile(fileId:String):void {
 			if (_sound) {
-				if(_sound.bytesLoaded != _sound.bytesTotal){
+				if (_sound.bytesLoaded != _sound.bytesTotal) {
 					_sound.close();
 				}
 			}
 			
-			_sound = new Sound(); 
+			_sound = new Sound();
 			
-			var req:URLRequest = new URLRequest(_loaderData.path + fileId + ".mp3"); 
-			var context:SoundLoaderContext = new SoundLoaderContext(8000, true); 
+			var req:URLRequest = new URLRequest(_loaderData.path + fileId + ".mp3");
+			var context:SoundLoaderContext = new SoundLoaderContext(8000, true);
 			_sound.addEventListener(IOErrorEvent.IO_ERROR, onError);
-			_sound.load(req, context); 
+			_sound.load(req, context);
 			//SoundController.registerSound(this);
 			
 			play();
@@ -83,7 +83,7 @@ package maryfisher.view.ui.mediator {
 				_channel.soundTransform = new SoundTransform(0);
 				//new SoundCommand(SoundCommand.GET_SOUNDTRANSFORM, _soundType, 0, null, this);
 				new SoundCommand(SoundCommand.GET_SOUNDTRANSFORM, _soundType, 0, this);
-			}else{
+			} else {
 				//new SoundCommand(SoundCommand.REGISTER_CHANNEL, _soundType, 0, _channel);
 				new SoundCommand(SoundCommand.REGISTER_CHANNEL, _soundType, 0, this);
 			}
@@ -91,7 +91,7 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		public function stop():void {
-			_channel.stop();
+			_channel && _channel.stop();
 		}
 		
 		/* INTERFACE maryfisher.framework.view.ITickedObject */
@@ -104,10 +104,10 @@ package maryfisher.view.ui.mediator {
 			
 			/** NOTE
 			 * what a strange f***ing bug
-			 * dont remove this stupid looking code 
+			 * dont remove this stupid looking code
 			 * _channel.soundTransform.volume += 0.01 wont work!!!!
 			 */
-			if(_interval % 10 == 0){
+			if (_interval % 10 == 0) {
 				var s:SoundTransform = _channel.soundTransform;
 				s.volume += 0.01;
 				_channel.soundTransform = s;
@@ -159,8 +159,8 @@ package maryfisher.view.ui.mediator {
 				_fileIndex++;
 				if (_fileIndex == _fileIds.length)
 					_fileIndex = 0;
-					_onFinishedListener && _onFinishedListener();
-					loadFile(_fileIds[_fileIndex]);
+				_onFinishedListener && _onFinishedListener();
+				loadFile(_fileIds[_fileIndex]);
 				return;
 			}
 			
@@ -180,7 +180,7 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		public function set fileIndex(value:int):void {
-			if(_channel){
+			if (_channel) {
 				_channel.removeEventListener(Event.SOUND_COMPLETE, onSoundComplete);
 				//new SoundCommand(SoundCommand.UNREGISTER_CHANNEL, _soundType, 0, _channel);
 				new SoundCommand(SoundCommand.UNREGISTER_CHANNEL, _soundType, 0, this);

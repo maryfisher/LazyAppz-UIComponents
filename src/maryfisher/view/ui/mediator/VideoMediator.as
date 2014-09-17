@@ -1,6 +1,5 @@
 package maryfisher.view.ui.mediator {
 	import flash.events.AsyncErrorEvent;
-	import flash.events.Event;
 	import flash.events.NetStatusEvent;
 	import flash.events.SecurityErrorEvent;
 	import flash.media.Video;
@@ -8,6 +7,8 @@ package maryfisher.view.ui.mediator {
 	import flash.net.NetStream;
 	import maryfisher.framework.core.AssetController;
 	import maryfisher.framework.data.LoaderData;
+	import maryfisher.view.ui.interfaces.IVideoContainer;
+	
 	/**
 	 * ...
 	 * @author mary_fisher
@@ -20,6 +21,7 @@ package maryfisher.view.ui.mediator {
 		private var _activeUrl:String;
 		private var _loaderData:LoaderData;
 		private var _onFinishedListener:Function;
+		private var _container:IVideoContainer;
 		protected var _netConnection:NetConnection;
 		protected var _isLoaded:Boolean;
 		protected var _isPlaying:Boolean;
@@ -31,11 +33,13 @@ package maryfisher.view.ui.mediator {
 			_netConnection.connect(null);
 		}
 		
-		public function init(width:int, height:int, id:String, fileId:String, bufferTime:Number = 8 ): void {
+		//public function init(width:int, height:int, id:String, fileId:String, bufferTime:Number = 8 ): void {
+		public function init(container:IVideoContainer, id:String, fileId:String, bufferTime:Number = 8):void {
+			_container = container;
 			
 			_bufferTime = bufferTime;
 			
-			_video = new Video (width, height);
+			//_video = new Video(width, height);
 			
 			//_activeUrl = url;
 			_loaderData = AssetController.getLoaderData(id);
@@ -45,21 +49,27 @@ package maryfisher.view.ui.mediator {
 			/** TODO
 			 * ???
 			 */
-			_stream.client={onMetaData:function(obj:Object):void{} }
+			_stream.client = {onMetaData: onMetaData}
 			/** TODO
 			 * _stream.soundTransform
 			 */
 			_stream.addEventListener(NetStatusEvent.NET_STATUS, netStatus);
 			_stream.addEventListener(AsyncErrorEvent.ASYNC_ERROR, asyncError);
-			
+		
+			//_video.attachNetStream(_stream);
+		}
+		
+		private function onMetaData(md:Object):void {
+			_video = new Video(md.width, md.height);
 			_video.attachNetStream(_stream);
+			_container.addVideo(_video);
 		}
 		
 		public function addOnFinished(list:Function):void {
 			_onFinishedListener = list;
 		}
 		
-		public function playVideo() : void {
+		public function playVideo():void {
 			
 			if (!_isLoaded) {
 				_stream.play(_activeUrl);
@@ -75,7 +85,7 @@ package maryfisher.view.ui.mediator {
 			_isPlaying = false;
 		}
 		
-		public function stopVideo() : void {
+		public function stopVideo():void {
 			_stream.pause();
 			_stream.seek(0);
 			
@@ -103,21 +113,21 @@ package maryfisher.view.ui.mediator {
 		protected function netStatus(e:NetStatusEvent):void {
 			trace("[VideoMediator] NetStatusEvent", e.info.code);
 			switch (e.info.code) {
-				case "NetStream.Play.StreamNotFound" :
+				case "NetStream.Play.StreamNotFound": 
 					trace("[VideoMediator] Unable to locate video:", _activeUrl);
 					break;
-				case "NetStream.Play.Start" :
+				case "NetStream.Play.Start": 
 					//start des buffer ladens -> Ladebalken
 					break;
-				case "NetStream.Buffer.Full" :
+				case "NetStream.Buffer.Full": 
 					//ladebalken kann weg
 					break;
-				case "NetStream.Play.Stop" :
+				case "NetStream.Play.Stop": 
 					stopVideo();
 					break;
 			}
 		}
-
+		
 		protected function securityError(e:SecurityErrorEvent):void {
 			trace("[VideoMediator] SecurityErrorEvent: ", e);
 		}

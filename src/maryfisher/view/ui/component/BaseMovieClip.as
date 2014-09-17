@@ -16,9 +16,9 @@ package maryfisher.view.ui.component {
 		
 		private var _currentFrame:int = -1;
 		private var _loop:Boolean;
-		private var _framesById:Dictionary;
+		private var _frameIdsById:Dictionary;
 		//private var _idleFrames:Vector.<Vector.<Bitmap>>;
-		private var _idleFrames:Vector.<Vector.<int>>;
+		private var _idleFrameIds:Vector.<Vector.<int>>;
 		//private var _currentFrames:Vector.<Bitmap>;
 		private var _currentFrames:Vector.<int>;
 		private var _currentBitmap:Bitmap;
@@ -31,25 +31,25 @@ package maryfisher.view.ui.component {
 		public function BaseMovieClip(arr:Array) {
 			_allFrames = Vector.<Bitmap>(arr);
 			//_idleFrames = new Vector.<Vector.<Bitmap>>();
-			_idleFrames = new Vector.<Vector.<int>>();
-			_framesById = new Dictionary();
+			_idleFrameIds = new Vector.<Vector.<int>>();
+			_frameIdsById = new Dictionary();
 		}
 		
 		protected function addFrames(arr:Array, frameId:String = DEFAULT_FRAME):void {
 			//_framesById[frameId] = Vector.<Bitmap>(arr);
-			_framesById[frameId] = Vector.<int>(arr);
+			_frameIdsById[frameId] = Vector.<int>(arr);
 		}
 		
 		protected function addIdleFrames(arr:Array):void {
 			//_idleFrames.push(Vector.<Bitmap>(arr));
-			_idleFrames.push(Vector.<int>(arr));
+			_idleFrameIds.push(Vector.<int>(arr));
 		}
 		
 		public function play(frameId:String = null, loop:Boolean = false):void {
 			_loop = loop;
 			_frameId = frameId || DEFAULT_FRAME;
 			_isPlaying = true;
-			_currentFrames = _framesById[_frameId];
+			_currentFrames = _frameIdsById[_frameId];
 			trace("[BaseMovieClip] play register Tick");
 			nextTick(0);
 			new StageCommand(StageCommand.REGISTER_TICK, this);
@@ -123,7 +123,7 @@ package maryfisher.view.ui.component {
 		//}
 		
 		private function setIdleFrames():void {
-			_currentFrames = _idleFrames[int(Math.random() * _idleFrames.length)];
+			_currentFrames = _idleFrameIds[int(Math.random() * _idleFrameIds.length)];
 			_loop = false;
 			_isPlaying = true;
 			//trace("[BaseMovieClip] setIdleFrames register Tick");
