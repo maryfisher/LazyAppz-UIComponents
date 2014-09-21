@@ -127,7 +127,7 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		private function dispatchUpdate():void {
-			var sp:Number = (_currenPos - _minPos) / _maxPos;
+			var sp:Number = (_currenPos - _minPos) / (_maxPos - _minPos);
 			//if (sp == _lastUpdate) return;
 			if (!_isDown) {
 				_updateSignal.dispatch(sp);

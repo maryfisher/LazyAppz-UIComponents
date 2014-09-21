@@ -50,7 +50,7 @@ package maryfisher.view.ui.component {
 			_frameId = frameId || DEFAULT_FRAME;
 			_isPlaying = true;
 			_currentFrames = _frameIdsById[_frameId];
-			trace("[BaseMovieClip] play register Tick");
+			//trace("[BaseMovieClip] play register Tick");
 			nextTick(0);
 			new StageCommand(StageCommand.REGISTER_TICK, this);
 		}
