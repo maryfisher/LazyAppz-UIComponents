@@ -1,4 +1,5 @@
 package maryfisher.view.ui.button {
+    import flash.display.DisplayObject;
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
@@ -36,6 +37,16 @@ package maryfisher.view.ui.button {
 			addChild(_textField);
 			_height = height;
 		}
+        
+        public function setStates(up:DisplayObject, over:DisplayObject, down:DisplayObject, disabled:DisplayObject = null):void {
+            upState = up;
+            overState = over;
+            downState = down;
+            disabledState = disabled;
+            _height = height;
+            
+            _textField.x = up.width - _textField.width >> 1;
+        }
 		
 		public function set textColor(color:uint):void {
 			_textField.textColor = color;
