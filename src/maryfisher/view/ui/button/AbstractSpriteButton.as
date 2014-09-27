@@ -56,7 +56,8 @@ package maryfisher.view.ui.button {
 			removeListeners();
 			_clickedSignal && _clickedSignal.removeAll();
 			_downSignal && _downSignal.removeAll();
-			//_upSignal && _upSignal.removeAll();
+			_rightClickSignal && _rightClickSignal.removeAll();
+			_bubblingSignal = null;
 		}
 		
 		/**
