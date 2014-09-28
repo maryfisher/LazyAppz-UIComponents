@@ -33,6 +33,11 @@ package maryfisher.view.ui.mediator {
 			scrollContent();
 		}
 		
+		public function scrollToEnd():void {
+			_end = -_content.height;
+			scrollContent();
+		}
+		
 		public function setScrollStops(stops:Vector.<int>):void {
 			_scrollStops = stops;
 		}
@@ -145,6 +150,14 @@ package maryfisher.view.ui.mediator {
 				//_scrollRows = _scrollSideways ? _scrollWidth / value : _scrollHeight / value;
 				_scrollRows = _scrollSideways ? _content.width / value : _content.height / value;
 			}
+		}
+		
+		public function isVisible(childPos:int, childHeight:int = 0):Boolean {
+			var visibleStart:int = !_scrollSideways ? _startPos - _content.y : - _content.x + _startPos;
+			var range:int = _scrollSideways ? _scrollWidth : _scrollHeight;
+			var childEnd:int = childPos + childHeight
+			return childPos >= visibleStart && childPos <= (visibleStart + range) 
+				|| childEnd >= visibleStart && childEnd <= (visibleStart + range) ;
 		}
 		
 	}

@@ -10,7 +10,7 @@ package maryfisher.view.ui.button {
 		public var disabledColor:uint;
 		public var selectedColor:uint;
 		
-		public function ButtonColorScheme(upColor:uint, overColor:uint, downColor:uint = NaN, disabledColor:uint = NaN, selectedColor:uint = NaN) {
+		public function ButtonColorScheme(upColor:uint, overColor:uint, downColor:uint = 0, disabledColor:uint = 0, selectedColor:uint = 0) {
 			this.upColor = upColor;
 			this.downColor = downColor;
 			this.overColor = overColor;

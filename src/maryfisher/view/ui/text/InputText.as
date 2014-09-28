@@ -7,7 +7,7 @@ package maryfisher.view.ui.text {
 	import flash.text.TextFieldType;
 	import flash.ui.Keyboard;
 	import maryfisher.view.event.TextInputSignalEvent;
-	import maryfisher.view.ui.component.BaseSprite;
+	import maryfisher.framework.view.core.BaseSprite;
 	import maryfisher.view.ui.component.FormatText;
 	import org.osflash.signals.DeluxeSignal;
 	import org.osflash.signals.events.GenericEvent;

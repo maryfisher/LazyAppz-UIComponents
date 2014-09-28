@@ -3,7 +3,7 @@ package maryfisher.view.ui.component {
 	import flash.events.Event;
 	import flash.geom.Rectangle;
 	import maryfisher.view.ui.button.ButtonColorScheme;
-	import maryfisher.view.ui.component.BaseSprite;
+	import maryfisher.framework.view.core.BaseSprite;
 	import maryfisher.view.ui.interfaces.IButton;
 	import maryfisher.view.ui.interfaces.IDropDownBase;
 	import maryfisher.view.ui.interfaces.IIDItem;
