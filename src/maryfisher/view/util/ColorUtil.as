@@ -110,6 +110,30 @@ package maryfisher.view.util {
 			return cl;
 		}
 		
+		static public function advanceColor(startColor:uint, endColor:uint, progress:Number):uint {
+			
+			var redStart:Number = getRed(startColor);  
+			var greenStart:Number = getGreen(startColor);
+			var blueStart:Number = getBlue(startColor);
+			var redEnd:Number = getRed(endColor);  
+			var greenEnd:Number = getGreen(endColor);
+			var blueEnd:Number = getBlue(endColor);
+			
+			var rCurrent:Number = redStart + (redEnd - redStart) * progress;
+			var	gCurrent:Number = greenStart + (greenEnd - greenStart) * progress;
+			var	bCurrent:Number = blueStart + (blueEnd - blueStart) * progress;
+			
+			return toRGB(rCurrent, gCurrent, bCurrent);
+		}
+		
+		static public function getRed(color:uint):Number { return (( color >> 16 ) & 0xFF); }
+		static public function getGreen(color:uint):Number { return ( (color >> 8) & 0xFF ); }
+		static public function getBlue(color:uint):Number { return ( color & 0xFF ); }
+		
+		static public function toRGB(red:Number, green:Number, blue:Number):uint { 
+			return ( ( red << 16 ) | ( green << 8 ) | blue ); 
+		}
+		
 		public static function applyFilter(data:BitmapData, filter:BitmapFilter):void {
 			data.applyFilter(data, data.rect, new Point(), filter);
 		}
