@@ -1,5 +1,7 @@
 package maryfisher.view.ui.mediator {
+	import adobe.utils.CustomActions;
 	import com.greensock.TweenMax;
+	import flash.utils.Dictionary;
 	import maryfisher.framework.command.view.StageCommand;
 	import maryfisher.framework.data.LocaleText;
 	import maryfisher.framework.data.LocaleTextParameter;
@@ -24,13 +26,25 @@ package maryfisher.view.ui.mediator {
 		private var _breakIndex:int = -1;
 		private var _currentBreak:LocaleTextParameter;
 		private var _chunk:int = 1;
-		private var _speed:int = 1;
+		private var _speed:Number = 1;
 		private var _currentTime:int;
+		private var _skip:Boolean;
+		private var _speedIndex:int = -1;
+		private var _speeds:Vector.<LocaleTextParameter>;
+		private var _currentSpeed:LocaleTextParameter;
+		private var _params:Dictionary;
+		private var _paramIndex:Dictionary;
+		private var _currentParam:Dictionary;
+		private var _activeParams:Vector.<String>;
 		
-		public function ProgressTextMediator(chunk:int = 1, speed:int = 1) {
+		public function ProgressTextMediator(chunk:int = 1, speed:Number = 1) {
 			_chunk = chunk;
 			_speed = speed;
-			_updatesSignal = new Signal(int);
+			_updatesSignal = new Signal(LocaleTextParameter);
+			_params = new Dictionary();
+			_paramIndex = new Dictionary();
+			_currentParam = new Dictionary();
+			_activeParams = new Vector.<String>();
 		}
 		
 		public function setText(text:FormatText, localeText:LocaleText, isHTML:Boolean = false):void {
@@ -38,10 +52,52 @@ package maryfisher.view.ui.mediator {
 			_text = text;
 			_localeText = localeText;
 			_breaks = _localeText.getParams("pause") || new Vector.<LocaleTextParameter>();
+			_speeds = _localeText.getParams("speed") || new Vector.<LocaleTextParameter>();
 			//trace("[ProgressTextMediator] setText breaks", _breaks, localeText.text);
 			_currentBreak = null;
 			_breakIndex = -1;
+			_speedIndex = -1;
 			getNextBreak();
+			getNextSpeed();
+			if(_currentSpeed){
+				setSpeed();
+			}
+			
+			for each (var id:String in _activeParams) {
+				_params[id] = _localeText.getParams(id) || new Vector.<LocaleTextParameter>();
+				_paramIndex[id] = -1;
+				_currentParam[id] = null;
+				getNextParam(id);
+			}
+		}
+		
+		public function activateParam(id:String):void {
+			_activeParams.push(id);
+		}
+		
+		public function deactivateParam(id:String):void {
+			var index:int = _activeParams.indexOf(id);
+			if (index == -1) return;
+			_activeParams.splice(index, 1);
+		}
+		
+		private function getNextParam(id:String):void {
+			_paramIndex[id]++;
+			var index:int = _paramIndex[id];
+			if (index >= _params[id].length) {
+				_currentParam[id] = null;
+				return;
+			}
+			_currentParam[id] = _params[id][index];
+		}
+		
+		private function getNextSpeed():void {
+			_speedIndex++;
+			if (_speedIndex >= _speeds.length) {
+				_currentSpeed = null;
+				return;
+			}
+			_currentSpeed = _speeds[_speedIndex];
 		}
 		
 		private function getNextBreak():void {
@@ -70,9 +126,38 @@ package maryfisher.view.ui.mediator {
 		
 		public function nextTick(interval:int):void {
 			
-			if(_currentTime % _speed == 0){
-				_currentIndex += _chunk;
-				_updatesSignal.dispatch(_currentIndex);
+			if (_currentTime % _speed == 0) {
+				if (_skip) {
+					_currentIndex = _localeText.formattedText.length;
+				}else {
+					if (_chunk == -1) {
+						if(_currentBreak){
+							_currentIndex = _currentBreak.indexFormatted;
+						}else {
+							_currentIndex = _localeText.formattedText.length;
+						}
+					} else {
+						_currentIndex += _chunk;
+					}
+				}
+				
+				//_updatesSignal.dispatch(_currentIndex);
+				
+				if (_isHTML) {
+					_text.htmlText = _localeText.formattedText.substr(0, _currentIndex);
+				}else {
+					_text.text = _localeText.formattedText.substr(0, _currentIndex);
+				}
+				
+				if (_currentSpeed && _currentIndex == _currentSpeed.indexFormatted) {
+					setSpeed();
+				}
+				
+				for each (var id:String in _activeParams) {
+					if (_currentParam[id] && _currentIndex == _currentParam[id].indexFormatted) {
+						_updatesSignal.dispatch(_currentParam[id]);
+					}
+				}
 				
 				if (_currentBreak && _currentIndex == _currentBreak.indexFormatted) {
 					stop();
@@ -80,11 +165,6 @@ package maryfisher.view.ui.mediator {
 					TweenMax.delayedCall(_currentBreak.content.@time, register);
 					getNextBreak();
 					return;
-				}
-				if (_isHTML) {
-					_text.htmlText = _localeText.formattedText.substr(0, _currentIndex);
-				}else {
-					_text.text = _localeText.formattedText.substr(0, _currentIndex);
 				}
 				
 				if (_currentIndex >= _localeText.formattedText.length) {
@@ -100,9 +180,14 @@ package maryfisher.view.ui.mediator {
 			new StageCommand(StageCommand.REGISTER_TICK, this);
 		}
 		
+		private function setSpeed():void {
+			_speed = parseInt(_currentSpeed.content.@val);
+			getNextSpeed();
+		}
+		
 		/**
 		 * 
-		 * @param	value: Function.<int>
+		 * @param	value: Function.<LocaleTextParameter>
 		 */
 		public function addUpdatesListener(value:Function):void {
 			_updatesSignal.add(value);
@@ -116,8 +201,12 @@ package maryfisher.view.ui.mediator {
 			_chunk = value;
 		}
 		
-		public function set speed(value:int):void {
+		public function set speed(value:Number):void {
 			_speed = value;
+		}
+		
+		public function set skip(value:Boolean):void {
+			_skip = value;
 		}
 		
 	}
