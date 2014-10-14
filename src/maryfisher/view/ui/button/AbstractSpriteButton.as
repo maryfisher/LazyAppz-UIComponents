@@ -147,16 +147,10 @@ package maryfisher.view.ui.button {
 			}
 			
 			if (!value) {
-				//onMouseOut(null);
-				//removeListeners();
 				_selected = false;
-			}else {
-				//addListeners();
 			}
 			
 			_enabled = value;
-			//mouseEnabled = _enabled;
-			//buttonMode = _enabled;
 			
 			if (!value) {
 				if(_disabledState) upState = _disabledState;
@@ -179,7 +173,6 @@ package maryfisher.view.ui.button {
 				}
 			}
 			_upState = value;
-			//_defaultState = value;
 			_upState && addChildAt(_upState, index);
 		}
 		
@@ -260,13 +253,9 @@ package maryfisher.view.ui.button {
 			}
 			if (_downState) _downState.visible = false;
 			
-			/* TODO
-			 *nicht auf alle Arten dispatchen
-			 */
 			//dispatchEvent(new ButtonEvent(ButtonEvent.BUTTON_CLICKED, _id));
 			_doBubble && (_bubblingSignal.dispatch(new ButtonSignalEvent(ButtonSignalEvent.ON_CLICKED)));
 			_clickedSignal && _clickedSignal.dispatch(this);
-			//_sound && _sound.play();
 			
 			if (_downSignal && _onStayDown) {
 				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
@@ -287,9 +276,6 @@ package maryfisher.view.ui.button {
 			
 			if (_downSignal) {
 				_downSignal.dispatch(this);
-				/* TODO
-				 * optional
-				 */
 				if(_onStayDown){
 					addEventListener(Event.ENTER_FRAME, onEnterFrame);
 				}
@@ -307,7 +293,6 @@ package maryfisher.view.ui.button {
 			}else {
 				upState = _defaultState;
 			}
-			//handleMouseOut(null);
 			showUpState();
 		}
 	}
