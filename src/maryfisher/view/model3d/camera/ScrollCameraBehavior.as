@@ -9,7 +9,6 @@ package maryfisher.view.model3d.camera {
 	import maryfisher.framework.core.KeyController;
 	import maryfisher.framework.data.KeyComboData;
 	import maryfisher.framework.view.ICameraObject;
-	import maryfisher.view.ui.interfaces.IDisplayObject;
 	/**
 	 * ...
 	 * @author mary_fisher

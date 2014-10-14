@@ -1,5 +1,5 @@
 package maryfisher.view.model3d.camera {
-	import maryfisher.view.ui.interfaces.IDisplayObject;
+	import maryfisher.framework.view.IDisplayObject;
 	
 	/**
 	 * ...
