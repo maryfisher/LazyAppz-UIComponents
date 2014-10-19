@@ -30,7 +30,7 @@ package maryfisher.view.ui.mediator {
 		private var _frontToBack:Boolean = true;
 		private var _doTween:Boolean = false;
 		private var _hasDynamicColumns:Boolean;
-		private var _dynamicColumnWidth:int;
+		private var _dynamicColumnMaxWidth:int;
 		
 		public function ListMediator() {
 			_children = new Vector.<IDisplayObject>();
@@ -59,23 +59,19 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		/**
-		 * 
+		 * setting the number of columns / rows after which line should break
+		 * setting columns to 1 and vertical true creates a vertical list
 		 * @param	columns
 		 * @param	isVertical
 		 */
 		public function setColumns(columns:int, isVertical:Boolean = true):void {
 			_isHorizontal = isVertical;
 			_columns = columns;
-			//if (isVertical) {
-				//_posX = _startX;
-			//}else {
-				//_posY = _startY;
-			//}
 			_index = 0;
 		}
 		
 		/**
-		 * for dimensions that vary with the index position
+		 * for dimensions that map the child position to a certain index
 		 * @param	dist
 		 */
 		public function setTableDistances(dist:Array):void {
@@ -107,9 +103,13 @@ package maryfisher.view.ui.mediator {
 			_frontToBack = value;
 		}
 		
+		/**
+		 * setting dynamic columns / rows width and defining a max width to begin a new row / column
+		 * @param	maxWidth
+		 */
 		public function dynamicColumns(maxWidth:int):void {
 			_hasDynamicColumns = true;
-			_dynamicColumnWidth = maxWidth;
+			_dynamicColumnMaxWidth = maxWidth;
 		}
 		
 		/**
@@ -159,17 +159,15 @@ package maryfisher.view.ui.mediator {
 				}
 			}
 			
-			//if (child) {
-				if (_doTween) {
-					/** TODO
-					 * replace with ILocationTweenEffect
-					 */
-					TweenLite.to(child, 0.3, { x: _posX, y:_posY } );
-				}else{
-					child.x = _posX;
-					child.y = _posY;
-				}
-			//}
+			if (_doTween) {
+				/** TODO
+				 * replace with ILocationTweenEffect
+				 */
+				TweenLite.to(child, 0.3, { x: _posX, y:_posY } );
+			}else{
+				child.x = _posX;
+				child.y = _posY;
+			}
 			
 			updatePosition();
 			
@@ -186,12 +184,12 @@ package maryfisher.view.ui.mediator {
 			
 			if (_hasDynamicColumns) {
 				if (_isHorizontal) {
-					if (_posX >= _dynamicColumnWidth) {
+					if (_posX >= _dynamicColumnMaxWidth) {
 						_posX = _startX;
 						_posY += _childHeight + _distY;
 					}
 				}else {
-					if (_posY >= _dynamicColumnWidth) {
+					if (_posY >= _dynamicColumnMaxWidth) {
 						_posY = _startY;
 						_posX += _childWidth + _distX;
 					}
@@ -221,6 +219,9 @@ package maryfisher.view.ui.mediator {
 			}
 		}
 		
+		/**
+		 * recalculates the position of the last added child
+		 */
 		public function updateLastChildPos():void {
 			if (_children.length == 0) return;
 			var child:IDisplayObject = _children[_children.length - 1];
@@ -230,7 +231,7 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		/**
-		 * for custom gaps
+		 * for custom one-time gaps
 		 * @param	distX
 		 * @param	distY
 		 */
@@ -282,14 +283,14 @@ package maryfisher.view.ui.mediator {
 		 * resets index / start positions, removes all children
 		 */
 		public function reset():void {
-			_children = new Vector.<IDisplayObject>();
+			_children.length = 0;
 			_index = 0;
 			_posX = _startX;
 			_posY = _startY;
 		}
 		
 		/**
-		 * removes on ListChild and updates positions of all others so no gaps appear
+		 * removes a list child and updates positions of all others so no gaps appear
 		 * @param	child
 		 */
 		public function removeListChild(child:IDisplayObject):void {
