@@ -48,16 +48,11 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		public function start():void {
-			
 			loadFile(!_doLoop ? _fileIds.pop() : _fileIds[_fileIndex]);
 		}
 		
 		private function loadFile(fileId:String):void {
-			if (_sound) {
-				if (_sound.bytesLoaded != _sound.bytesTotal) {
-					_sound.close();
-				}
-			}
+			closeSound();
 			
 			_sound = new Sound();
 			
@@ -77,7 +72,6 @@ package maryfisher.view.ui.mediator {
 		/* INTERFACE maryfisher.framework.sound.ISound */
 		
 		public function play():void {
-			
 			_channel = _sound.play();
 			if (_fadeIn) {
 				_channel.soundTransform = new SoundTransform(0);
@@ -90,7 +84,16 @@ package maryfisher.view.ui.mediator {
 			_channel.addEventListener(Event.SOUND_COMPLETE, onSoundComplete);
 		}
 		
+		private function closeSound():void {
+			if (_sound) {
+				if (_sound.bytesLoaded != _sound.bytesTotal) {
+					_sound.close();
+				}
+			}
+		}
+		
 		public function stop():void {
+			closeSound();
 			_channel && _channel.stop();
 		}
 		

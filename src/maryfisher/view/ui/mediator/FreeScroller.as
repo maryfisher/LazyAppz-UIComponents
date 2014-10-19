@@ -12,6 +12,9 @@ package maryfisher.view.ui.mediator {
 	 */
 	public class FreeScroller {
 		
+		static public const RIGHT_MOUSE:String = "rightMouse";
+		static public const MIDDLE_MOUSE:String = "middleMouse";
+		
 		private var _isDragging:Boolean;
 		private var _lastPos:Point;
 		private var _end:Point;
@@ -24,7 +27,7 @@ package maryfisher.view.ui.mediator {
 		private var _dragTypeDown:String;
 		private var _dragTypeUp:String;
 		
-		public function FreeScroller(dragType:String = "middleMouse") {
+		public function FreeScroller(dragType:String = MIDDLE_MOUSE) {
 			_dragType = dragType;
 			_dragTypeDown = _dragType + "Down";
 			_dragTypeUp = _dragType + "Up";
