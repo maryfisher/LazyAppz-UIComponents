@@ -70,7 +70,7 @@ package maryfisher.view.ui.component {
 		
 		private function onDropped(isVisible:Boolean):void {
 			if (isVisible) {
-				//positionBase();
+				positionBase();
 				stage.addChild(_dropBase as DisplayObject);
 				onVisible();
 			}else {
@@ -79,7 +79,7 @@ package maryfisher.view.ui.component {
 			}
 		}
 		
-		private function positionBase():void {
+		protected function positionBase():void {
 			var rect:Rectangle = getRect(stage);
 			_dropBase.x = rect.x;
 			_dropBase.y = rect.y + _dropTop.height;

@@ -162,7 +162,7 @@ package maryfisher.view.ui.mediator {
 				if (_currentBreak && _currentIndex == _currentBreak.indexFormatted) {
 					stop();
 					//trace("[ProgressTextMediator] next call in", _currentBreak.content.@time);
-					TweenMax.delayedCall(_currentBreak.content.@time, register);
+					TweenMax.delayedCall(int(_currentBreak.getAttribute("time")), register);
 					getNextBreak();
 					return;
 				}
@@ -181,7 +181,7 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		private function setSpeed():void {
-			_speed = parseInt(_currentSpeed.content.@val);
+			_speed = parseInt(_currentSpeed.getAttribute("val"));
 			getNextSpeed();
 		}
 		
