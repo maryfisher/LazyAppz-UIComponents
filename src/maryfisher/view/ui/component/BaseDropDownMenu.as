@@ -124,8 +124,6 @@ package maryfisher.view.ui.component {
 			_selectedIndex = _buttons.indexOf(el);
 			_selectedListener && _selectedListener(_selectedIndex);
 			_bubbleSignal.dispatch(new GenericEvent(true));
-			//_dropBase.actHeight = _maxHeight - _topH;
-			//_scroller && (_dropMediator.listHeight = _maxHeight - _topH);
 		}
 		
 		public function addListElement(id:String, label:String):IButton {
@@ -138,7 +136,7 @@ package maryfisher.view.ui.component {
 		
 		/**
 		 * 
-		 * @param	list	Function.<index:int>
+		 * @param	list	Function.<int>
 		 */
 		public function addSelectedListener(list:Function):void {
 			_selectedListener = list;
