@@ -61,7 +61,7 @@ package maryfisher.view.ui.button {
 		public function destroy():void {
 			removeListeners();
 			
-			_tooltip.destroy();
+			_tooltip && _tooltip.destroy();
 		}
 		
 		public function attachTooltip(tooltip:ITooltip):void {

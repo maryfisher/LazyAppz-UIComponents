@@ -69,7 +69,7 @@ package maryfisher.view.ui.component {
 			applyFormat();
 		}
 		
-		protected function applyFormat():void{
+		public function applyFormat():void{
 			this.setTextFormat(_format);
 			this.defaultTextFormat = _format;
 		}
@@ -145,6 +145,10 @@ package maryfisher.view.ui.component {
 			mask = new Bitmap(new BitmapData(value.width, value.height, false, 0));
 			mask.x = value.x;
 			mask.y = value.y;
+		}
+		
+		public function get format():TextFormat {
+			return _format;
 		}
 	}
 
