@@ -2,7 +2,7 @@ package maryfisher.view.ui.component {
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.geom.Point;
-	import maryfisher.view.ui.interfaces.IDisplayObject;
+	import maryfisher.framework.view.IDisplayObject;
 	import maryfisher.view.ui.interfaces.IPage;
 	import maryfisher.view.ui.mediator.ListMediator;
 	
@@ -12,32 +12,14 @@ package maryfisher.view.ui.component {
 	 */
 	public class BaseSpritePage extends Sprite implements IPage {
 		
-		private var _listMediator:ListMediator;
-		//private var _maxPageWidth:int;
-		//private var _isHorizontal:Boolean;
+		protected var _listMed:ListMediator;
 		
 		public function BaseSpritePage() {
-			//_isHorizontal = isHorizontal;
-			//_maxPageWidth = pageWidth;
-			_listMediator = new ListMediator();
-			_listMediator.setColumns(1, true);
-			_listMediator.hasVariableDims = true;
-			visible = false;
+			_listMed = new ListMediator();
 		}
 		
-		/* INTERFACE maryfisher.view.ui.interfaces.IPage */
-		
-		//public function hasRoom(content:IDisplayObject):Boolean {
-			//var childPos:Point = _listMediator.getLastChildPos();
-			//var max:int = _isHorizontal ? childPos.x + content.width : childPos.y + content.height;
-			//if (max <= _maxPageWidth) {
-				//addContent(content);
-			//}
-			//return false;
-		//}
-		
 		public function addContent(content:IDisplayObject):void {
-			_listMediator.addListChild(content);
+			_listMed.addListChild(content);
 			addChild(content as DisplayObject);
 		}
 		
@@ -50,7 +32,7 @@ package maryfisher.view.ui.component {
 		}
 		
 		public function get listMediator():ListMediator {
-			return _listMediator;
+			return _listMed;
 		}
 		
 	}

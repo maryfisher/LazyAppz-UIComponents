@@ -25,7 +25,7 @@ package maryfisher.view.ui.mediator {
 		private var _prevButton:IButton;
 		private var _lastButton:IButton;
 		private var _firstButton:IButton;
-		private var _distances:Point;
+		//private var _distances:Point;
 		private var _onSelectListener:Function;
 		private var _numberButtons:Vector.<IButton>;
 		
@@ -39,9 +39,9 @@ package maryfisher.view.ui.mediator {
 			_maxPageHeight = maxPageHeight;
 		}
 		
-		public function listMediatorSettings(dist:Point):void {
-			_distances = dist;
-		}
+		//public function listMediatorSettings(distX:int, distY:int):void {
+			//_distances = new Point(distX, distY);
+		//}
 		
 		public function addContent(content:IDisplayObject, onNewPage:Boolean = false):IPage {
 			if (!_pageType) {
@@ -51,7 +51,7 @@ package maryfisher.view.ui.mediator {
 			var l:int = _pages.length;
 			if (l == 0 || onNewPage || !hasRoom(content, _pages[l - 1])) {
 				var page:IPage = new _pageType();
-				page.listMediator.setDistances(_distances.x, _distances.y);
+				//page.listMediator.setDistances(_distances.x, _distances.y);
 				page.addContent(content);
 				addPage(page);
 				
@@ -112,7 +112,7 @@ package maryfisher.view.ui.mediator {
 			_pageBar.pageMediator = this;
 		}
 		
-		public function init():void {
+		public function updateContent():void {
 			_pageBar && _pageBar.setMaxPages(_pages.length);
 			selectPage(0);
 		}
@@ -147,6 +147,7 @@ package maryfisher.view.ui.mediator {
 		public function selectPage(newpage:int):void {
 			
 			if (newpage == _currentPageNum) return;
+			if (_pages.length == 0) return;
 			
 			(_currentPageNum > -1 ) && _pages[_currentPageNum].hide();
 			_currentPageNum = newpage;

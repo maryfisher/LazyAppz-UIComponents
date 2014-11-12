@@ -96,10 +96,10 @@ package maryfisher.view.ui.component {
 		
 		public function startScrolling(scrollEnd:int):void {
 			//fade in
+			if (!_thumb) return;
 			var perc:Number = scrollEnd / (_scrollMax - _scrollHeight);
 			var px:int = scrollEnd > _thumb.y ? -1 : 1;
 			var pos:int = (_scrollHeight - _thumb.height) * perc + px;
-			
 			
 			TweenMax.killTweensOf(_thumb);
 			TweenMax.to(_thumb, _fadeInSpeed, { y: pos } );
