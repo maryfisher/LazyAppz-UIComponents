@@ -9,6 +9,7 @@ package maryfisher.view.ui.mediator {
 	import maryfisher.framework.command.sound.SoundCommand;
 	import maryfisher.framework.command.view.StageCommand;
 	import maryfisher.framework.core.AssetController;
+	import maryfisher.framework.core.ILoaderDataRequest;
 	import maryfisher.framework.data.LoaderData;
 	import maryfisher.framework.sound.ISound;
 	import maryfisher.framework.view.ITickedObject;
@@ -17,7 +18,7 @@ package maryfisher.view.ui.mediator {
 	 * ...
 	 * @author mary_fisher
 	 */
-	public class SoundMediator implements ISound, ITickedObject {
+	public class SoundMediator implements ISound, ITickedObject, ILoaderDataRequest {
 		
 		private var _loaderData:LoaderData;
 		private var _channel:SoundChannel;
@@ -31,20 +32,31 @@ package maryfisher.view.ui.mediator {
 		private var _fadeIn:Boolean;
 		private var _fadeOut:Boolean;
 		private var _interval:int = 0;
+		private var _assetId:String;
 		
 		public function SoundMediator() {
 		
 		}
 		
 		public function init(assetId:String, fileIds:Vector.<String>, soundId:String, doLoop:Boolean = false):void {
+			_assetId = assetId;
 			_doLoop = doLoop;
 			_fileIds = fileIds;
 			_fileIndex = 0;
 			
 			_soundType = soundId;
 			
-			_loaderData = AssetController.getLoaderData(assetId);
+			AssetController.registerForLoaderData(this);
+		}
 		
+		/* INTERFACE maryfisher.framework.core.ILoaderDataRequest */
+		
+		public function get loaderDataId():String {
+			return _assetId;
+		}
+		
+		public function set loaderData(value:LoaderData):void {
+			_loaderData = value;
 		}
 		
 		public function start():void {

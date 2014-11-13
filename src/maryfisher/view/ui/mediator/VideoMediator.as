@@ -6,6 +6,7 @@ package maryfisher.view.ui.mediator {
 	import flash.net.NetConnection;
 	import flash.net.NetStream;
 	import maryfisher.framework.core.AssetController;
+	import maryfisher.framework.core.ILoaderDataRequest;
 	import maryfisher.framework.data.LoaderData;
 	import maryfisher.view.ui.interfaces.IVideoContainer;
 	
@@ -13,7 +14,7 @@ package maryfisher.view.ui.mediator {
 	 * ...
 	 * @author mary_fisher
 	 */
-	public class VideoMediator {
+	public class VideoMediator implements ILoaderDataRequest {
 		
 		private var _video:Video;
 		private var _stream:NetStream;
@@ -22,6 +23,8 @@ package maryfisher.view.ui.mediator {
 		private var _loaderData:LoaderData;
 		private var _onFinishedListener:Function;
 		private var _container:IVideoContainer;
+		private var _loaderDataId:String;
+		private var _fileId:String;
 		protected var _netConnection:NetConnection;
 		protected var _isLoaded:Boolean;
 		protected var _isPlaying:Boolean;
@@ -35,15 +38,21 @@ package maryfisher.view.ui.mediator {
 		
 		//public function init(width:int, height:int, id:String, fileId:String, bufferTime:Number = 8 ): void {
 		public function init(container:IVideoContainer, id:String, fileId:String, bufferTime:Number = 8):void {
+			_fileId = fileId;
+			_loaderDataId = id;
 			_container = container;
 			
 			_bufferTime = bufferTime;
 			
 			//_video = new Video(width, height);
 			
+			AssetController.registerForLoaderData(this);
+		}
+		
+		public function set loaderData(value:LoaderData):void {
+			_loaderData = value;
 			//_activeUrl = url;
-			_loaderData = AssetController.getLoaderData(id);
-			_activeUrl = _loaderData.path + fileId + ".flv";
+			_activeUrl = _loaderData.path + _fileId + ".flv";
 			_stream = new NetStream(_netConnection);
 			_stream.bufferTime = _bufferTime;
 			/** TODO
@@ -138,6 +147,10 @@ package maryfisher.view.ui.mediator {
 		
 		public function get video():Video {
 			return _video;
+		}
+		
+		public function get loaderDataId():String {
+			return _loaderDataId;
 		}
 	}
 
