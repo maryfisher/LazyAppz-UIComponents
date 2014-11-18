@@ -24,7 +24,8 @@ package maryfisher.view.ui.component {
 		public function BaseSpriteTooltip(owner:DisplayObject) {
 			super();
 			_owner = owner;
-			
+			mouseChildren = false;
+			mouseEnabled = false;
 		}
 		
 		/* INTERFACE maryfisher.view.ui.interfaces.ITooltip */
