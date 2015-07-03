@@ -123,15 +123,31 @@ package maryfisher.view.util {
 			var	gCurrent:Number = greenStart + (greenEnd - greenStart) * progress;
 			var	bCurrent:Number = blueStart + (blueEnd - blueStart) * progress;
 			
-			return toRGB(rCurrent, gCurrent, bCurrent);
+			return toHex(rCurrent, gCurrent, bCurrent);
 		}
 		
 		static public function getRed(color:uint):Number { return (( color >> 16 ) & 0xFF); }
 		static public function getGreen(color:uint):Number { return ( (color >> 8) & 0xFF ); }
 		static public function getBlue(color:uint):Number { return ( color & 0xFF ); }
 		
-		static public function toRGB(red:Number, green:Number, blue:Number):uint { 
+		static public function toHex(red:Number, green:Number, blue:Number):uint { 
 			return ( ( red << 16 ) | ( green << 8 ) | blue ); 
+		}
+		
+		public static function makeGradient(c:Color, intensity:int = 20, colors:Array = null):uint {
+			if (!colors) colors = ["r", "g", "b"];
+			//var c:Color = hexToRGB(color);
+			for each (var comp:String in colors) {
+				c[comp] += intensity;
+				c[comp] = Math.min(c[comp], 255); // -- make sure below 255
+				c[comp] = Math.max(c[comp], 0);   // -- make sure above 0
+			}
+			//trace(c.hex.toString(16))
+			return c.hex;
+		}
+		
+		static public function hexToColor(hex:uint):Color {
+			return new Color(hex >> 24 & 0xFF, hex >> 16 & 0xFF, hex >> 8 & 0xFF, hex & 0xFF);
 		}
 		
 		public static function applyFilter(data:BitmapData, filter:BitmapFilter):void {

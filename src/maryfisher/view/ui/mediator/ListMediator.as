@@ -40,12 +40,15 @@ package maryfisher.view.ui.mediator {
 		 * 
 		 * @param	startX
 		 * @param	startY
+		 * @param	reset
 		 */
-		public function setStartPos(startX:int, startY:int):void {
+		public function setStartPos(startX:int, startY:int, reset:Boolean = true):void {
 			_startX = startX;
 			_startY = startY;
-			_posX = _startX;
-			_posY = _startY;
+			if(reset) {
+				_posX = _startX;
+				_posY = _startY;
+			}
 		}
 		
 		/**
@@ -150,7 +153,11 @@ package maryfisher.view.ui.mediator {
 				/** TODO
 				 * isVertical?
 				 */
-				_childWidth = _tableDistances[_index % _columns];
+				if (_isHorizontal) {
+					_childHeight = _tableDistances[_index % _columns];
+				}else{
+					_childWidth = _tableDistances[_index % _columns];
+				}
 				
 				if (_hasVariableDims) {
 					_childHeight = child.height;

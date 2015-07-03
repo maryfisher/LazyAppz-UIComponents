@@ -17,7 +17,7 @@ package maryfisher.view.ui.component {
 			
 			if (scale != 1) {
 				var sbd:BitmapData = bd.clone();
-				var bd:BitmapData = new BitmapData(sbd.width * scale, sbd.height * scale, sbd.transparent, 0xff0000);
+				bd = new BitmapData(sbd.width * scale, sbd.height * scale, sbd.transparent, 0xff0000);
 				var matrix:Matrix = new Matrix();
 				matrix.scale(scale, scale);
 				bd.draw(sbd, matrix);

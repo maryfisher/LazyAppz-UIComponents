@@ -24,6 +24,10 @@ package maryfisher.view.model3d {
 			_loader.addEventListener(LoaderEvent.RESOURCE_COMPLETE, onResourceComplete);
 		}
 		
+		protected function loadModel(model:Class):void {
+			_loader3D.loadData(new model());
+		}
+		
 		protected function onAssetComplete(e:AssetEvent):void {
 			if (e.asset.assetType == AssetType.MESH) {
 				parseMesh(e.asset as Mesh);

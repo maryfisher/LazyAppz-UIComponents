@@ -111,6 +111,18 @@ package maryfisher.view.ui.mediator {
 			
 		}
 		
+		public function removeListElement(obj:IIDItem):void {
+			if (obj == _selectedElement) {
+				/** TODO
+				 * 
+				 */
+			}else {
+				_listMediator.removeListChild(obj);
+				_dropBase.removeDisplayChild(obj);
+				_listOrder.splice(_listOrder.indexOf(obj), 1);
+			}
+		}
+		
 		private function onSwitch(e:MouseEvent):void {
 			//trace("[DropdDownListMediator] onSwitch");
 			
@@ -142,7 +154,7 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		private function removeOnHide():void {
-			_dropBase.stage.removeEventListener(MouseEvent.CLICK, onHide, true)
+			_dropBase.stage && _dropBase.stage.removeEventListener(MouseEvent.CLICK, onHide, true)
 			if(_hideOnOut) _dropBase.removeListener(MouseEvent.MOUSE_OUT, onHide);
 		}
 		
@@ -171,11 +183,15 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		public function init():void {
-			var nextChild:int = _listMediator.getNextChildPos().y;
-			if (nextChild == 0) return;
-			if (_dropBase.height > nextChild) _dropBase.actHeight = nextChild;
-			_scroller && (_scroller.updateContent());
 			_dropListener.addListener(MouseEvent.CLICK, onSwitch, false);
+			update();
+		}
+		
+		public function update():void {
+			var nextChildPos:int = _listMediator.getNextChildPos().y;
+			if (nextChildPos == 0) return;
+			if (_dropBase.height > nextChildPos) _dropBase.actHeight = nextChildPos;
+			_scroller && (_scroller.updateContent());
 		}
 		
 		//public function update():void {
@@ -225,9 +241,17 @@ package maryfisher.view.ui.mediator {
 			//
 		//}
 		
-		public function destroy():void {
+		public function dispose():void {
 			_dropListener.removeListener(MouseEvent.CLICK, onSwitch);
 			removeOnHide();
+		}
+		
+		public function set enabled(value:Boolean):void {
+			if (value) {
+				_dropListener.addListener(MouseEvent.CLICK, onSwitch);
+			}else {
+				_dropListener.removeListener(MouseEvent.CLICK, onSwitch);
+			}
 		}
 	}
 

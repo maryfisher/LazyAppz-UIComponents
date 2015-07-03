@@ -41,9 +41,9 @@ package maryfisher.view.ui.mediator {
 		
 		public function assignCounterButtons(plusCounter:IButton, minusCounter:IButton, textCounter:ITextField = null, amount:int = 0):void {
 			_amount = amount;
-			_textCounter = textCounter;
 			_minusCounter = minusCounter;
 			_plusCounter = plusCounter;
+			_textCounter = textCounter;
 			_textCounter && (_textCounter.text = amount.toString());
 			_minusCounter.addClickedListener(onMinus);
 			_plusCounter.addClickedListener(onPlus);

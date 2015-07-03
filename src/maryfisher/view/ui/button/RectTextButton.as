@@ -3,6 +3,7 @@ package maryfisher.view.ui.button {
 	import flash.display.BitmapData;
 	import flash.display.Shape;
 	import flash.geom.Matrix;
+	import flash.text.TextFieldAutoSize;
 	import maryfisher.view.ui.button.ButtonColorScheme;
 	import maryfisher.view.ui.button.SimpleButton;
 	import maryfisher.view.ui.component.FormatText;
@@ -31,12 +32,15 @@ package maryfisher.view.ui.button {
 			_bgColorScheme = bgColorScheme;
 			
 			super(id, lineColorScheme, textfield, centerButton, overwrite);
-			_defaultState = getState(_bgColorScheme.upColor, _lineColorScheme.upColor);
-			setStates(	_defaultState, 
-						getState(_bgColorScheme.overColor, _lineColorScheme.overColor), 
-						getState(_bgColorScheme.downColor, _lineColorScheme.downColor), 
-						getState(_bgColorScheme.disabledColor, _lineColorScheme.disabledColor));
-			_selectedState = getState(_bgColorScheme.downColor, _lineColorScheme.downColor);
+			updateStates();
+		}
+		
+		override public function get width():Number {
+			return super.width + _lineThickness;
+		}
+		
+		override public function set width(value:Number):void {
+			super.width = value;
 		}
 		
 		protected function getState(color:uint, lineColor:uint):Bitmap {
@@ -53,6 +57,31 @@ package maryfisher.view.ui.button {
 			return new Bitmap(bitmapData);
 		}
 		
+		private function updateStates():void {
+			_defaultState = getState(_bgColorScheme.upColor, _lineColorScheme.upColor);
+			setStates(	_defaultState, 
+						getState(_bgColorScheme.overColor, _lineColorScheme.overColor), 
+						getState(_bgColorScheme.downColor, _lineColorScheme.downColor), 
+						getState(_bgColorScheme.disabledColor, _lineColorScheme.disabledColor));
+			_selectedState = getState(_bgColorScheme.downColor, _lineColorScheme.downColor);
+		}
+		
+		override public function set label(value:String):void {
+			super.label = value;
+			if (_textField.width + _textField.x * 2 > _w) {
+				_w = _textField.width + _textField.x * 2;
+				updateStates();
+			}
+		}
+		
+		public function set bgColorScheme(value:ButtonColorScheme):void {
+			_bgColorScheme = value;
+			updateStates();
+		}
+		
+		public function get bgColorScheme():ButtonColorScheme {
+			return _bgColorScheme;
+		}
 	}
 
 }

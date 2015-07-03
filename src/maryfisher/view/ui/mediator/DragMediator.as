@@ -3,8 +3,9 @@ package maryfisher.view.ui.mediator {
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.events.TouchEvent;
 	import flash.geom.Point;
-	import maryfisher.view.ui.interfaces.IDisplayObject;
+	import maryfisher.framework.view.IDisplayObject;
 	import org.osflash.signals.Signal;
 	
 	/**
@@ -77,6 +78,13 @@ package maryfisher.view.ui.mediator {
 				_dragObject.addListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 				_stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			}
+			CONFIG::touch {
+				if(!_dragObject.hasListener(TouchEvent.TOUCH_BEGIN)){
+					_dragObject.addListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
+					_dragObject.addListener(TouchEvent.TOUCH_END, onTouchEnd);
+					_stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+				}
+			}
 		}
 		
 		private function removeListeners():void {
@@ -86,6 +94,11 @@ package maryfisher.view.ui.mediator {
 				 * addStageListener in IDisplayObject
 				 */
 				_stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			}
+			CONFIG::touch {
+				_dragObject.addListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
+				_dragObject.removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+				_stage.removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);
 			}
 		}
 		
@@ -99,6 +112,16 @@ package maryfisher.view.ui.mediator {
 			onDown();
 		}
 		
+		CONFIG::touch
+		private function onTouchBegin(e:TouchEvent):void {
+			onDown();
+		}
+		
+		CONFIG::touch
+		private function onTouchEnd(e:TouchEvent):void {
+			onUp();
+		}
+		
 		public function onDown():void {
 			_offsetY = _stage.mouseY - _dragObject.y;
 			_offsetX = _stage.mouseX - _dragObject.x;
@@ -106,7 +129,9 @@ package maryfisher.view.ui.mediator {
 			CONFIG::mouse {
 				_stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			}
-			
+			CONFIG::touch {
+				_stage.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+			}
 		}
 		
 		public function onUp():void {
@@ -115,10 +140,22 @@ package maryfisher.view.ui.mediator {
 			CONFIG::mouse {
 				_dragObject.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			}
+			CONFIG::touch {
+				_dragObject.stage.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+			}
 		}
 		
 		CONFIG::mouse
 		private function onMouseMove(e:MouseEvent):void {
+			calculateMove();
+		}
+		
+		CONFIG::touch
+		private function onTouchMove(e:TouchEvent):void	{
+			calculateMove();
+		}
+		
+		private function calculateMove():void {
 			assignDiff(_stage.mouseY - _offsetY, _stage.mouseX - _offsetX);
 		}
 		

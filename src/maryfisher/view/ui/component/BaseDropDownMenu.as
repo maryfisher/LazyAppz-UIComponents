@@ -28,6 +28,7 @@ package maryfisher.view.ui.component {
 		protected var _buttons:Vector.<IButton>;
 		private var _selectedListener:Function;
 		private var _id:String;
+		private var _enabled:Boolean;
 		protected var _maxHeight:int;
 		protected var _scroller:BaseScroller;
 		protected var _topH:int;
@@ -82,13 +83,23 @@ package maryfisher.view.ui.component {
 		protected function positionBase():void {
 			var rect:Rectangle = getRect(stage);
 			_dropBase.x = rect.x;
-			_dropBase.y = rect.y + _dropTop.height;
+			var h:int = Math.min(_maxHeight, _dropBase.height);
+			if (rect.y + h + _dropTop.height > stage.stageHeight) {
+				_dropBase.y = rect.y - h;
+			}else {
+				_dropBase.y = rect.y + _dropTop.height;
+			}
 		}
 		
 		private function onAddedToStage(e:Event):void {
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			
 			init();
+		}
+		
+		protected function dispatchUpdate():void {
+			_selectedListener && _selectedListener(_selectedIndex);
+			_bubbleSignal.dispatch(new GenericEvent(true));
 		}
 		
 		public function buildMenu():void {
@@ -122,8 +133,7 @@ package maryfisher.view.ui.component {
 		protected function onElementSelected(el:IButton):void {
 			updateTop(el);
 			_selectedIndex = _buttons.indexOf(el);
-			_selectedListener && _selectedListener(_selectedIndex);
-			_bubbleSignal.dispatch(new GenericEvent(true));
+			dispatchUpdate();
 		}
 		
 		public function addListElement(id:String, label:String):IButton {
@@ -131,6 +141,16 @@ package maryfisher.view.ui.component {
 			_dropMediator.addListElement(b);
 			_buttons.push(b);
 			return b;
+		}
+		
+		public function removeListElement(id:String):void {
+			for each (var b:IButton in _buttons) {
+				if (b.id == id) {
+					_dropMediator.removeListElement(b);
+					break;
+				}
+			}
+			_buttons.splice(_buttons.indexOf(b), 1);
 		}
 		
 		
@@ -149,13 +169,31 @@ package maryfisher.view.ui.component {
 				return;
 			}
 			
+			//positionBase();
+			//if (_maxHeight < _dropBase.height) {
+				//if(!_scroller){
+					//createScroller();
+				//}
+			//}
+			updateBase();
+			_dropMediator.init();
+		}
+		
+		/** TODO
+		 * implement
+		 */
+		public function update():void {
+			updateBase();
+			_dropMediator.update();
+		}
+		
+		private function updateBase():void {
 			positionBase();
 			if (_maxHeight < _dropBase.height) {
 				if(!_scroller){
 					createScroller();
 				}
 			}
-			_dropMediator.init();
 		}
 		
 		public function reset():void {
@@ -167,10 +205,22 @@ package maryfisher.view.ui.component {
 			_scroller && _scroller.reset();
 		}
 		
+		public function destroy():void {
+			_scroller && _scroller.dispose();
+			_dropMediator.dispose();
+		}
+		
+		public function set enabled(value:Boolean):void {
+			if (_enabled == value) return;
+			_enabled = value;
+			_dropMediator.enabled = _enabled
+		}
+		
 		public function select(index:int):void {
 			_selectedIndex = index;
 			updateTop(_buttons[index]);
 			_dropMediator.selectElement(_buttons[index]);
+			_bubbleSignal.removeAll();
 		}
 		
 		public function get id():String {

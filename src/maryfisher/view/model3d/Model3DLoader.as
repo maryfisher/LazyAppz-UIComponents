@@ -60,7 +60,7 @@ package maryfisher.view.model3d {
 			}
 		}
 		
-		protected function parseData(data : * , context : AssetLoaderContext = null, parser : ParserBase = null):void {
+		public function parseData(data : * , context : AssetLoaderContext = null, parser : ParserBase = null):void {
 			//_loader.loadData(data, context, null, parser);
 			var assetLoader:AssetLoader = new AssetLoader();
 			var token:AssetLoaderToken = assetLoader.loadData(data, "", context, null, parser);

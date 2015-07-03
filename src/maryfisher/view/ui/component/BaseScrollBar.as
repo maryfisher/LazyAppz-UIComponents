@@ -23,6 +23,7 @@ package maryfisher.view.ui.component {
 		private var _fadeInSpeed:Number = 0.3;
 		private var _scroller:BarScroller;
 		private var _lastPos:int;
+		private var _offset:int;
 		
 		public function BaseScrollBar(isInvisible:Boolean) {
 			_isInvisible = isInvisible;
@@ -52,14 +53,15 @@ package maryfisher.view.ui.component {
 		
 		CONFIG::mouse
 		private function onMouseUp(e:MouseEvent):void {
-			trace("remove");
+			//trace("remove");
 			stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 		}
 		
 		CONFIG::mouse
 		private function onMouseDown(e:MouseEvent):void {
-			trace("add");
+			//trace("add");
 			_lastPos = e.stageY;
+			_offset = _thumb.mouseY;
 			stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 		}
@@ -70,7 +72,8 @@ package maryfisher.view.ui.component {
 		}
 		
 		private function calculateMove():void {
-			var endY:int = stage.mouseY - _lastPos;
+			var endY:int = stage.mouseY - _lastPos + _offset;
+			//var endY:int = _thumb.mouseY - _lastPos;
 			
 			//var diffY:int = - _lastPos + stage.mouseY;
 			//var endY:int = _thumb.y + diffY;

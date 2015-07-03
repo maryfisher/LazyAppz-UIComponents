@@ -58,7 +58,7 @@ package maryfisher.view.model3d.camera {
 		
 		public function BaseCameraController(targetObject:Entity = null, lookAtObject:ObjectContainer3D = null, panAngle:Number = 0, tiltAngle:Number = 90, distance:Number = 1000){
 			_targetObject = targetObject;
-			_lookAtObject = lookAtObject || new ObjectContainer3D();
+			this.lookAtObject = lookAtObject;
 			//super(targetObject, lookAtObject);
 			
 			_distance = distance;
@@ -67,9 +67,6 @@ package maryfisher.view.model3d.camera {
 			
 			_currentPanAngle = _panAngle;
 			_currentTiltAngle = _tiltAngle;
-			
-			_currentPositionX = _lookAtObject.position.x;
-			_currentPositionZ = _lookAtObject.position.z;
 			
 			_tiltSignal = new Signal(int);
 			_panSignal = new Signal(int);
@@ -332,6 +329,12 @@ package maryfisher.view.model3d.camera {
 		
 		public function get currentTiltAngle():Number {
 			return _currentTiltAngle;
+		}
+		
+		public function set lookAtObject(value:ObjectContainer3D):void {
+			_lookAtObject = value || new ObjectContainer3D();
+			_currentPositionX = _lookAtObject.position.x;
+			_currentPositionZ = _lookAtObject.position.z;
 		}
 		
 		public function get lookAtObject():ObjectContainer3D {

@@ -6,14 +6,13 @@ package maryfisher.sound {
 	import flash.media.SoundTransform;
 	import flash.utils.Timer;
 	import maryfisher.framework.command.sound.SoundCommand;
-	import maryfisher.framework.core.SoundController;
-	import maryfisher.framework.sound.ISound;
+	import maryfisher.framework.sound.ISoundPlayer;
 	
 	/**
 	 * ...
 	 * @author mary_fisher
 	 */
-	public class BaseSound implements ISound{
+	public class BaseSound implements ISoundPlayer {
 		protected var _channel:SoundChannel;
 		private var _soundTransform:SoundTransform;
 		private var _fader:Timer;

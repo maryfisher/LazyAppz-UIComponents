@@ -21,12 +21,13 @@ package maryfisher.view.ui.mediator {
 		protected var _maxPos:int;
 		protected var _minPos:int;
 		protected var stage:Stage;
-		protected var _currenPos:int;
+		protected var _currentPos:int;
+		protected var _startPos:int;
 		protected var _offset:Number;
 		private var _lastUpdate:Number = 0;
 		private var _doTween:Boolean;
 		private var _downChange:Boolean;
-		private var _isDown:Boolean;
+		protected var _isDown:Boolean;
 		private var _downSignal:Signal;
 		
 		public function SliderMediator(doTween:Boolean = true) {
@@ -53,7 +54,7 @@ package maryfisher.view.ui.mediator {
 			_isVertical = isVertical;
 			_thumb = thumb;
 			_isDown = false;
-			_currenPos = _isVertical ? thumb.y : thumb.x;
+			_startPos = _currentPos = _isVertical ? thumb.y : thumb.x;
 			if(_thumb.stage){
 				onThumbAdded();
 			}else {
@@ -81,7 +82,7 @@ package maryfisher.view.ui.mediator {
 		
 		public function setPercent(volume:Number):void {
 			//trace("[SliderMediator] setPercent", (_maxPos - _minPos) * volume);
-			assignDiff((_maxPos - _minPos) * volume);
+			assignDiff(_minPos + (_maxPos - _minPos) * volume);
 		}
 		
 		CONFIG::touch
@@ -127,7 +128,7 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		private function dispatchUpdate():void {
-			var sp:Number = (_currenPos - _minPos) / (_maxPos - _minPos);
+			var sp:Number = (_currentPos - _minPos) / (_maxPos - _minPos);
 			//if (sp == _lastUpdate) return;
 			if (!_isDown) {
 				_updateSignal.dispatch(sp);
@@ -139,7 +140,7 @@ package maryfisher.view.ui.mediator {
 		
 		public function getPercent():Number {
 			//trace("[SliderMediator] getPercent _maxPos", _maxPos, "_minPos", _minPos, "_currentPos", _currenPos);
-			return (_currenPos - _minPos) / (_maxPos - _minPos);
+			return (_currentPos - _minPos) / (_maxPos - _minPos);
 		}
 		
 		public function destroy():void {
@@ -155,12 +156,12 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		protected function assignDiff(diff:Number):void {
-			_currenPos = _isVertical ? _thumb.y : _thumb.x;
+			_currentPos = _isVertical ? _thumb.y : _thumb.x;
 			//_currenPos += diff;
 			var newPos:int = Math.min(Math.max(diff, _minPos), _maxPos);
 			//trace("[SliderMediator] assignDiff", newPos, _currenPos);
-			if (newPos != _currenPos) {
-				_currenPos = newPos;
+			if (newPos != _currentPos) {
+				_currentPos = newPos;
 				tweenThumb();
 			}
 		}
@@ -175,13 +176,19 @@ package maryfisher.view.ui.mediator {
 		
 		protected function tweenThumb():void {
 			if(_doTween){
-				var tween:Object = _isVertical ? { y: _currenPos } : { x: _currenPos };
+				var tween:Object = _isVertical ? { y: _currentPos } : { x: _currentPos };
+				tween.onComplete = onComplete;
 				TweenLite.to(_thumb, 0.3, tween);
 			}else {
-				_isVertical ? _thumb.y = _currenPos : _thumb.x = _currenPos;
+				_isVertical ? _thumb.y = _currentPos : _thumb.x = _currentPos;
+				onComplete();
 			}
 			//if (_downChange) _updateSignal.dispatch();
 			if(_downChange) dispatchUpdate();
+		}
+		
+		protected function onComplete():void {
+			
 		}
 		
 		/**
@@ -198,7 +205,7 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		public function setPos(pos:int):void {
-			_currenPos = pos;
+			_currentPos = pos;
 			tweenThumb();
 		}
 		

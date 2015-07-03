@@ -26,6 +26,8 @@ package maryfisher.view.ui.mediator {
 		private var _dragType:String;
 		private var _dragTypeDown:String;
 		private var _dragTypeUp:String;
+		private var _dragCount:int;
+		private var _maxDragging:int = 10;
 		
 		public function FreeScroller(dragType:String = MIDDLE_MOUSE) {
 			_dragType = dragType;
@@ -62,14 +64,14 @@ package maryfisher.view.ui.mediator {
 				//_content.addListener(MouseEvent.MIDDLE_MOUSE_DOWN, onMiddleDown);
 			//}
 			if(!_content.hasListener(_dragTypeDown)){
-				_content.addListener(_dragTypeDown, onMiddleDown);
+				_content.addListener(_dragTypeDown, onMouseDown);
 			}
 		}
 		
 		public function removeListener():void {
 			
 			//_content.removeListener(MouseEvent.MIDDLE_MOUSE_DOWN, onMiddleDown);
-			_content.removeListener(_dragTypeDown, onMiddleDown);
+			_content.removeListener(_dragTypeDown, onMouseDown);
 		}
 		
 		public function scrollTo(posx:int, posy:int, instantScroll:Boolean):void {
@@ -78,8 +80,9 @@ package maryfisher.view.ui.mediator {
 			scrollContent(instantScroll);
 		}
 		
-		private function onMiddleDown(e:MouseEvent):void {
+		private function onMouseDown(e:MouseEvent):void {
 			_isDragging = true;
+			_dragCount = 0;
 			/** TODO
 			 * 
 			 */
@@ -106,7 +109,8 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		private function onMouseMove(e:MouseEvent):void {
-			if(_isDragging){
+			if (_isDragging) {
+				_dragCount++;
 				_end.x -= (_lastPos.x - _content.stage.mouseX);
 				_end.y -= (_lastPos.y - _content.stage.mouseY);
 				_lastPos.x = _content.stage.mouseX; 
@@ -117,8 +121,8 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		private function scrollContent(instantScroll:Boolean):void {
-			_end.x = Math.min(Math.max(_end.x, _startPos.x -(_content.width - _scrollWidth)), _startPos.x);
-			_end.y = Math.min(Math.max(_end.y, _startPos.y-(_content.height - _scrollHeight)), _startPos.y);
+			_end.x = Math.min(Math.max(_end.x, _startPos.x - (_content.width - _scrollWidth)), _startPos.x);
+			_end.y = Math.min(Math.max(_end.y, _startPos.y - (_content.height - _scrollHeight)), _startPos.y);
 			if (_content.x == _end.x && _content.y == _end.y) {
 				return;
 			}
@@ -138,6 +142,14 @@ package maryfisher.view.ui.mediator {
 		
 		private function scrollingFinished():void {
 			_update.dispatch();
+		}
+		
+		public function get wasDragging():Boolean {
+			return _dragCount > _maxDragging;
+		}
+		
+		public function set maxDragging(value:int):void {
+			_maxDragging = value;
 		}
 	}
 

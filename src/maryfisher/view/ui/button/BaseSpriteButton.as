@@ -9,13 +9,14 @@ package maryfisher.view.ui.button {
 	import maryfisher.view.event.ButtonSignalEvent;
 	import maryfisher.view.ui.interfaces.IButton;
 	import maryfisher.view.ui.interfaces.ITooltip;
+	import maryfisher.view.ui.interfaces.ITooltipButton;
 	import org.osflash.signals.Signal;
 	
 	/**
 	 * ...
 	 * @author ...
 	 */
-	public class BaseSpriteButton extends AbstractSpriteButton{
+	public class BaseSpriteButton extends AbstractSpriteButton implements ITooltipButton {
 		//private var _isTouch:Boolean;
 		private var _isDown:Boolean;
 		
@@ -178,10 +179,10 @@ package maryfisher.view.ui.button {
 		}
 		CONFIG::mouse
 		protected function onMouseOver(e:MouseEvent):void {
+			_tooltip && _tooltip.show();
 			if (!enabled) {
 				return;
 			}
-			_tooltip && _tooltip.show();
 			if (_selected) {
 				return;
 			}
@@ -272,6 +273,14 @@ package maryfisher.view.ui.button {
 		
 		public function set outCursor(value:String):void {
 			_outCursor = value;
+		}
+		
+		public function get tooltip():ITooltip {
+			return _tooltip;
+		}
+		
+		public function get overState():DisplayObject {
+			return _overState;
 		}
 		
 		//public function set defaultState(value:DisplayObject):void {

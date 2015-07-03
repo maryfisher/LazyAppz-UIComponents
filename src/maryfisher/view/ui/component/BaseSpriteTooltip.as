@@ -17,7 +17,7 @@ package maryfisher.view.ui.component {
 		
 		private var _mouseOver:Boolean = false;
 		private var _ownerMouseOut:Boolean = false;
-		private var _owner:DisplayObject;
+		protected var _owner:DisplayObject;
 		protected var _distX:int;
 		protected var _distY:int;
 		

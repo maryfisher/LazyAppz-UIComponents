@@ -1,5 +1,6 @@
 package maryfisher.view.ui.interfaces {
 	import maryfisher.framework.sound.ISound;
+	import maryfisher.framework.sound.ISoundPlayer;
 	import maryfisher.framework.view.IViewComponent;
 	
 	/**
@@ -16,7 +17,7 @@ package maryfisher.view.ui.interfaces {
 		function addDownListener(listener:Function, onStayDown:Boolean):void;
 		
 		function destroy():void;
-		function set sound(value:ISound):void;
+		function set sound(value:ISoundPlayer):void;
 	}
 	
 }

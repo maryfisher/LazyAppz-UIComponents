@@ -118,6 +118,7 @@ package maryfisher.view.ui.mediator {
 		
 		public function stop():void {
 			if (!_isRunning) return;
+			TweenMax.killDelayedCallsTo(register);
 			_isRunning = false;
 			new StageCommand(StageCommand.UNREGISTER_TICK, this);
 		}
@@ -161,7 +162,9 @@ package maryfisher.view.ui.mediator {
 				
 				if (_currentBreak && _currentIndex == _currentBreak.indexFormatted) {
 					stop();
-					//trace("[ProgressTextMediator] next call in", _currentBreak.content.@time);
+					/** TODO
+					 * Auswahl zwischen dispatch oder echter Pause
+					 */
 					TweenMax.delayedCall(int(_currentBreak.getAttribute("time")), register);
 					getNextBreak();
 					return;

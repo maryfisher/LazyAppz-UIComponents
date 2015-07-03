@@ -3,9 +3,9 @@ package maryfisher.view.ui.button {
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.events.Event;
-	import maryfisher.framework.sound.ISound;
-	import maryfisher.view.event.ButtonSignalEvent;
+	import maryfisher.framework.sound.ISoundPlayer;
 	import maryfisher.framework.view.core.BaseSprite;
+	import maryfisher.view.event.ButtonSignalEvent;
 	import maryfisher.view.ui.interfaces.IButton;
 	import maryfisher.view.util.ColorUtil;
 	import org.osflash.signals.DeluxeSignal;
@@ -23,7 +23,7 @@ package maryfisher.view.ui.button {
 		private var _bubblingSignal:DeluxeSignal;
 		private var _onStayDown:Boolean;
 		//private var _upSignal:Signal;
-		protected var _sound:ISound;
+		protected var _sound:ISoundPlayer;
 		
 		protected var _enabled:Boolean;
 		protected var _selected:Boolean;
@@ -115,7 +115,7 @@ package maryfisher.view.ui.button {
 		
 		/* INTERFACE maryfisher.view.ui.interfaces.IButton */
 		
-		public function set sound(value:ISound):void {
+		public function set sound(value:ISoundPlayer):void {
 			_sound = value;
 		}
 		
@@ -202,9 +202,12 @@ package maryfisher.view.ui.button {
 		}
 		
 		public function set selectedState(value:DisplayObject):void {
+			//if (_selectedState) {
+				//removeChild(_selectedState);
+			//}
 			_selectedState = value;
-			_selectedState.visible = false;
-			addChild(_selectedState);
+			//_selectedState.visible = false;
+			//addChild(_selectedState);
 		}
 		
 		public function set doBubble(value:Boolean):void {
@@ -217,6 +220,10 @@ package maryfisher.view.ui.button {
 		
 		public function set defaultState(value:DisplayObject):void {
 			_defaultState = value;
+		}
+		
+		public function get defaultState():DisplayObject {
+			return _defaultState;
 		}
 		
 		protected function drawDisabledState(desaturate:Boolean = true, transparent:Boolean = false):void {
@@ -254,12 +261,18 @@ package maryfisher.view.ui.button {
 			if (_downState) _downState.visible = false;
 			
 			//dispatchEvent(new ButtonEvent(ButtonEvent.BUTTON_CLICKED, _id));
-			_doBubble && (_bubblingSignal.dispatch(new ButtonSignalEvent(ButtonSignalEvent.ON_CLICKED)));
-			_clickedSignal && _clickedSignal.dispatch(this);
+			//_clickedSignal && _clickedSignal.dispatch(this);
+			//_doBubble && (_bubblingSignal.dispatch(new ButtonSignalEvent(ButtonSignalEvent.ON_CLICKED)));
+			trigger();
 			
 			if (_downSignal && _onStayDown) {
 				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			}
+		}
+		
+		public function trigger():void {
+			_clickedSignal && _clickedSignal.dispatch(this);
+			_doBubble && (_bubblingSignal.dispatch(new ButtonSignalEvent(ButtonSignalEvent.ON_CLICKED)));
 		}
 		
 		protected function onDown():void {

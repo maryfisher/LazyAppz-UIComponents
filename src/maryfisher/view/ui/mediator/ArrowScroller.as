@@ -1,5 +1,6 @@
 package maryfisher.view.ui.mediator {
 	import flash.display.DisplayObject;
+	import flash.events.MouseEvent;
 	import maryfisher.framework.view.IDisplayObject;
 	import maryfisher.view.ui.interfaces.IButton;
 	import maryfisher.view.ui.interfaces.IScrollContainer;
@@ -7,7 +8,7 @@ package maryfisher.view.ui.mediator {
 	 * ...
 	 *
 	 */
-	public class ArrowScroller extends BaseScroller {
+	public class ArrowScroller extends MouseScroller {
 		
 		static public const NEXT:String = "next";
 		static public const PREV:String = "prev";
@@ -81,6 +82,10 @@ package maryfisher.view.ui.mediator {
 			setCurrentPage(-1);
 		}
 		
+		override protected function onMouseWheel(e:MouseEvent):void {
+			setCurrentPage(e.delta > 0 ? -1 : 1);
+		}
+		
 		private function enableButtons():void {
 			_prevButton.enabled = (_currentPage > 0);
 			_nextButton.enabled = (_currentPage < _maxPages - 1);
@@ -89,6 +94,10 @@ package maryfisher.view.ui.mediator {
 		override public function scrollTo(pos:int):void {
 			_currentPage = Math.ceil(-( -pos - _startPos) / _scrollRows);
 			super.scrollTo(pos);
+		}
+		
+		public function scrollToPage(page:int):void {
+			setCurrentPage(page - _currentPage);
 		}
 		
 		private function calculateMove():void {
@@ -140,6 +149,11 @@ package maryfisher.view.ui.mediator {
 			//enableButtons();
 			
 			calculateMove();
+		}
+		
+		override public function reset():void {
+			super.reset();
+			enableButtons();
 		}
 		
 		public function get currentPage():int {

@@ -40,27 +40,31 @@ package maryfisher.view.util {
 			
 			var actwidth:int;
 			var repeatWidth:int = 0;
+			var centerWidth:int = 0;
 			if (leftPlusRight >= width) {
 				actwidth = leftPlusRight;
 			}else {
-				repeatWidth = Math.ceil((width - leftPlusRight) / center.width);
-				actwidth = leftPlusRight + repeatWidth * center.width;
+				repeatWidth = Math.ceil((width - leftPlusRight) / topcenter.width);
+				centerWidth = repeatWidth * topcenter.width;
+				actwidth = leftPlusRight + centerWidth;
 			}
 			
 			var actheight:int;
-			var repeatHeight:int = 0;
+			var repeatHeight:int;
+			var centerHeight:int;
 			if (topPlusBottom >= height) {
 				actheight = topPlusBottom;
 			}else {
-				repeatHeight = Math.ceil((height - topPlusBottom) / center.height);
-				actheight = topPlusBottom + repeatHeight * center.height;
+				repeatHeight = Math.ceil((height - topPlusBottom) / centerleft.height);
+				centerHeight = repeatHeight * centerleft.height;
+				actheight = topPlusBottom + centerHeight;
 			}
 			
 			bg = new BitmapData(actwidth, actheight, true, 0);
 			bg.copyPixels(topleft, topleft.rect, point);
 			point.x = topleft.width + repeatWidth * topcenter.width;
 			bg.copyPixels(topright, topright.rect, point);
-			point.y =  topleft.height + repeatHeight * center.height;
+			point.y =  topleft.height + centerHeight;
 			bg.copyPixels(bottomright, bottomright.rect, point);
 			point.x = 0;
 			bg.copyPixels(bottomleft, bottomleft.rect, point);
@@ -76,7 +80,7 @@ package maryfisher.view.util {
 					bg.copyPixels(center, center.rect, point);
 				}
 				//bottom center width
-				point.y = topleft.height + center.height * repeatHeight;
+				point.y = topleft.height + centerHeight;
 				bg.copyPixels(bottomcenter, bottomcenter.rect, point);
 			}
 			for (i = 0; i < repeatHeight; i++) {
@@ -85,7 +89,7 @@ package maryfisher.view.util {
 				point.x = 0;
 				bg.copyPixels(centerleft, centerleft.rect, point);
 				//center right height
-				point.x = topleft.width + topcenter.width * repeatWidth;
+				point.x = topleft.width + centerWidth;
 				bg.copyPixels(centerright, centerright.rect, point);
 			}
 			

@@ -25,7 +25,12 @@ package maryfisher.view.ui.component {
 			super();
 			this.x = x;
 			this.y = y;
-			this.width = width;
+			if (width == -1) {
+				this.width = 1;
+				setAutoSizeLeft();
+			}else {
+				this.width = width;
+			}
 			this.height = height;
 			mouseEnabled = false;
 			selectable = false;
@@ -137,6 +142,10 @@ package maryfisher.view.ui.component {
 		public function setLocaleText(contextData:LocaleContextData, addText:Boolean = false, ... pars):void {
 			var t:String = LocaleController.getText(contextData).getText().text;
 			text = addText ? text + t : t;
+		}
+		
+		public function setAutoSizeLeft():void {
+			autoSize = TextFieldAutoSize.LEFT;
 		}
 		
 		/* INTERFACE maryfisher.view.ui.interfaces.ITextField */

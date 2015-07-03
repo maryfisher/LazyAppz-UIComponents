@@ -43,6 +43,11 @@ package maryfisher.view.ui.button {
             overState = over;
             downState = down;
             disabledState = disabled;
+			if(_textField.height > up.height)
+				_textField.height = up.height;
+			if(_textField.width > up.width)
+				_textField.width = up.width;
+			
             _height = height;
             
             _textField.x = up.width - _textField.width >> 1;
@@ -68,6 +73,11 @@ package maryfisher.view.ui.button {
 			_textField.textColor = _textScheme.upColor;
 		}
 		
+		override public function set selected(value:Boolean):void {
+			super.selected = value;
+			if(value) _textField.textColor = _textScheme.selectedColor;
+		}
+		
 		//override protected function onUp():void {
 			//super.onUp();
 			//_textField.textColor = _colorScheme.overColor;
@@ -75,7 +85,8 @@ package maryfisher.view.ui.button {
 		
 		public function set label(value:String):void {
 			_textField.text = value;
-			_textField.y = (_height - _textField.height) >> 1;
+			_textField.y = (_height - _textField.textHeight) >> 1;
+			//_textField.y = (_height - _textField.height) >> 1;
 		}
 		
 		public function get label():String {
