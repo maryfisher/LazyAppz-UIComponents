@@ -66,7 +66,7 @@ package maryfisher.view.ui.mediator {
 		
 		public function reset():void {
 			_listMediator.reset();
-			_dropBase.removeContent();
+			_dropBase.removeBaseContent();
 			//_dropTop.removeChildren();
 			_scroller && (_scroller.reset());
 			_selectedElement = _dropTop as IIDItem;
@@ -97,7 +97,7 @@ package maryfisher.view.ui.mediator {
 			}else {
 				if (obj.id != _selectedElement.id) {
 					_listMediator.addListChild(obj);
-					_dropBase.addDisplayChild(obj);
+					_dropBase.addContent(obj);
 				}else {
 					_selectedElement = obj;
 				}
@@ -118,7 +118,7 @@ package maryfisher.view.ui.mediator {
 				 */
 			}else {
 				_listMediator.removeListChild(obj);
-				_dropBase.removeDisplayChild(obj);
+				_dropBase.removeContent(obj);
 				_listOrder.splice(_listOrder.indexOf(obj), 1);
 			}
 		}
@@ -172,12 +172,12 @@ package maryfisher.view.ui.mediator {
 			//}
 			
 			_listMediator.reset();
-			_dropBase.removeContent();
+			_dropBase.removeBaseContent();
 			
 			for each (var item:IIDItem in _listOrder) {
 				if (item.id == _selectedElement.id ) continue;
 				_listMediator.addListChild(item);
-				_dropBase.addDisplayChild(item);
+				_dropBase.addContent(item);
 			}
 			//_dropBase.updateHeight();
 		}
