@@ -4,8 +4,8 @@ package maryfisher.view.ui.button {
 	import flash.display.DisplayObject;
 	import flash.events.Event;
 	import maryfisher.framework.sound.ISoundPlayer;
-	import maryfisher.framework.view.core.BaseSprite;
 	import maryfisher.view.event.ButtonSignalEvent;
+	import maryfisher.view.ui.component.BaseSprite;
 	import maryfisher.view.ui.interfaces.IButton;
 	import maryfisher.view.util.ColorUtil;
 	import org.osflash.signals.DeluxeSignal;

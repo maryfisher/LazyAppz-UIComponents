@@ -3,10 +3,10 @@ package maryfisher.view.ui.component {
 	import flash.events.Event;
 	import flash.geom.Rectangle;
 	import maryfisher.view.ui.button.ButtonColorScheme;
-	import maryfisher.framework.view.core.BaseSprite;
+	import maryfisher.view.ui.component.BaseSprite;
 	import maryfisher.view.ui.interfaces.IButton;
+	import maryfisher.view.ui.interfaces.IButtonContainer;
 	import maryfisher.view.ui.interfaces.IDropDownBase;
-	import maryfisher.view.ui.interfaces.IIDItem;
 	import maryfisher.view.ui.interfaces.IScrollBar;
 	import maryfisher.view.ui.mediator.BaseScroller;
 	import maryfisher.view.ui.mediator.BarScroller;
@@ -23,9 +23,10 @@ package maryfisher.view.ui.component {
 		protected var _bubbleSignal:DeluxeSignal;
 		protected var _dropMediator:DropDownListMediator;
 		protected var _dropBase:IDropDownBase;
-		protected var _dropTop:IIDItem;
+		protected var _dropTop:IButtonContainer;
+		//protected var _dropTop:IIDItem;
 		protected var _selectedIndex:int = -1;
-		protected var _buttons:Vector.<IButton>;
+		protected var _buttons:Vector.<IButtonContainer>;
 		private var _selectedListener:Function;
 		private var _id:String;
 		private var _enabled:Boolean;
@@ -42,7 +43,7 @@ package maryfisher.view.ui.component {
 			
 			_bubbleSignal = new DeluxeSignal(this);
 			
-			_buttons = new Vector.<IButton>();
+			_buttons = new Vector.<IButtonContainer>();
 			
 			if(autoBuild)
 				buildMenu();
@@ -56,7 +57,7 @@ package maryfisher.view.ui.component {
 			throw new Error("[BaseDropDownMenu] [createBase] Please overwrite this method to create _dropBase.")
 		}
 		
-		protected function createListButton(id:String, label:String):IButton {
+		protected function createListButton(id:String, label:String):IButtonContainer {
 			throw new Error("[BaseDropDownMenu] [createListButton] Please overwrite this method to create a list button.")
 			return null;
 		}
@@ -65,7 +66,7 @@ package maryfisher.view.ui.component {
 			throw new Error("[BaseDropDownMenu] [resetTop] Please overwrite this method to reset the _dropTop.")
 		}
 		
-		protected function updateTop(b:IButton):void {
+		protected function updateTop(b:IButtonContainer):void {
 			throw new Error("[BaseDropDownMenu] [resetTop] Please overwrite this method to update the content of _dropTop.")
 		}
 		
@@ -130,22 +131,22 @@ package maryfisher.view.ui.component {
 			}
 		}
 		
-		protected function onElementSelected(el:IButton):void {
+		protected function onElementSelected(el:IButtonContainer):void {
 			updateTop(el);
 			_selectedIndex = _buttons.indexOf(el);
 			dispatchUpdate();
 		}
 		
-		public function addListElement(id:String, label:String):IButton {
-			var b:IButton = createListButton(id, label);
+		public function addListElement(id:String, label:String):IButtonContainer {
+			var b:IButtonContainer = createListButton(id, label);
 			_dropMediator.addListElement(b);
 			_buttons.push(b);
 			return b;
 		}
 		
 		public function removeListElement(id:String):void {
-			for each (var b:IButton in _buttons) {
-				if (b.id == id) {
+			for each (var b:IButtonContainer in _buttons) {
+				if (b.button.id == id) {
 					_dropMediator.removeListElement(b);
 					break;
 				}

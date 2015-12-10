@@ -5,6 +5,7 @@ package maryfisher.view.ui.mediator {
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import maryfisher.framework.view.IDisplayObject;
+	import maryfisher.framework.view.IViewListener;
 	import org.osflash.signals.Signal;
 	/**
 	 * ...
@@ -19,7 +20,7 @@ package maryfisher.view.ui.mediator {
 		private var _lastPos:Point;
 		private var _end:Point;
 		private var _startPos:Point;
-		private var _content:IDisplayObject;
+		private var _content:IViewListener;
 		private var _scrollWidth:int;
 		private var _scrollHeight:int;
 		private var _update:Signal;
@@ -53,7 +54,7 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		
-		public function assignContent(content:IDisplayObject):void {
+		public function assignContent(content:IViewListener):void {
 			_content = content;
 			_startPos.x = _content.x;
 			_startPos.y = _content.y;
@@ -89,7 +90,7 @@ package maryfisher.view.ui.mediator {
 			//_content.addListener(MouseEvent.MIDDLE_MOUSE_UP, onMouseUp);
 			//_content.stage.addEventListener(MouseEvent.MIDDLE_MOUSE_UP, onMouseUp);
 			_content.addListener(_dragTypeUp, onMouseUp);
-			_content.stage.addEventListener(_dragTypeUp, onMouseUp);
+			_content.addStageListener(_dragTypeUp, onMouseUp);
 			_content.addListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			
 			_lastPos.x = e.stageX;
@@ -104,17 +105,17 @@ package maryfisher.view.ui.mediator {
 			//_content.removeListener(MouseEvent.MIDDLE_MOUSE_UP, onMouseUp);
 			//_content.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			_content.removeListener(_dragTypeUp, onMouseUp);
-			_content.stage.removeEventListener(_dragTypeUp, onMouseUp);
+			_content.removeStageListener(_dragTypeUp, onMouseUp);
 			_content.removeListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 		}
 		
 		private function onMouseMove(e:MouseEvent):void {
 			if (_isDragging) {
 				_dragCount++;
-				_end.x -= (_lastPos.x - _content.stage.mouseX);
-				_end.y -= (_lastPos.y - _content.stage.mouseY);
-				_lastPos.x = _content.stage.mouseX; 
-				_lastPos.y = _content.stage.mouseY;
+				_end.x -= (_lastPos.x - _content.stageMouseX);
+				_end.y -= (_lastPos.y - _content.stageMouseY);
+				_lastPos.x = _content.stageMouseX; 
+				_lastPos.y = _content.stageMouseY;
 				
 				scrollContent(false);
 			}

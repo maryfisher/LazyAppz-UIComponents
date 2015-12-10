@@ -6,6 +6,7 @@ package maryfisher.view.ui.mediator {
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
 	import maryfisher.framework.view.IDisplayObject;
+	import maryfisher.framework.view.IViewListener;
 	import maryfisher.view.ui.interfaces.ISlider;
 	import org.osflash.signals.Signal;
 	
@@ -15,12 +16,12 @@ package maryfisher.view.ui.mediator {
 	 */
 	public class SliderMediator {
 		
-		protected var _thumb:IDisplayObject;
+		protected var _thumb:IViewListener;
 		protected var _updateSignal:Signal;
 		protected var _isVertical:Boolean;
 		protected var _maxPos:int;
 		protected var _minPos:int;
-		protected var stage:Stage;
+		//protected var stage:Stage;
 		protected var _currentPos:int;
 		protected var _startPos:int;
 		protected var _offset:Number;
@@ -48,14 +49,14 @@ package maryfisher.view.ui.mediator {
 		/* TODO
 		 * zu IButton machen?
 		 */
-		public function assignThumb(thumb:IDisplayObject, minPos:int, maxPos:int, isVertical:Boolean = true):void {
+		public function assignThumb(thumb:IViewListener, minPos:int, maxPos:int, isVertical:Boolean = true):void {
 			_minPos = minPos;
 			_maxPos = maxPos;
 			_isVertical = isVertical;
 			_thumb = thumb;
 			_isDown = false;
 			_startPos = _currentPos = _isVertical ? thumb.y : thumb.x;
-			if(_thumb.stage){
+			if(_thumb.hasStage){
 				onThumbAdded();
 			}else {
 				_thumb.addListener(Event.ADDED_TO_STAGE, onThumbAdded);
@@ -64,7 +65,7 @@ package maryfisher.view.ui.mediator {
 		
 		private function onThumbAdded(e:Event = null):void {
 			_thumb.removeListener(Event.ADDED_TO_STAGE, onThumbAdded);
-			stage = _thumb.stage;
+			//stage = _thumb.stage;
 			assignListeners();
 		}
 		
@@ -72,11 +73,11 @@ package maryfisher.view.ui.mediator {
 			
 			CONFIG::mouse {
 				_thumb.addListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-				stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+				_thumb.addStageListener(MouseEvent.MOUSE_UP, onMouseUp);
 			}
 			CONFIG::touch{
 				_thumb.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
-				stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+				_thumb.addStageListener(TouchEvent.TOUCH_END, onTouchEnd);
 			}
 		}
 		
@@ -94,20 +95,20 @@ package maryfisher.view.ui.mediator {
 		CONFIG::touch
 		protected function onTouchEnd(e:TouchEvent):void { 
 			if (!_isDown) return;
-			stage && stage.removeEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+			_thumb.removeStageListener(TouchEvent.TOUCH_MOVE, onTouchMove);
 			_isDown = false;
 			dispatchUpdate();
 		}
 		CONFIG::mouse
 		protected function onMouseDown(ev:MouseEvent):void {
-			stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+			_thumb.addStageListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			_isDown = true;
 			calculateOffset();
 		}
 		CONFIG::mouse
 		protected function onMouseUp(ev:MouseEvent):void { 
 			if (!_isDown) return;
-			stage && stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+			_thumb.removeStageListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			_isDown = false;
 			dispatchUpdate();
 		}
@@ -146,11 +147,11 @@ package maryfisher.view.ui.mediator {
 		public function destroy():void {
 			CONFIG::touch {
 				_thumb.removeListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
-				stage && stage.removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+				_thumb.removeStageListener(TouchEvent.TOUCH_END, onTouchEnd);
 			}
 			CONFIG::mouse {
 				_thumb.removeListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-				stage && stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+				_thumb.removeStageListener(MouseEvent.MOUSE_UP, onMouseUp);
 			}
 			_thumb = null;
 		}
@@ -167,11 +168,11 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		protected function calculateOffset():void {
-			_offset = _isVertical ? (stage.mouseY - _thumb.y) : (stage.mouseX - _thumb.x);
+			_offset = _isVertical ? (_thumb.stageMouseY - _thumb.y) : (_thumb.stageMouseX - _thumb.x);
 		}
 		
 		protected function calculatePosition():void {
-			assignDiff((_isVertical ? stage.mouseY  : stage.mouseX) - _offset);
+			assignDiff((_isVertical ? _thumb.stageMouseY  : _thumb.stageMouseX) - _offset);
 		}
 		
 		protected function tweenThumb():void {

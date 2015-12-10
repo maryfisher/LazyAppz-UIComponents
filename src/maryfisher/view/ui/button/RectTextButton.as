@@ -1,11 +1,9 @@
 package maryfisher.view.ui.button {
-	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Shape;
 	import flash.geom.Matrix;
-	import flash.text.TextFieldAutoSize;
 	import maryfisher.view.ui.button.ButtonColorScheme;
-	import maryfisher.view.ui.button.SimpleButton;
+	import maryfisher.view.ui.component.BaseBitmap;
 	import maryfisher.view.ui.component.FormatText;
 	
 	/**
@@ -22,7 +20,7 @@ package maryfisher.view.ui.button {
 		private var _alpha:Number;
 		protected var _lineThickness:int;
 		
-		public function RectTextButton(id:String, w:int, h:int, bgColorScheme:ButtonColorScheme = null, lineColorScheme:ButtonColorScheme = null, textfield:FormatText = null, padding:int = 0, alpha:Number = 1, lineThickness:int = 1, centerButton:Boolean = true, overwrite:Boolean = true) {
+		public function RectTextButton(id:String, w:int, h:int, bgColorScheme:ButtonColorScheme = null, lineColorScheme:ButtonColorScheme = null, textfield:FormatText = null, padding:int = 0, alpha:Number = 1, lineThickness:int = 1, centerButton:Boolean = true, overwrite:Boolean = false) {
 			_lineThickness = lineThickness;
 			_alpha = alpha;
 			_padding = padding;
@@ -30,9 +28,13 @@ package maryfisher.view.ui.button {
 			_w = w;
 			_lineColorScheme = lineColorScheme;
 			_bgColorScheme = bgColorScheme;
+			if(textfield){
+				textfield.width = w;
+				textfield.height = h;
+			}
 			
 			super(id, lineColorScheme, textfield, centerButton, overwrite);
-			updateStates();
+			setStates();
 		}
 		
 		override public function get width():Number {
@@ -43,7 +45,7 @@ package maryfisher.view.ui.button {
 			super.width = value;
 		}
 		
-		protected function getState(color:uint, lineColor:uint):Bitmap {
+		protected function getState(color:uint, lineColor:uint, textColor:uint):BaseBitmap {
 			var shape:Shape = new Shape();
 			shape.graphics.lineStyle(_lineThickness, lineColor);
 			shape.graphics.beginFill(color, _alpha);
@@ -54,29 +56,29 @@ package maryfisher.view.ui.button {
 			matrix.translate(_lineThickness - 1, _lineThickness - 1);
 			var bitmapData:BitmapData = new BitmapData(shape.width, shape.height, true, 0);
 			bitmapData.draw(shape, matrix);
-			return new Bitmap(bitmapData);
+			return new BaseBitmap(drawTextData(bitmapData, textColor));
 		}
 		
-		private function updateStates():void {
-			_defaultState = getState(_bgColorScheme.upColor, _lineColorScheme.upColor);
-			setStates(	_defaultState, 
-						getState(_bgColorScheme.overColor, _lineColorScheme.overColor), 
-						getState(_bgColorScheme.downColor, _lineColorScheme.downColor), 
-						getState(_bgColorScheme.disabledColor, _lineColorScheme.disabledColor));
-			_selectedState = getState(_bgColorScheme.downColor, _lineColorScheme.downColor);
+		override protected function setStates():void {
+			setButtonStates(
+				getState(_bgColorScheme.upColor, _lineColorScheme.upColor, _textScheme.upColor),
+				getState(_bgColorScheme.overColor, _lineColorScheme.overColor, _textScheme.overColor),
+				getState(_bgColorScheme.downColor, _lineColorScheme.downColor, _textScheme.downColor),
+				getState(_bgColorScheme.disabledColor, _lineColorScheme.disabledColor, _textScheme.disabledColor),
+				getState(_bgColorScheme.downColor, _lineColorScheme.downColor, _textScheme.downColor));
 		}
 		
 		override public function set label(value:String):void {
 			super.label = value;
 			if (_textField.width + _textField.x * 2 > _w) {
 				_w = _textField.width + _textField.x * 2;
-				updateStates();
+				setStates();
 			}
 		}
 		
 		public function set bgColorScheme(value:ButtonColorScheme):void {
 			_bgColorScheme = value;
-			updateStates();
+			setStates();
 		}
 		
 		public function get bgColorScheme():ButtonColorScheme {

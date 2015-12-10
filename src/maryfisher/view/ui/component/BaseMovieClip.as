@@ -4,7 +4,7 @@ package maryfisher.view.ui.component {
 	import flash.display.Sprite;
 	import flash.utils.Dictionary;
 	import maryfisher.framework.command.view.StageCommand;
-	import maryfisher.framework.view.core.BaseSprite;
+	import maryfisher.view.ui.component.BaseSprite;
 	import maryfisher.framework.view.IMovieClip;
 	import maryfisher.framework.view.ITickedObject;
 	

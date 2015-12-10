@@ -26,7 +26,7 @@ package maryfisher.view.ui.mediator {
 		private var _breakIndex:int = -1;
 		private var _currentBreak:LocaleTextParameter;
 		private var _chunk:int = 1;
-		private var _speed:Number = 1;
+		private var _speed:int = 1;
 		private var _currentTime:int;
 		private var _skip:Boolean;
 		private var _speedIndex:int = -1;
@@ -37,7 +37,7 @@ package maryfisher.view.ui.mediator {
 		private var _currentParam:Dictionary;
 		private var _activeParams:Vector.<String>;
 		
-		public function ProgressTextMediator(chunk:int = 1, speed:Number = 1) {
+		public function ProgressTextMediator(chunk:int = 1, speed:int = 1) {
 			_chunk = chunk;
 			_speed = speed;
 			_updatesSignal = new Signal(LocaleTextParameter);
@@ -162,10 +162,7 @@ package maryfisher.view.ui.mediator {
 				
 				if (_currentBreak && _currentIndex == _currentBreak.indexFormatted) {
 					stop();
-					/** TODO
-					 * Auswahl zwischen dispatch oder echter Pause
-					 */
-					TweenMax.delayedCall(int(_currentBreak.getAttribute("time")), register);
+					TweenMax.delayedCall(parseFloat(_currentBreak.getAttribute("time")), register);
 					getNextBreak();
 					return;
 				}
@@ -210,6 +207,10 @@ package maryfisher.view.ui.mediator {
 		
 		public function set skip(value:Boolean):void {
 			_skip = value;
+		}
+		
+		public function get isRunning():Boolean {
+			return _isRunning;
 		}
 		
 	}

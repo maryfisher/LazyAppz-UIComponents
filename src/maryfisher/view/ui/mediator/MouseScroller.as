@@ -1,6 +1,7 @@
 package maryfisher.view.ui.mediator {
 	import flash.events.MouseEvent;
 	import maryfisher.framework.view.IDisplayObject;
+	import maryfisher.framework.view.IViewListener;
 	/**
 	 * ...
 	 * @author mary_fisher
@@ -11,7 +12,7 @@ package maryfisher.view.ui.mediator {
 			
 		}
 		
-		override public function assignContent(content:IDisplayObject):void {
+		override public function assignContent(content:IViewListener):void {
 			super.assignContent(content);
 			
 			CONFIG::mouse {

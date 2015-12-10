@@ -50,6 +50,32 @@ package maryfisher.view.ui.component {
 			
 		}
 		
+		/* INTERFACE maryfisher.framework.view.IDisplayObject */
+		
+		public function hasStage():Boolean {
+			return stage != null;
+		}
+		
+		public function hasStageListener(type:String):Boolean {
+			return false;
+		}
+		
+		public function addStageListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void {
+			
+		}
+		
+		public function removeStageListener(type:String, listener:Function, useCapture:Boolean = false):void {
+			
+		}
+		
+		public function get stageMouseX():Number {
+			return stage.mouseX;
+		}
+		
+		public function get stageMouseY():Number {
+			return stage.mouseY;
+		}
+		
 	}
 
 }

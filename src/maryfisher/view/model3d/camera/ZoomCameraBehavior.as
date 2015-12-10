@@ -1,4 +1,6 @@
 package maryfisher.view.model3d.camera {
+	import com.greensock.easing.Sine;
+	import com.greensock.TweenMax;
 	import flash.display.Stage;
 	import flash.events.MouseEvent;
 	/**
@@ -34,11 +36,12 @@ package maryfisher.view.model3d.camera {
 			/** TODO
 			 * distance check
 			 */
-			//trace(_cameraController.distance);
+			//trace("ZoomCameraBehavior onMouseWheel", _cameraController.distance);
 			if (e.delta > 0 && _cameraController.distance <= _minDistance) return;
 			if (e.delta < 0 && _cameraController.distance >= _maxDistance) return;
 			//e.delta > 0 ist zoom rein
-			_cameraController.distance -= e.delta * _zoomDistance;
+			TweenMax.killTweensOf(_cameraController);
+			TweenMax.to(_cameraController, 0.3, {distance: _cameraController.distance - e.delta * _zoomDistance, ease: Sine.easeOut});
 		}
 		
 		public function set zoomDistance(value:int):void {

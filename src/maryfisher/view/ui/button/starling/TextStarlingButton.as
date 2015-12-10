@@ -1,6 +1,12 @@
 package maryfisher.view.ui.button.starling {
-	import maryfisher.austengames.view.components.ButtonColorScheme;
+	import flash.display.BitmapData;
+	import flash.text.TextFieldAutoSize;
+	import maryfisher.view.ui.button.ButtonColorScheme;
+	import maryfisher.view.ui.component.FormatText;
+	import maryfisher.view.ui.component.starling.BaseImage;
+	import maryfisher.view.ui.component.starling.BaseStarling;
 	import starling.text.TextField;
+	import starling.textures.Texture;
 	/**
 	 * ...
 	 * @author mary_fisher
@@ -8,49 +14,61 @@ package maryfisher.view.ui.button.starling {
 	public class TextStarlingButton extends BaseStarlingButton {
 		
 		protected var _colorScheme:ButtonColorScheme;
+		protected var _label:FormatText;
+		protected var _height:int;
+		protected var _width:int;
 		
-		protected var _label:TextField;
-		
-		public function TextStarlingButton(id:String, colorScheme:ButtonColorScheme, textfield:TextField = null) {
+		public function TextStarlingButton(id:String, colorScheme:ButtonColorScheme, textfield:FormatText = null, centerButton:Boolean = true) {
 			super(id);
 			_colorScheme = colorScheme;
-			_label = textfield || new TextField(100, 30, "");
-			_label.touchable = false;
-			//_label.wordWrap = false;
-			//_label.autoScale = TextFieldAutoSize.CENTER;
-			_label.hAlign = "center";
-			_label.color = _colorScheme.upColor;
-			addChild(_label);
+			
+			_label = textfield || new FormatText();
+			
+			if (centerButton) {
+				_label.wordWrap = false;
+				_label.autoSize = TextFieldAutoSize.CENTER;
+				_label.align = "center";
+			}else {
+				_label.align = "left";
+				_label.autoSize = TextFieldAutoSize.LEFT;
+			}
+			
+			_label.align = "center"
 		}
 		
-		override protected function onOver():void {
-			super.onOver();
-			_label.color = _colorScheme.overColor;
+		public function set label(value:String):void {
+			_label.text = value;
+			if(_height == 0){
+				_height = _label.textHeight;
+			}
+			if(_width == 0){
+				_width = _label.textWidth;
+			}
+			_label.y = (_height - _label.textHeight) >> 1;
+			setStates();
+		}
+		
+		public function get label():String {
+			return _label.text;
+		}
+		
+		protected function setStates():void {
+			_button.defaultState = getState(_colorScheme.upColor);
+			_button.disabledState = getState(_colorScheme.disabledColor);
+			_button.overState = getState(_colorScheme.overColor);
+			_button.downState = getState(_colorScheme.downColor);
+			_button.selectedState = getState(_colorScheme.selectedColor);
 			
 		}
 		
-		override protected function onDown():void {
-			super.onDown();
-			_label.color = _colorScheme.downColor;
+		protected function drawTextData(st:BitmapData, textColor:uint):BitmapData {
+			_label.textColor = textColor;
+			st.draw(_label);
+			return st;
 		}
 		
-		override protected function showUpState():void {
-			super.showUpState();
-			_label.color = _colorScheme.upColor;
-		}
-		
-		override protected function onUp():void {
-			super.onUp();
-			_label.color = _colorScheme.upColor;
-		}
-		
-		override public function set enabled(value:Boolean):void {
-			super.enabled = value;
-			if (_enabled) {
-				_label.color = _colorScheme.upColor;
-			}else {
-				_label.color = _colorScheme.downColor;
-			}
+		private function getState(textColor:uint):BaseImage {
+			return new BaseImage(Texture.fromBitmapData(drawTextData(new BitmapData(_width, _height, true, 0), textColor)));
 		}
 	}
 

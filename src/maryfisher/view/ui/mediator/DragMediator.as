@@ -6,6 +6,7 @@ package maryfisher.view.ui.mediator {
 	import flash.events.TouchEvent;
 	import flash.geom.Point;
 	import maryfisher.framework.view.IDisplayObject;
+	import maryfisher.framework.view.IViewListener;
 	import org.osflash.signals.Signal;
 	
 	/**
@@ -19,12 +20,12 @@ package maryfisher.view.ui.mediator {
 		private var _currenPos:Point;
 		private var _maxPos:Point;
 		private var _minPos:Point;
-		private var _dragObject:IDisplayObject;
+		private var _dragObject:IViewListener;
 		private var _isDown:Boolean;
 		private var _updateSignal:Signal;
 		private var _restrictToX:Boolean;
 		private var _restrictToY:Boolean;
-		private var _stage:Stage;
+		//private var _stage:Stage;
 		
 		public function DragMediator() {
 			_updateSignal = new Signal(int, int);
@@ -50,22 +51,22 @@ package maryfisher.view.ui.mediator {
 			_maxPos.y = maxY;
 		}
 		
-		public function assignDragObject(dragObject:IDisplayObject):void {
+		public function assignDragObject(dragObject:IViewListener):void {
 			_dragObject = dragObject;
 			_currenPos = new Point(_dragObject.x, _dragObject.y);
 			
 			
-			if (!_dragObject.stage) {
+			if (!_dragObject.hasStage) {
 				_dragObject.addListener(Event.ADDED_TO_STAGE, onAdded);
 			}else {
-				_stage = _dragObject.stage;
+				//_stage = _dragObject.stage;
 				addListeners();
 			}
 		}
 		
 		private function onAdded(e:Event):void {
 			_dragObject.removeListener(Event.ADDED_TO_STAGE, onAdded);
-			_stage = _dragObject.stage;
+			//_stage = _dragObject.stage;
 			addListeners();
 		}
 		
@@ -76,13 +77,13 @@ package maryfisher.view.ui.mediator {
 		private function addListeners():void {
 			CONFIG::mouse {
 				_dragObject.addListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-				_stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+				_dragObject.addStageListener(MouseEvent.MOUSE_UP, onMouseUp);
 			}
 			CONFIG::touch {
 				if(!_dragObject.hasListener(TouchEvent.TOUCH_BEGIN)){
 					_dragObject.addListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
 					_dragObject.addListener(TouchEvent.TOUCH_END, onTouchEnd);
-					_stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+					_dragObject.addStageListener(TouchEvent.TOUCH_END, onTouchEnd);
 				}
 			}
 		}
@@ -90,15 +91,12 @@ package maryfisher.view.ui.mediator {
 		private function removeListeners():void {
 			CONFIG::mouse {
 				_dragObject.removeListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-				/** TODO
-				 * addStageListener in IDisplayObject
-				 */
-				_stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+				_dragObject.removeStageListener(MouseEvent.MOUSE_UP, onMouseUp);
 			}
 			CONFIG::touch {
 				_dragObject.addListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
 				_dragObject.removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);
-				_stage.removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+				_dragObject.removeStageListener(TouchEvent.TOUCH_END, onTouchEnd);
 			}
 		}
 		
@@ -123,14 +121,14 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		public function onDown():void {
-			_offsetY = _stage.mouseY - _dragObject.y;
-			_offsetX = _stage.mouseX - _dragObject.x;
+			_offsetY = _dragObject.stageMouseY - _dragObject.y;
+			_offsetX = _dragObject.stageMouseX - _dragObject.x;
 			_isDown = true;
 			CONFIG::mouse {
-				_stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+				_dragObject.addStageListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			}
 			CONFIG::touch {
-				_stage.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+				_dragObject.addStageListener(TouchEvent.TOUCH_MOVE, onTouchMove);
 			}
 		}
 		
@@ -138,10 +136,10 @@ package maryfisher.view.ui.mediator {
 			if (!_isDown) return;
 			_isDown = false;
 			CONFIG::mouse {
-				_dragObject.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+				_dragObject.removeStageListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			}
 			CONFIG::touch {
-				_dragObject.stage.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+				_dragObject.removeStageListener(TouchEvent.TOUCH_MOVE, onTouchMove);
 			}
 		}
 		
@@ -156,7 +154,7 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		private function calculateMove():void {
-			assignDiff(_stage.mouseY - _offsetY, _stage.mouseX - _offsetX);
+			assignDiff(_dragObject.stageMouseY - _offsetY, _dragObject.stageMouseX - _offsetX);
 		}
 		
 		protected function assignDiff(diffY:Number, diffX:Number):void {

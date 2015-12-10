@@ -1,8 +1,13 @@
-package maryfisher.view.ui.mediator {
+package maryfisher.view.ui.mediator.button {
+	import flash.ui.Mouse;
 	import flash.ui.MouseCursor;
+	import maryfisher.framework.command.view.StageCommand;
 	import maryfisher.framework.sound.ISoundPlayer;
 	import maryfisher.framework.view.IDisplayObject;
+	import maryfisher.framework.view.ITickedObject;
+	import maryfisher.view.event.ButtonSignalEvent;
 	import maryfisher.view.ui.interfaces.IButton;
+	import maryfisher.view.ui.interfaces.IButtonContainer;
 	import maryfisher.view.ui.interfaces.IDisplayObjectContainer;
 	import maryfisher.view.ui.interfaces.ITooltip;
 	import org.osflash.signals.DeluxeSignal;
@@ -11,19 +16,21 @@ package maryfisher.view.ui.mediator {
 	 * ...
 	 * @author mary_fisher
 	 */
-	public class BaseButtonMediator implements IButton {
+	public class BaseButtonMediator implements IButton, ITickedObject {
 		
 		private var _clickedSignal:Signal;
-		private var _rightClickSignal:Signal;
 		private var _downSignal:Signal;
 		private var _bubblingSignal:DeluxeSignal;
+		//for desktop only
+		private var _rightClickSignal:Signal;
 		private var _overSignal:Signal;
 		private var _outSignal:Signal;
 		
 		protected var _doBubble:Boolean = true;
 		private var _onStayDown:Boolean;
-		private var _isDown:Boolean;
+		protected var _isDown:Boolean;
 		
+		protected var _container:IButtonContainer;
 		protected var _sound:ISoundPlayer;
 		protected var _tooltip:ITooltip;
 		
@@ -35,29 +42,31 @@ package maryfisher.view.ui.mediator {
 		protected var _disabledState:IDisplayObject;
 		protected var _selectedState:IDisplayObject;
 		protected var _defaultState:IDisplayObject;
+		protected var _hitTest:IDisplayObject;
+		
+		//for desktop only
 		protected var _overState:IDisplayObject;
-		//protected var _hitTest:DisplayObject;
 		
 		protected var _id:String;
 		
+		//for desktop only
 		protected var _overCursor:String = MouseCursor.BUTTON;
 		protected var _outCursor:String = MouseCursor.ARROW;
 		
-		public function BaseButtonMediator(container:IDisplayObjectContainer, id:String) {
+		public function BaseButtonMediator(container:IButtonContainer, id:String) {
+			_container = container;
 			_enabled = true;
 			_selected = false;
 			_id = id;
 			
-			_bubblingSignal = new DeluxeSignal(this);
+			_bubblingSignal = new DeluxeSignal(container);
 			
 			addListeners();
-			
-			CONFIG::mouse {
-				buttonMode = true;
-			}
 		}
 		
 		protected function addListeners():void { }
+		
+		protected function removeListeners():void {	}
 		
 		public function destroy():void {
 			removeListeners();
@@ -140,19 +149,6 @@ package maryfisher.view.ui.mediator {
 			_sound = value;
 		}
 		
-		public function get componentType():String {
-			return "";
-		}
-		
-		protected function removeListeners():void {	}
-		
-		public function showUpState():void {
-			if(_upState) _upState.visible = true;
-			
-			if (_downState) _downState.visible = false;
-			//_tooltip && _tooltip.hide();
-		}
-		
 		public function get selected():Boolean { return _selected;	}
 		public function set selected(value:Boolean):void {
 			if (_selected == value) {
@@ -162,9 +158,25 @@ package maryfisher.view.ui.mediator {
 			changeSelected(value);
 		}
 		
+		protected function changeSelected(value:Boolean):void {
+			_selected = value;
+			_container.selected = value;
+			if (_selected) {
+				upState = _selectedState;
+			}else {
+				upState = _defaultState;
+			}
+			showUpState();
+		}
+		
 		public function set enabled(value:Boolean):void {
 			if (_enabled == value) {
 				return;
+			}
+			CONFIG::mouse{
+				if (!value) {
+					onOut();
+				}
 			}
 			
 			if (!value) {
@@ -172,6 +184,7 @@ package maryfisher.view.ui.mediator {
 			}
 			
 			_enabled = value;
+			_container.enabled = value;
 			
 			if (!value) {
 				if(_disabledState) upState = _disabledState;
@@ -185,118 +198,163 @@ package maryfisher.view.ui.mediator {
 		public function get id():String { return _id; }
 		public function set id(value:String):void { _id = value; }
 		
-		public function set upState(value:DisplayObject):void {
+		public function set upState(value:IDisplayObject):void {
 			var index:int = 0;
 			if (_upState) {
-				if (contains(_upState)) {
-					index = getChildIndex(_upState);
-					removeChild(_upState);
+				if (_container.containsContent(_upState)) {
+					index = _container.getContentIndex(_upState);
+					_container.removeContent(_upState);
 				}
 			}
 			_upState = value;
-			_upState && addChildAt(_upState, index);
+			_upState && _container.addContentAt(_upState, index);
 		}
 		
-		public function set downState(value:DisplayObject):void {
+		public function set downState(value:IDisplayObject):void {
 			var index:int = 0;
 			if (_downState) {
-				if (contains(_downState)) {
-					index = getChildIndex(_downState);
-					removeChild(_downState);
+				if (_container.containsContent(_downState)) {
+					index = _container.getContentIndex(_downState);
+					_container.removeContent(_downState);
 				}
 			}
 			_downState = value;
 			if (!_downState) return;
 			_downState.visible = false;
-			addChildAt(_downState, index);
+			_container.addContentAt(_downState, index);
 		}
 		
-		public function set hitTest(value:DisplayObject):void {
+		CONFIG::mouse
+		public function set overState(value:IDisplayObject):void {
+			//var index:int = numChildren - 2;
+			if (_overState) {
+				if (_container.containsContent(_overState)) {
+					//var index:int = getChildIndex(_overState);
+					_container.removeContent(_overState);
+				}
+			}
+			_overState = value;
+			if (!_overState) return;
+			
+			_overState.visible = false;
+			if (_downState && _container.containsContent(_downState)) {
+				_container.addContentAt(_overState, _container.getContentIndex(_downState));
+				return;
+			}
+			_container.addContentAt(_overState, _container.getContentIndex(_upState));
+		}
+		
+		public function set hitTest(value:IDisplayObject):void {
 			_hitTest = value;
-			mouseChildren = true;
-			mouseEnabled = false;
-			_hitTest.alpha = 0;
-			addChild(_hitTest);
-			/* TODO
-			 * es müssen die anderen states disabled werden
+			/** TODO
+			 * 
 			 */
+			//_hitTest.alpha = 0;
+			_container.addContent(_hitTest);
 		}
 		
-		public function set selectedState(value:DisplayObject):void {
-			//if (_selectedState) {
-				//removeChild(_selectedState);
-			//}
+		public function set selectedState(value:IDisplayObject):void {
+			if (_upState && _upState == _selectedState) {
+				upState = value;
+			}
 			_selectedState = value;
-			//_selectedState.visible = false;
-			//addChild(_selectedState);
+		}
+		
+		public function set defaultState(value:IDisplayObject):void {
+			if (_upState == _defaultState || !_upState) {
+				upState = value;
+			}
+			_defaultState = value;
 		}
 		
 		public function set doBubble(value:Boolean):void {
 			_doBubble = value;
 		}
 		
-		public function set disabledState(value:DisplayObject):void {
+		public function set disabledState(value:IDisplayObject):void {
 			_disabledState = value;
-		}
-		
-		public function set defaultState(value:DisplayObject):void {
-			_defaultState = value;
-		}
-		
-		public function get defaultState():DisplayObject {
-			return _defaultState;
-		}
-		
-		protected function drawDisabledState(desaturate:Boolean = true, transparent:Boolean = false):void {
-			
-			if (_defaultState is Bitmap) {
-				var bd:BitmapData
-				if (desaturate) {
-					bd = ColorUtil.desaturateBitmapData((_defaultState as Bitmap).bitmapData, transparent ? 0.5 : 1);
-				}else {
-					bd = (_defaultState as Bitmap).bitmapData.clone();
-					//if (transparent) {
-						//bd = ColorUtil.setTransparency((_defaultState as Bitmap).bitmapData, 0.5);
-					//}
-				}
-				_disabledState = new Bitmap(bd);
-				if (transparent) {
-					_disabledState.alpha = 0.5;
-				}
-				
-			}else {
-				//_disabledState = new Bitmap()
-				//_defaultState;
-				//ColorUtil.desaturate(_disabledState);
-			}
 		}
 		
 		protected function onRight():void {
 			_rightClickSignal && _rightClickSignal.dispatch(this);
 		}
 		
+		public function set overCursor(value:String):void {
+			_overCursor = value;
+		}
+		
+		public function set outCursor(value:String):void {
+			_outCursor = value;
+		}
+		
+		public function get tooltip():ITooltip {
+			return _tooltip;
+		}
+		
+		public function get container():IDisplayObjectContainer {
+			return _container;
+		}
+		
+		public function attachTooltip(tooltip:ITooltip):void {
+			_tooltip = tooltip;
+		}
+		
 		protected function onUp():void {
+			if (!_isDown) {
+				return;
+			}
 			if (!_enabled) {
 				return;
 			}
 			if (_downState) _downState.visible = false;
 			
-			//dispatchEvent(new ButtonEvent(ButtonEvent.BUTTON_CLICKED, _id));
-			//_clickedSignal && _clickedSignal.dispatch(this);
-			//_doBubble && (_bubblingSignal.dispatch(new ButtonSignalEvent(ButtonSignalEvent.ON_CLICKED)));
+			if(!_selected) showOverState();
+			
 			trigger();
 			
 			if (_downSignal && _onStayDown) {
-				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+				new StageCommand(StageCommand.UNREGISTER_TICK, this);
+			}
+			_isDown = false;
+		}
+		
+		public function showUpState():void {
+			if(_upState) _upState.visible = true;
+			
+			if (_downState) _downState.visible = false;
+			CONFIG::mouse{
+				if (_overState) _overState.visible = false;
 			}
 		}
 		
-		public function trigger():void {
-			_clickedSignal && _clickedSignal.dispatch(this);
-			_doBubble && (_bubblingSignal.dispatch(new ButtonSignalEvent(ButtonSignalEvent.ON_CLICKED)));
+		CONFIG::mouse
+		protected function onOver():void {
+			_tooltip && _tooltip.show();
+			if (!enabled) {
+				return;
+			}
+			if (_selected) {
+				return;
+			}
+			showOverState();
+			
+			_overSignal && _overSignal.dispatch(this);
+			Mouse.cursor = _overCursor;
+		}
+		
+		CONFIG::mouse
+		public function showOverState():void {
+			if (_overState) {
+				_upState && (_upState.visible = false);
+				_overState.visible = true;
+			}
 		}
 		
 		protected function onDown():void {
+			if (_isDown) {
+				return;
+			}
+			_isDown = true;
 			if (!_enabled) {
 				return;
 			}
@@ -306,29 +364,34 @@ package maryfisher.view.ui.mediator {
 			}
 			if (_downState) _downState.visible = true;
 			
-			//_doBubble && (_bubblingSignal.dispatch(new ButtonSignalEvent(ButtonSignalEvent.ON_DOWN)));
-			
 			if (_downSignal) {
 				_downSignal.dispatch(this);
-				if(_onStayDown){
-					addEventListener(Event.ENTER_FRAME, onEnterFrame);
+				if (_onStayDown) {
+					new StageCommand(StageCommand.REGISTER_TICK, this);
 				}
 			}
 		}
 		
-		private function onEnterFrame(e:Event):void {
-			_downSignal.dispatch(this);
-		}
-		
-		protected function changeSelected(value:Boolean):void {
-			_selected = value;
-			if (_selected) {
-				upState = _selectedState;
-			}else {
-				upState = _defaultState;
+		protected function onOut():void {
+			_tooltip && _tooltip.hide();
+			if (!_enabled || _selected) {
+				return;
 			}
+			Mouse.cursor = _outCursor;
+			_outSignal && _outSignal.dispatch(this);
 			showUpState();
 		}
+		
+		public function trigger():void {
+			_clickedSignal && _clickedSignal.dispatch(this);
+			_doBubble && (_bubblingSignal.dispatch(new ButtonSignalEvent(ButtonSignalEvent.ON_CLICKED)));
+		}
+		
+		/* INTERFACE maryfisher.framework.view.ITickedObject */
+		
+		public function nextTick(interval:int):void {
+			if(_isDown)
+				_downSignal.dispatch(this);
+		}
 	}
-
 }

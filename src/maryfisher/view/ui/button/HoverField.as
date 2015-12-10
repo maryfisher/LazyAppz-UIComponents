@@ -1,7 +1,7 @@
 package maryfisher.view.ui.button {
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
-	import maryfisher.framework.view.core.BaseSprite;
+	import maryfisher.view.ui.component.BaseSprite;
 	import maryfisher.view.ui.interfaces.ITooltip;
 	
 	/**

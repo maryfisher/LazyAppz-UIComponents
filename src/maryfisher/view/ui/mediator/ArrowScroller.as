@@ -2,6 +2,7 @@ package maryfisher.view.ui.mediator {
 	import flash.display.DisplayObject;
 	import flash.events.MouseEvent;
 	import maryfisher.framework.view.IDisplayObject;
+	import maryfisher.framework.view.IViewListener;
 	import maryfisher.view.ui.interfaces.IButton;
 	import maryfisher.view.ui.interfaces.IScrollContainer;
 	/**
@@ -106,7 +107,7 @@ package maryfisher.view.ui.mediator {
 			scrollContent();
 		}
 		
-		override public function assignContent(content:IDisplayObject):void {
+		override public function assignContent(content:IViewListener):void {
 			super.assignContent(content);
 			
 			_currentPage = 0;

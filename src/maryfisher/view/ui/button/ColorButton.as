@@ -2,6 +2,7 @@ package maryfisher.view.ui.button {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
+	import maryfisher.view.ui.component.BaseBitmap;
 	import maryfisher.view.ui.component.FormatText;
 	
 	/**
@@ -9,45 +10,29 @@ package maryfisher.view.ui.button {
 	 * @author mary_fisher
 	 */
 	public class ColorButton extends TextSpriteButton {
+		
 		protected var _bgScheme:ButtonColorScheme;
 		
 		public function ColorButton(id:String, w:int, h:int, colorScheme:ButtonColorScheme, textColorScheme:ButtonColorScheme, textfield:FormatText = null, hasSelectedState:Boolean = true) {
 			_bgScheme = colorScheme;
-			//var bd:BitmapData = new BitmapData(w, h, false, colorScheme.upColor);
-			//var bd2:BitmapData = new BitmapData(w, h, false, colorScheme.overColor);
-			//var bd3:BitmapData = new BitmapData(w, h, false, colorScheme.downColor);
-			
-			//_defaultState = new Bitmap(bd);
-			_defaultState = getState(w, h, colorScheme.upColor);
-			if (colorScheme.disabledColor) {
-				//_disabledState = new Bitmap(new BitmapData(w, h, false, colorScheme.disabledColor));
-				_disabledState = getState(w, h, colorScheme.disabledColor);
-			} else {
-				//drawDisabledState(false, true);
-			}
-			this.upState = _defaultState;
-			//this.overState = new Bitmap(bd2);
-			this.overState = getState(w, h, colorScheme.overColor);
-			//this.downState = new Bitmap(bd3);
-			this.downState = getState(w, h, colorScheme.downColor);
-			if (hasSelectedState) {
-				_selectedState = getState(w, h, colorScheme.downColor);
-			}
-			
-			super(id, textColorScheme, textfield);
-			
-			_textField.x = 0;
+			super(id, textColorScheme, textfield, true, false);
 			_textField.width = w;
-			//_textField.y = int((h - _textField.height) / 2);
-			//trace(_textField.y);
+			_textField.height = h;
+			_height = h;
+			_width = w;
 		}
 		
-		public function getState(w:int, h:int, color:uint):Bitmap {
-			return new Bitmap(new BitmapData(w, h, false, color));
+		override protected function setStates():void {
+			_button.defaultState = getState(_textScheme.upColor, _bgScheme.upColor);
+			_button.disabledState = getState(_textScheme.disabledColor, _bgScheme.disabledColor);
+			_button.overState = getState(_textScheme.overColor, _bgScheme.overColor);
+			_button.downState = getState(_textScheme.downColor, _bgScheme.downColor);
+			_button.selectedState = getState(_textScheme.selectedColor, _bgScheme.selectedColor);
+			
 		}
 		
-		public function set bgScheme(value:ButtonColorScheme):void {
-			_bgScheme = value;
+		private function getState(textColor:uint, color:uint):BaseBitmap {
+			return new BaseBitmap(drawTextData(new BitmapData(_width, _height, false, color), textColor));
 		}
 	}
 

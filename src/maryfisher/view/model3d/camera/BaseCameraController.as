@@ -58,7 +58,6 @@ package maryfisher.view.model3d.camera {
 		
 		public function BaseCameraController(targetObject:Entity = null, lookAtObject:ObjectContainer3D = null, panAngle:Number = 0, tiltAngle:Number = 90, distance:Number = 1000){
 			_targetObject = targetObject;
-			this.lookAtObject = lookAtObject;
 			//super(targetObject, lookAtObject);
 			
 			_distance = distance;
@@ -74,9 +73,11 @@ package maryfisher.view.model3d.camera {
 			_cameraObjects = new Vector.<ICameraObject>();
 			_cameraBehaviors = new Vector.<AbstractCameraBehavior>();
 			
-			updatePosition();
-			updateAngle();
-			updateLookAt();
+			this.lookAtObject = lookAtObject;
+			
+			//updatePosition();
+			//updateAngle();
+			//updateLookAt();
 		}
 		
 		public function addBehavior(behav:AbstractCameraBehavior):void {
@@ -333,8 +334,9 @@ package maryfisher.view.model3d.camera {
 		
 		public function set lookAtObject(value:ObjectContainer3D):void {
 			_lookAtObject = value || new ObjectContainer3D();
-			_currentPositionX = _lookAtObject.position.x;
-			_currentPositionZ = _lookAtObject.position.z;
+			//_currentPositionX = _lookAtObject.position.x;
+			//_currentPositionZ = _lookAtObject.position.z;
+			updateLookAtObject();
 		}
 		
 		public function get lookAtObject():ObjectContainer3D {

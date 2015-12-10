@@ -6,6 +6,7 @@ package maryfisher.view.ui.mediator {
 	import flash.display.DisplayObject;
 	import flash.geom.Rectangle;
 	import maryfisher.framework.view.IDisplayObject;
+	import maryfisher.framework.view.IViewListener;
 	import org.osflash.signals.Signal;
 	
 	/**
@@ -16,7 +17,7 @@ package maryfisher.view.ui.mediator {
 		
 		protected var _scrollStops:Vector.<int>;
 		protected var _scrollSideways:Boolean;
-		protected var _content:IDisplayObject;
+		protected var _content:IViewListener;
 		protected var _scrollWidth:int;
 		protected var _scrollHeight:int;
 		protected var _startPos:int;
@@ -77,7 +78,7 @@ package maryfisher.view.ui.mediator {
 			_endPos = _startPos - _scrollMax + (_scrollSideways ? _scrollWidth : _scrollHeight);
 		}
 		
-		public function assignContent(content:IDisplayObject):void {
+		public function assignContent(content:IViewListener):void {
 			_content = content;
 			updateStart();
 			updateEnd();

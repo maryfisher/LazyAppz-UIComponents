@@ -17,8 +17,14 @@ package maryfisher.view.ui.interfaces {
 		function get container():IDisplayObjectContainer;
 		function addClickedListener(listener:Function):void;
 		function addDownListener(listener:Function, onStayDown:Boolean):void;
+		function addOverListener(listener:Function):void;
+		function addRightClickListener(listener:Function):void;
+		function addOutListener(listener:Function):void;
 		function destroy():void;
 		function set sound(value:ISoundPlayer):void;
+		function get tooltip():ITooltip;
+		
+		function trigger():void;
 	}
 	
 }
