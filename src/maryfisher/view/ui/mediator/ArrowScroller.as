@@ -4,6 +4,7 @@ package maryfisher.view.ui.mediator {
 	import maryfisher.framework.view.IDisplayObject;
 	import maryfisher.framework.view.IViewListener;
 	import maryfisher.view.ui.interfaces.IButton;
+	import maryfisher.view.ui.interfaces.IDisplayObjectContainer;
 	import maryfisher.view.ui.interfaces.IScrollContainer;
 	/**
 	 * ...
@@ -83,8 +84,14 @@ package maryfisher.view.ui.mediator {
 			setCurrentPage(-1);
 		}
 		
+		CONFIG::mouse
 		override protected function onMouseWheel(e:MouseEvent):void {
 			setCurrentPage(e.delta > 0 ? -1 : 1);
+		}
+		
+		override public function scrollToEnd():void {
+			_currentPage = _maxPages - 1;
+			super.scrollToEnd();
 		}
 		
 		private function enableButtons():void {
@@ -107,7 +114,7 @@ package maryfisher.view.ui.mediator {
 			scrollContent();
 		}
 		
-		override public function assignContent(content:IViewListener):void {
+		override public function assignContent(content:IDisplayObjectContainer):void {
 			super.assignContent(content);
 			
 			_currentPage = 0;

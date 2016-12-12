@@ -1,18 +1,24 @@
 package maryfisher.view.ui.mediator {
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.events.MouseEvent;
 	import maryfisher.framework.view.IDisplayObject;
 	import maryfisher.framework.view.IViewListener;
+	import maryfisher.view.ui.component.BaseBitmap;
+	import maryfisher.view.ui.interfaces.IDisplayObjectContainer;
 	/**
 	 * ...
 	 * @author mary_fisher
 	 */
 	public class MouseScroller extends BaseScroller {
 		
+		private var _bg:BaseBitmap;
+		
 		public function MouseScroller() {
-			
+			_bg = new BaseBitmap();
 		}
 		
-		override public function assignContent(content:IViewListener):void {
+		override public function assignContent(content:IDisplayObjectContainer):void {
 			super.assignContent(content);
 			
 			CONFIG::mouse {
@@ -38,6 +44,21 @@ package maryfisher.view.ui.mediator {
 			_end += e.delta * 10;
 			
 			scrollContent();
+		}
+		
+		override public function updateContent():void {
+			super.updateContent();
+			
+			/** TODO
+			 * replace with ScrollBG class (DropDownBase)
+			 */
+			if(_content.width > 0 && _content.height > 0){
+				_bg.bitmapData = new BitmapData(_content.width, _content.height, true, 0);
+			}
+			
+			if(!_content.containsContent(_bg)){
+				_content.addContentAt(_bg, 0);
+			}
 		}
 		
 	}

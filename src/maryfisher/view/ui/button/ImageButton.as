@@ -10,7 +10,7 @@ package maryfisher.view.ui.button {
 	 */
 	public class ImageButton extends SimpleButton {
 		
-		public function ImageButton(id:String, upState:BitmapData, overState:BitmapData, downState:BitmapData, disabledState:BitmapData=null, selectedState:BitmapData = null) {
+		public function ImageButton(id:String, upState:BitmapData=null, overState:BitmapData=null, downState:BitmapData=null, disabledState:BitmapData=null, selectedState:BitmapData = null) {
 			super(id, new BaseBitmap(upState), new BaseBitmap(overState), new BaseBitmap(downState), new BaseBitmap(disabledState), new BaseBitmap(selectedState));
 			
 		}

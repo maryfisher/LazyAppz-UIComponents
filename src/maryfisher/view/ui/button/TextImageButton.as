@@ -38,10 +38,12 @@ package maryfisher.view.ui.button {
 			_defaultS = defaultS;
 			_width = _defaultS.width;
 			_height = _defaultS.height;
-			_textField.x = 0;
-			_textField.y = 0;
-			_textField.width = _width;
-			_textField.height = _height;
+			if(_centerButton){
+				_textField.x = 0;
+				_textField.y = 0;
+				_textField.width = _width;
+				_textField.height = _height;
+			}
 			//setStates();
 		}
 		

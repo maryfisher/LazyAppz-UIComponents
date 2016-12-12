@@ -11,13 +11,15 @@ package maryfisher.view.ui.button {
 	 */
 	public class TextSpriteButton extends BaseSpriteButton {
 		
+		protected var _centerButton:Boolean;
 		protected var _textScheme:ButtonColorScheme;
 		protected var _textField:FormatText;
-		protected var _height:int;
-		protected var _width:int;
+		protected var _height:Number = 0;
+		protected var _width:Number = 0;
 		
 		public function TextSpriteButton(id:String, colorScheme:ButtonColorScheme, textfield:FormatText = null, centerButton:Boolean = true, overwrite:Boolean = false) {
 			super(id);
+			_centerButton = centerButton;
 			_textScheme = colorScheme;
 			_textField = textfield || new FormatText();
 			
@@ -33,19 +35,23 @@ package maryfisher.view.ui.button {
 			}
 		}
 		
+		public function get label():String {
+			return _textField.text;
+		}
+		
 		public function set label(value:String):void {
 			_textField.text = value;
+			setTextDims();
+			setStates();
+		}
+		
+		protected function setTextDims():void {
 			if(_height == 0){
 				_height = _textField.textHeight;
 			}
 			if(_width == 0){
 				_width = _textField.textWidth;
 			}
-			setStates();
-		}
-		
-		public function get label():String {
-			return _textField.text;
 		}
 		
 		public function set textScheme(value:ButtonColorScheme):void {
@@ -78,7 +84,7 @@ package maryfisher.view.ui.button {
 		
 		protected function drawTextData(st:BitmapData, textColor:uint):BitmapData {
 			var m:Matrix = new Matrix();
-			m.translate(0, (_height - _textField.textHeight) >> 1);
+			m.translate(_textField.x, (_height - _textField.textHeight) >> 1);
 			_textField.textColor = textColor;
 			st.draw(_textField, m);
 			return st;

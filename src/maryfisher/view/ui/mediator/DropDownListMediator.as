@@ -151,6 +151,7 @@ package maryfisher.view.ui.mediator {
 			//trace("[DropdDownListMediator] onHide");
 			_dropBase.visible = false;
 			removeOnHide();
+			_switchListener && _switchListener(_dropBase.visible);
 		}
 		
 		private function removeOnHide():void {

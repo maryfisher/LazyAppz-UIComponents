@@ -92,8 +92,10 @@ package maryfisher.view.ui.component {
 		
 		protected function reset():void {
 			removeChildren();
-			if (_thumb && _thumb.hasEventListener(MouseEvent.MOUSE_DOWN)) {
-				_thumb.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			CONFIG::mouse {
+				if (_thumb && _thumb.hasEventListener(MouseEvent.MOUSE_DOWN)) {
+					_thumb.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+				}
 			}
 		}
 		

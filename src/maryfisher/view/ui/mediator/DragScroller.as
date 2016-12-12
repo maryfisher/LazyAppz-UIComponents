@@ -5,6 +5,7 @@ package maryfisher.view.ui.mediator {
 	import flash.events.TouchEvent;
 	import maryfisher.framework.view.IDisplayObject;
 	import maryfisher.framework.view.IViewListener;
+	import maryfisher.view.ui.interfaces.IDisplayObjectContainer;
 	import maryfisher.view.ui.interfaces.IScrollBar;
 	/**
 	 * ...
@@ -28,7 +29,7 @@ package maryfisher.view.ui.mediator {
 			
 		}
 		
-		override public function assignContent(content:IViewListener):void {
+		override public function assignContent(content:IDisplayObjectContainer):void {
 			super.assignContent(content);
 			if(!_content.hasStage){
 				_content.addListener(Event.ADDED_TO_STAGE, onAdded);

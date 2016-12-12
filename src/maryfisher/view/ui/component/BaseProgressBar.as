@@ -3,6 +3,7 @@ package maryfisher.view.ui.component {
 	import flash.display.Bitmap;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	import maryfisher.framework.view.IDisplayObject;
 	import maryfisher.view.ui.button.HoverField;
 	import maryfisher.view.ui.interfaces.IProgressBar;
 	
@@ -23,9 +24,9 @@ package maryfisher.view.ui.component {
 			
 		}
 		
-		public function setBar(bar:DisplayObject, mask:DisplayObject):void {
-			_bar = bar;
-			_mask = mask;
+		public function setBar(bar:IDisplayObject, mask:IDisplayObject):void {
+			_bar = bar as DisplayObject;
+			_mask = mask as DisplayObject;
 			//_isHorizontal ? _mask.width = _lastProgress * _bar.width : _mask.height = _lastProgress * _bar.height;
 			_isHorizontal ? _mask.x = -_bar.width : _mask.y = _bar.height;
 			_bar.mask = _mask;

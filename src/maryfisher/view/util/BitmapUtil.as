@@ -3,6 +3,7 @@ package maryfisher.view.util {
 	import flash.display.BitmapData;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	/**
 	 * ...
 	 * @author mary_fisher
@@ -27,6 +28,91 @@ package maryfisher.view.util {
 			return bitmapData;
 		}
 		
+		static public function build9Tile(base:BitmapData, leftW:int, centerW:int, rightW:int, topH:int, centerH:int, 
+			bottomH:int, w:int, h:int):BitmapData {
+			
+			var leftPlusRight:int = leftW + rightW;
+			var topPlusBottom:int = topH + bottomH;
+			
+			var actwidth:int;
+			var repeatWidth:int = 0;
+			var centerWidth:int = 0;
+			if (leftPlusRight >= w) {
+				actwidth = leftPlusRight;
+			} else {
+				repeatWidth = Math.ceil((w - leftPlusRight) / centerW);
+				centerWidth = repeatWidth * centerW;
+				actwidth = leftPlusRight + centerWidth;
+			}
+			
+			var actheight:int;
+			var repeatHeight:int;
+			var centerHeight:int;
+			if (topPlusBottom >= h) {
+				actheight = topPlusBottom;
+			}else {
+				repeatHeight = Math.ceil((h - topPlusBottom) / centerH);
+				centerHeight = repeatHeight * centerH;
+				actheight = topPlusBottom + centerHeight;
+			}
+			
+			var point:Point = new Point();
+			var rect:Rectangle = new Rectangle();
+			var tile:BitmapData = new BitmapData(actwidth, actheight, true, 0);
+			//leftTop
+			rect.width = leftW;
+			rect.height = topH;
+			tile.copyPixels(base, rect, point);
+			//rightTop
+			rect.width = rightW;
+			rect.height = topH;
+			rect.x = leftW + centerW;
+			point.x = leftW + centerWidth;
+			tile.copyPixels(base, rect, point);
+			//bottomRight
+			rect.width = rightW;
+			rect.height = bottomH;
+			rect.y = topH + centerH;
+			point.y = topH + centerHeight;
+			tile.copyPixels(base, rect, point);
+			//bottomLeft
+			rect.width = leftW;
+			rect.height = bottomH;
+			rect.x = point.x = 0;
+			tile.copyPixels(base, rect, point);
+			
+			for (var i:int = 0; i < repeatWidth; i++) {
+				//top center width
+				rect.x = leftW;
+				point.x = leftW + i * centerW;
+				rect.y = point.y = 0;
+				tile.copyPixels(base, rect, point);
+				//center width / height
+				for (var j:int = 0; j < repeatHeight; j++) {
+					rect.y = topH;
+					point.y = topH + j * centerH;
+					tile.copyPixels(base, rect, point);
+				}
+				//bottom center width
+				rect.y = topH + centerH;
+				point.y = topH + centerHeight;
+				tile.copyPixels(base, rect, point);
+			}
+			for (i = 0; i < repeatHeight; i++) {
+				//center left height
+				rect.y = topH;
+				point.y = topH + i * centerH;
+				rect.x = point.x = 0;
+				tile.copyPixels(base, rect, point);
+				//center right height
+				rect.x = leftW + centerW;
+				point.x = leftW + centerWidth;
+				tile.copyPixels(base, rect, point);
+			}
+			
+			return tile;
+		}
+
 		static public function build9TileBackground(topleft:BitmapData, topcenter:BitmapData, topright:BitmapData,
 			centerleft:BitmapData, center:BitmapData, centerright:BitmapData, 
 			bottomleft:BitmapData, bottomcenter:BitmapData, bottomright:BitmapData, width:int, height:int):BitmapData {

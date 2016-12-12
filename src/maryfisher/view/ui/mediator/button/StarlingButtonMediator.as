@@ -1,4 +1,5 @@
 package maryfisher.view.ui.mediator.button {
+	import maryfisher.view.ui.interfaces.IButtonContainer;
 	import maryfisher.view.ui.interfaces.IDisplayObjectContainer;
 	import maryfisher.view.ui.mediator.button.BaseButtonMediator;
 	import starling.display.DisplayObjectContainer;
@@ -15,9 +16,9 @@ package maryfisher.view.ui.mediator.button {
 		private var _isOver:Boolean;
 		private var _starlingC:DisplayObjectContainer;
 		
-		public function StarlingButtonMediator(container:DisplayObjectContainer, id:String) {
-			_starlingC = container;
-			super(container as IDisplayObjectContainer, id);
+		public function StarlingButtonMediator(container:IButtonContainer, id:String) {
+			_starlingC = container as DisplayObjectContainer;
+			super(container, id);
 		}
 		
 		override protected function addListeners():void {
@@ -65,7 +66,9 @@ package maryfisher.view.ui.mediator.button {
 				if (_isOver) return;
 				_isOver = true;
 				//trace("onOver");
-				onOver();
+				CONFIG::mouse {
+					onOver();
+				}
 			} else if (touch.phase == TouchPhase.ENDED) {
 				//trace("onUp");
 				onUp();

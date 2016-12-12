@@ -19,6 +19,10 @@ package maryfisher.view.util {
 			return color.toString(16);
 		}
 		
+		static public function convertAlpha(alpha:Number):uint {
+			return (uint)(alpha * 255);
+		}
+		
 		static public function getAlphaColor(alpha:uint, color:uint):uint {
 			return (alpha << 24) | color;
 		}

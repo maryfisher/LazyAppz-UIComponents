@@ -71,6 +71,7 @@ package maryfisher.view.ui.component {
 		}
 		
 		private function onDropped(isVisible:Boolean):void {
+				trace("on Dropped");
 			if (isVisible) {
 				positionBase();
 				stage.addChild(_dropBase as DisplayObject);

@@ -211,7 +211,8 @@ package maryfisher.view.ui.mediator.button {
 		}
 		
 		public function set downState(value:IDisplayObject):void {
-			var index:int = 0;
+			//var index:int = 0;
+			var index:int = _container.numChildren;
 			if (_downState) {
 				if (_container.containsContent(_downState)) {
 					index = _container.getContentIndex(_downState);
@@ -229,7 +230,6 @@ package maryfisher.view.ui.mediator.button {
 			//var index:int = numChildren - 2;
 			if (_overState) {
 				if (_container.containsContent(_overState)) {
-					//var index:int = getChildIndex(_overState);
 					_container.removeContent(_overState);
 				}
 			}
@@ -308,7 +308,9 @@ package maryfisher.view.ui.mediator.button {
 			}
 			if (_downState) _downState.visible = false;
 			
-			if(!_selected) showOverState();
+			CONFIG::mouse {
+				if (!_selected) showOverState();
+			}
 			
 			trigger();
 			
@@ -320,7 +322,6 @@ package maryfisher.view.ui.mediator.button {
 		
 		public function showUpState():void {
 			if(_upState) _upState.visible = true;
-			
 			if (_downState) _downState.visible = false;
 			CONFIG::mouse{
 				if (_overState) _overState.visible = false;

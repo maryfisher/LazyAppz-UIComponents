@@ -40,7 +40,7 @@ package maryfisher.view.ui.mediator {
 			_update = new Signal();
 		}
 		
-		public function defineScrollArea(scrollWidth:int, scrollHeight:int):void {
+		public function defineScrollArea(scrollWidth:int, scrollHeight:int, needsMask:Boolean = true):void {
 			_scrollHeight = scrollHeight;
 			_scrollWidth = scrollWidth;
 			if (_content) {
@@ -52,7 +52,6 @@ package maryfisher.view.ui.mediator {
 		private function createMask():void {
 			_content.clipRect = new Rectangle(_content.x, _content.y, _scrollWidth, _scrollHeight);
 		}
-		
 		
 		public function assignContent(content:IViewListener):void {
 			_content = content;

@@ -1,8 +1,9 @@
 package maryfisher.view.ui.component.starling {
 	import com.greensock.TweenMax;
 	import flash.display.BitmapData;
-	import flash.display.DisplayObject;
+	import maryfisher.framework.view.IDisplayObject;
 	import maryfisher.view.ui.interfaces.IProgressBar;
+	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.textures.Texture;
 	
@@ -12,19 +13,18 @@ package maryfisher.view.ui.component.starling {
 	 */
 	public class BaseStarlingProgressBar extends BaseStarling implements IProgressBar {
 		
-		protected var _mask:Image;
-		protected var _bar:Image;
+		protected var _mask:DisplayObject;
+		protected var _bar:DisplayObject;
 		protected var _lastProgress:Number = 0;
 		private var _isHorizontal:Boolean;
 		
 		public function BaseStarlingProgressBar(isHorizontal:Boolean) {
 			_isHorizontal = isHorizontal;
-			
 		}
 		
-		public function setBar(bar:BitmapData, mask:BitmapData):void {
-			_bar = new Image(Texture.fromBitmapData(bar));
-			_mask =  new Image(Texture.fromBitmapData(mask));
+		public function setBar(bar:IDisplayObject, mask:IDisplayObject):void {
+			_bar = bar as DisplayObject;
+			_mask = mask as DisplayObject;
 			_isHorizontal ? _mask.x = -_bar.width : _mask.y = _bar.height;
 			_bar.mask = _mask;
 			addChild(_bar);

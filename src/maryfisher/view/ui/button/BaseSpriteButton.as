@@ -1,6 +1,4 @@
 package maryfisher.view.ui.button {
-	import com.greensock.loading.core.DisplayObjectLoader;
-	import flash.display.DisplayObject;
 	import maryfisher.framework.view.IDisplayObject;
 	import maryfisher.view.ui.component.BaseSprite;
 	import maryfisher.view.ui.interfaces.IButton;
@@ -44,10 +42,16 @@ package maryfisher.view.ui.button {
 		
 		public function setButtonStates(defaultS:IDisplayObject, overS:IDisplayObject, downS:IDisplayObject, disabledS:IDisplayObject = null, selectedS:IDisplayObject = null):void {
 			_button.defaultState = defaultS;
-			_button.overState = overS;
+			CONFIG::mouse {
+				_button.overState = overS;
+			}
 			_button.downState = downS;
 			disabledS && (_button.disabledState = disabledS);
 			selectedS && (_button.selectedState = selectedS);
+		}
+		
+		public function fadeState(state:IDisplayObject):void {
+			
 		}
 		
 		public function get button():IButton {

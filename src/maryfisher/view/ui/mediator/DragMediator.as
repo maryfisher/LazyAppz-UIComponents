@@ -95,7 +95,7 @@ package maryfisher.view.ui.mediator {
 			}
 			CONFIG::touch {
 				_dragObject.addListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
-				_dragObject.removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+				_dragObject.removeListener(TouchEvent.TOUCH_END, onTouchEnd);
 				_dragObject.removeStageListener(TouchEvent.TOUCH_END, onTouchEnd);
 			}
 		}

@@ -12,7 +12,7 @@ package maryfisher.view.ui.component.starling {
 		public function StarlingText(x:int, y:int, width:int, height:int, fontName:String = "Verdana", fontSize:Number = 12, color:uint = 0x0, bold:Boolean = false) {
 			this.x = x;
 			this.y = y;
-			super(width, height, "", fontName, fontSize, color, bold);
+			super(width, height);// , "", fontName, fontSize, color, bold);
 			
 		}
 		

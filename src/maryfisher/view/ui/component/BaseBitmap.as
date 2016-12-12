@@ -13,9 +13,9 @@ package maryfisher.view.ui.component {
 	 */
 	public class BaseBitmap extends Bitmap implements IDisplayObject {
 		
-		public function BaseBitmap(bd:BitmapData, scale:Number = 1) {
+		public function BaseBitmap(bd:BitmapData = null, scale:Number = 1) {
 			
-			if (scale != 1) {
+			if (scale != 1 && bd) {
 				var sbd:BitmapData = bd.clone();
 				bd = new BitmapData(sbd.width * scale, sbd.height * scale, sbd.transparent, 0xff0000);
 				var matrix:Matrix = new Matrix();

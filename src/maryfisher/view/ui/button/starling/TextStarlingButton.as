@@ -13,14 +13,14 @@ package maryfisher.view.ui.button.starling {
 	 */
 	public class TextStarlingButton extends BaseStarlingButton {
 		
-		protected var _colorScheme:ButtonColorScheme;
+		protected var _textScheme:ButtonColorScheme;
 		protected var _label:FormatText;
 		protected var _height:int;
 		protected var _width:int;
 		
 		public function TextStarlingButton(id:String, colorScheme:ButtonColorScheme, textfield:FormatText = null, centerButton:Boolean = true) {
 			super(id);
-			_colorScheme = colorScheme;
+			_textScheme = colorScheme;
 			
 			_label = textfield || new FormatText();
 			
@@ -53,11 +53,13 @@ package maryfisher.view.ui.button.starling {
 		}
 		
 		protected function setStates():void {
-			_button.defaultState = getState(_colorScheme.upColor);
-			_button.disabledState = getState(_colorScheme.disabledColor);
-			_button.overState = getState(_colorScheme.overColor);
-			_button.downState = getState(_colorScheme.downColor);
-			_button.selectedState = getState(_colorScheme.selectedColor);
+			_button.defaultState = getState(_textScheme.upColor);
+			_button.disabledState = getState(_textScheme.disabledColor);
+			CONFIG::mouse {
+				_button.overState = getState(_textScheme.overColor);
+			}
+			_button.downState = getState(_textScheme.downColor);
+			_button.selectedState = getState(_textScheme.selectedColor);
 			
 		}
 		

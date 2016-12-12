@@ -14,8 +14,6 @@ package maryfisher.view.ui.button {
 		
 		protected var _bgColorScheme:ButtonColorScheme;
 		protected var _lineColorScheme:ButtonColorScheme;
-		private var _w:int;
-		private var _h:int;
 		private var _padding:int;
 		private var _alpha:Number;
 		protected var _lineThickness:int;
@@ -24,16 +22,16 @@ package maryfisher.view.ui.button {
 			_lineThickness = lineThickness;
 			_alpha = alpha;
 			_padding = padding;
-			_h = h;
-			_w = w;
+			_height = h;
+			_width = w;
 			_lineColorScheme = lineColorScheme;
 			_bgColorScheme = bgColorScheme;
-			if(textfield){
-				textfield.width = w;
-				textfield.height = h;
-			}
 			
 			super(id, lineColorScheme, textfield, centerButton, overwrite);
+			_textField.width = w;
+			_textField.height = h;
+			
+			//setTextDims();
 			setStates();
 		}
 		
@@ -49,7 +47,7 @@ package maryfisher.view.ui.button {
 			var shape:Shape = new Shape();
 			shape.graphics.lineStyle(_lineThickness, lineColor);
 			shape.graphics.beginFill(color, _alpha);
-			shape.graphics.drawRect(-_padding, -_padding, _w + _padding * 2, _h + _padding * 2);
+			shape.graphics.drawRect(-_padding, -_padding, _width + _padding * 2, _height + _padding * 2);
 			shape.graphics.endFill();
 			
 			var matrix:Matrix = new Matrix();
@@ -68,11 +66,9 @@ package maryfisher.view.ui.button {
 				getState(_bgColorScheme.downColor, _lineColorScheme.downColor, _textScheme.downColor));
 		}
 		
-		override public function set label(value:String):void {
-			super.label = value;
-			if (_textField.width + _textField.x * 2 > _w) {
-				_w = _textField.width + _textField.x * 2;
-				setStates();
+		override protected function setTextDims():void {
+			if (_textField.width + _textField.x * 2 > _width) {
+				_width = _textField.width + _textField.x * 2;
 			}
 		}
 		

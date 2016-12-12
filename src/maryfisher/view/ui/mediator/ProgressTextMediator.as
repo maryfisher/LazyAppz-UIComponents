@@ -111,8 +111,7 @@ package maryfisher.view.ui.mediator {
 		
 		public function start():void {
 			if (_isRunning) return;
-			_currentIndex = -1;
-			_currentTime = 0;
+			reset();
 			register();
 		}
 		
@@ -123,10 +122,15 @@ package maryfisher.view.ui.mediator {
 			new StageCommand(StageCommand.UNREGISTER_TICK, this);
 		}
 		
+		public function reset():void {
+			stop();
+			_currentIndex = -1;
+			_currentTime = 0;
+		}
+		
 		/* INTERFACE maryfisher.framework.view.ITickedObject */
 		
 		public function nextTick(interval:int):void {
-			
 			if (_currentTime % _speed == 0) {
 				if (_skip) {
 					_currentIndex = _localeText.formattedText.length;
@@ -176,6 +180,7 @@ package maryfisher.view.ui.mediator {
 		}
 		
 		private function register():void {
+			if (_isRunning) return;
 			_isRunning = true;
 			new StageCommand(StageCommand.REGISTER_TICK, this);
 		}

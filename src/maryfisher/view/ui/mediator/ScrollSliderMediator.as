@@ -83,7 +83,7 @@ package maryfisher.view.ui.mediator {
 		
 		CONFIG::touch
 		override protected function onTouchEnd(e:TouchEvent):void { 
-			super.onTouchEnd();
+			super.onTouchEnd(e);
 			if (!_isScrolling) return;
 			stopScrolling();
 		}

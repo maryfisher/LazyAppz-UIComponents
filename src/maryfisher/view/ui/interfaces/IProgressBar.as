@@ -6,11 +6,11 @@ package maryfisher.view.ui.interfaces {
 	 * ...
 	 * @author mary_fisher
 	 */
-	public interface IProgressBar extends IDisplayObject {
+	public interface IProgressBar extends IDisplayObjectContainer {
 		function setProgress(percent:Number):void
 		//function get width():Number;
 		//function get height():Number;
-		//function setBar(bar:DisplayObject, mask:DisplayObject):void
+		function setBar(bar:IDisplayObject, mask:IDisplayObject):void
 		//function set maskWidth(value:Number):void;
 		//function get totalWidth():Number;
 	}

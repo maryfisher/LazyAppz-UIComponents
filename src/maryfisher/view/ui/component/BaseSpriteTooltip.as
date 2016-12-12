@@ -15,11 +15,21 @@ package maryfisher.view.ui.component {
 	 */
 	public class BaseSpriteTooltip extends BaseSpriteView implements ITooltip {
 		
+		static public const FACE_LEFT:int = 0;
+		static public const FACE_RIGHT:int = 1;
+		static public const FACE_UP:int = 2;
+		static public const FACE_DOWN:int = 3;
+		
 		private var _mouseOver:Boolean = false;
 		private var _ownerMouseOut:Boolean = false;
+		protected var _ownerRect:Rectangle;
 		protected var _owner:DisplayObject;
-		protected var _distX:int;
-		protected var _distY:int;
+		//protected var _distX:int;
+		protected var _paddingX:int;
+		protected var _paddingY:int;
+		//protected var _distY:int;
+		protected var _face:int;
+		protected var _defaultFace:int;
 		
 		public function BaseSpriteTooltip(owner:DisplayObject) {
 			super();
@@ -36,20 +46,66 @@ package maryfisher.view.ui.component {
 		
 		override public function show():void {
 			
-			//addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
-			var p:Rectangle = _owner.getRect(stage);
-			x = p.x + _distX;
-			y = p.y + _distY;
+			_ownerRect = _owner.getRect(stage);
 			
+			if (_defaultFace == FACE_LEFT) {
+				faceLeft();
+				//if (x + contentWidth > ViewController.stageWidth) {
+					//faceRight();
+				//}else {
+					//faceLeft();
+				//}
+				//if (y + contentHeight > ViewController.stageHeight) {
+					////y -= (p.y + contentHeight) - ViewController.stageHeight + 20;
+					//faceDown();
+				//}
+			} else if (_defaultFace == FACE_RIGHT) {
+				faceRight();
+			} else if(_defaultFace == FACE_DOWN){
+				faceDown();
+			} else if(_defaultFace == FACE_UP){
+				faceUp();
+			}
+			checkBounds();
+			
+			super.show();
+		}
+		
+		private function checkBounds():void {
 			if (x + contentWidth > ViewController.stageWidth) {
-				x = p.x - contentWidth;
+				faceRight();
+			}else if(x < 0) {
+				faceLeft();
 			}
 			if (y + contentHeight > ViewController.stageHeight) {
-				y -= (p.y + contentHeight) - ViewController.stageHeight + 20;
+				faceDown();
+			}else if(y < 0){
+				faceUp();
 			}
-			//_owner.stage.addChild(this);
-			//trace("show tooltip");
-			super.show();
+		}
+		
+		private function faceRight():void {
+			x = _ownerRect.x - contentWidth - _paddingX;
+			y = _ownerRect.y + _paddingY;
+			_face = FACE_RIGHT;
+		}
+		
+		private function faceLeft():void {
+			x = _ownerRect.x + _owner.width + _paddingX;
+			y = _ownerRect.y + _paddingY;
+			_face = FACE_LEFT;
+		}
+		
+		private function faceDown():void {
+			x = _ownerRect.x + (_ownerRect.width - contentWidth >> 1);
+			y = _ownerRect.y - contentHeight - _paddingY;
+			_face = FACE_DOWN;
+		}
+		
+		private function faceUp():void {
+			x = _ownerRect.x + (_ownerRect.width - contentWidth >> 1);
+			y = _ownerRect.y + _ownerRect.height + _paddingY;
+			_face = FACE_UP;
 		}
 		
 		protected function get contentHeight():int {
@@ -58,6 +114,20 @@ package maryfisher.view.ui.component {
 		
 		protected function get contentWidth():int {
 			return width;
+		}
+		
+		public function set paddingX(value:int):void {
+			_paddingX = value;
+			//_distX = _owner.width + _paddingX;
+		}
+		
+		public function set paddingY(value:int):void {
+			_paddingY = value;
+			//_distY = _owner.height + _paddingY;
+		}
+		
+		public function set defaultFace(value:int):void {
+			_defaultFace = value;
 		}
 		
 		private function onMouseOver(e:MouseEvent):void {

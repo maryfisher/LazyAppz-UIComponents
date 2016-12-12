@@ -7,6 +7,7 @@ package maryfisher.view.ui.button.starling {
 	import maryfisher.view.starling.BaseStarlingSprite;
 	import maryfisher.view.ui.component.starling.BaseStarling;
 	import maryfisher.view.ui.interfaces.IButton;
+	import maryfisher.view.ui.interfaces.IButtonContainer;
 	import maryfisher.view.ui.interfaces.ITooltip;
 	import maryfisher.view.ui.mediator.button.StarlingButtonMediator;
 	import maryfisher.view.util.ColorUtil;
@@ -24,7 +25,7 @@ package maryfisher.view.ui.button.starling {
 	 * ...
 	 * @author mary_fisher
 	 */
-	public class BaseStarlingButton extends BaseStarling {
+	public class BaseStarlingButton extends BaseStarling implements IButtonContainer {
 		
 		protected var _button:StarlingButtonMediator;
 		
@@ -32,7 +33,18 @@ package maryfisher.view.ui.button.starling {
 			_button = new StarlingButtonMediator(this, id);
 		}
 		
-		public function get button():StarlingButtonMediator {
+		
+		/* INTERFACE maryfisher.view.ui.interfaces.IButtonContainer */
+		
+		public function set selected(value:Boolean):void {
+			_button.selected = value;
+		}
+		
+		public function set enabled(value:Boolean):void {
+			_button.enabled = value;
+		}
+		
+		public function get button():IButton {
 			return _button;
 		}
 	}

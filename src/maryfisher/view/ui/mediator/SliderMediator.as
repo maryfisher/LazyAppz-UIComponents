@@ -76,7 +76,7 @@ package maryfisher.view.ui.mediator {
 				_thumb.addStageListener(MouseEvent.MOUSE_UP, onMouseUp);
 			}
 			CONFIG::touch{
-				_thumb.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
+				_thumb.addListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
 				_thumb.addStageListener(TouchEvent.TOUCH_END, onTouchEnd);
 			}
 		}
@@ -88,7 +88,7 @@ package maryfisher.view.ui.mediator {
 		
 		CONFIG::touch
 		protected function onTouchBegin(e:TouchEvent):void {
-			stage.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+			_thumb.addStageListener(TouchEvent.TOUCH_MOVE, onTouchMove);
 			_isDown = true;
 			calculateOffset();
 		}
